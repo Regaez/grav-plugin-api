@@ -1,0 +1,31 @@
+name: Api
+version: 0.1.0
+description: A Rest API for GravCMS
+icon: plug
+author:
+  name: Thomas Threadgold
+  email: thomas@threadgold.nz
+homepage: https://github.com/regaez/grav-plugin-api
+demo: http://demo.yoursite.com
+keywords: grav, plugin, etc
+bugs: https://github.com/regaez/grav-plugin-api/issues
+docs: https://github.com/regaez/grav-plugin-api/blob/develop/README.md
+license: MIT
+
+form:
+  validation: strict
+  fields:
+    enabled:
+      type: toggle
+      label: Plugin status
+      highlight: 1
+      default: 0
+      options:
+        1: Enabled
+        0: Disabled
+      validate:
+        type: bool
+    route:
+      type: text
+      label: Route
+      help: The base route for the API
