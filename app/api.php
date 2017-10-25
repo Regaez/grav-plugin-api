@@ -1,9 +1,10 @@
 <?php
 namespace GravApi;
 
-use Grav\Common\Grav;
+use \Monolog\Logger;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
+use \GravApi\Handlers\PagesHandler;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -13,12 +14,8 @@ require __DIR__ . '/../vendor/autoload.php';
  */
 class Api
 {
-
     // Our Slim app instance
     protected $app;
-
-    // Our grav instance
-    protected $grav;
 
     // Our base API route
     protected $baseRoute;
@@ -29,19 +26,36 @@ class Api
     public function __construct($baseRoute)
     {
         // Initialise Slim
-        $container = new \Slim\Container;
-        $this->app = new \Slim\App($container);
-
-        $this->grav = Grav::instance();
+        $config = [
+            'settings' => [
+                'displayErrorDetails' => true,
+                'logger' => [
+                    'name' => 'slim-app',
+                    'level' => Logger::DEBUG,
+                    'path' => __DIR__ . '/../logs/app.log',
+                ],
+            ]
+        ];
+        $this->app = new \Slim\App($config);
 
         $this->baseRoute = trim($baseRoute, '/');
 
-        $this->app->get("/{$this->baseRoute}".'/hello/{name}', function (Request $request, Response $response) {
-            $name = $request->getAttribute('name');
-            $response->getBody()->write("Hello, $name");
-            return $response;
-        });
+        $this->attachHandlers();
+    }
 
+    protected function attachHandlers() {
+        $this->app->group("/{$this->baseRoute}", function () {
+
+            $this->group('/pages', function() {
+                $this->get('', PagesHandler::class . ':getPages');
+                $this->get('/{page}', PagesHandler::class . ':getPage');
+            });
+
+        });
+    }
+
+    public function run()
+    {
         $this->app->run();
     }
 }
