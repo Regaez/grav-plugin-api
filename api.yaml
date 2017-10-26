@@ -9,7 +9,7 @@ resources:
         enabled: true
         auth: false
         # Only return these fields for each page
-        fields: ['title', 'url', 'visible', 'modified']
+        fields: ['title', 'content','frontmatter', 'route', 'template', 'visible', 'modified']
     user:
         enabled: true
         auth: true
