@@ -21,7 +21,14 @@ class PagesHandler extends BaseHandler
 
     public function getPage($request, $response, $args) {
 
-        $page = $this->grav['pages']->find('/'. $args['page']);
+        $route = "/{$request->getAttribute('page')}";
+        $page = $this->grav['pages']->find($route);
+
+        if (!$page) {
+            return $response->withStatus(404)
+                            ->withHeader('Content-Type', 'text/html')
+                            ->write('Page not found');
+        }
 
         $resource = new PageResource($page);
 

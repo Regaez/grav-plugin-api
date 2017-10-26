@@ -48,7 +48,7 @@ class Api
 
             $this->group('/pages', function() {
                 $this->get('', PagesHandler::class . ':getPages');
-                $this->get('/{page}', PagesHandler::class . ':getPage');
+                $this->get('/{page:.*}', PagesHandler::class . ':getPage');
             });
 
         });
