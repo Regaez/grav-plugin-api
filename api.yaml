@@ -6,6 +6,7 @@ resources:
         fields: []
     pages:
         enabled: true
+        # Only return these fields for each page
         fields: ['title', 'url', 'visible', 'modified']
     user:
         enabled: true
@@ -19,3 +20,10 @@ resources:
     plugins:
         enabled: true
         fields: []
+    config:
+        enabled: true
+        fields: []
+    configs:
+        enabled: true
+        # Prevents API from accessing these config files
+        ignore_files: ['streams']

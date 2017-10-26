@@ -5,6 +5,7 @@ use \Monolog\Logger;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 use \GravApi\Config\Config;
+use \GravApi\Handlers\ConfigHandler;
 use \GravApi\Handlers\PagesHandler;
 use \GravApi\Handlers\PluginsHandler;
 use \GravApi\Handlers\UsersHandler;
@@ -87,6 +88,17 @@ class Api
 
                 if ( !empty($settings->plugin->enabled) ) {
                     $this->get('/{plugin}', PluginsHandler::class . ':getPlugin');
+                }
+            });
+
+            $this->group('/config', function() use ($settings) {
+
+                if ( !empty($settings->configs->enabled) ) {
+                    $this->get('', ConfigHandler::class . ':getConfigs');
+                }
+
+                if ( !empty($settings->config->enabled) ) {
+                    $this->get('/{config}', ConfigHandler::class . ':getConfig');
                 }
             });
         });

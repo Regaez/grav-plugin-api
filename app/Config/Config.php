@@ -15,6 +15,8 @@ class Config {
     private $users;
     private $plugin;
     private $plugins;
+    private $config;
+    private $configs;
 
     /**
      * We map all settings to existing class properties
