@@ -2,9 +2,8 @@
 namespace GravApi\Middlewares;
 
 use Grav\Common\User\User;
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
-use \GravApi\Config\Config;
+use GravApi\Config\Config;
+use GravApi\Responses\Response;
 
 /**
  * Class AuthMiddleware
@@ -31,7 +30,7 @@ class AuthMiddleware
      *
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function __invoke(Request $request, Response $response, $next)
+    public function __invoke($request, $response, $next)
     {
         if ( !empty($this->config->auth) ) {
 
@@ -39,9 +38,7 @@ class AuthMiddleware
             $authPass = implode(' ', $request->getHeader('PHP_AUTH_PW')) ?: '';
 
             if ( !$this->isAuthorised($authUser, $authPass)) {
-                return $response->withStatus(401)
-                                ->withHeader('Content-Type', 'text/html')
-                                ->write('Unauthorized');
+                return $response->withJson(Response::Unauthorized(), 401);
             }
         }
 
