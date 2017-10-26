@@ -12,8 +12,6 @@ class PageCollectionResource
 {
     protected $collection;
 
-    protected $filter;
-
     public function __construct(Collection $collection)
     {
         $this->collection = $collection;
