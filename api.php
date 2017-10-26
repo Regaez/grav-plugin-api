@@ -53,7 +53,7 @@ class ApiPlugin extends Plugin
         $paths = $this->grav['uri']->paths();
 
         // Check if the requested page is an intended API call, return if not
-        if ( $paths[0] !== $this->getBaseRoute()) {
+        if ( !$paths || $paths[0] !== $this->getBaseRoute()) {
             return;
         }
 
