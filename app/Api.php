@@ -6,6 +6,7 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 use \GravApi\Config\Config;
 use \GravApi\Handlers\PagesHandler;
+use \GravApi\Handlers\PluginsHandler;
 use \GravApi\Handlers\UsersHandler;
 
 require __DIR__ . '/../vendor/autoload.php';
@@ -75,6 +76,17 @@ class Api
 
                 if ( !empty($settings->user->enabled) ) {
                     $this->get('/{user}', UsersHandler::class . ':getUser');
+                }
+            });
+
+            $this->group('/plugins', function() use ($settings) {
+
+                if ( !empty($settings->plugins->enabled) ) {
+                    $this->get('', PluginsHandler::class . ':getPlugins');
+                }
+
+                if ( !empty($settings->plugin->enabled) ) {
+                    $this->get('/{plugin}', PluginsHandler::class . ':getPlugin');
                 }
             });
         });

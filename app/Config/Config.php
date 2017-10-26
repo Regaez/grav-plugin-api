@@ -13,12 +13,16 @@ class Config {
     private $pages;
     private $user;
     private $users;
+    private $plugin;
+    private $plugins;
 
     private function __construct($settings = null) {
         $this->page = (object) $settings['page'] ?: null;
         $this->pages = (object) $settings['pages'] ?: null;
         $this->user = (object) $settings['user'] ?: null;
         $this->users = (object) $settings['users'] ?: null;
+        $this->plugin = (object) $settings['plugin'] ?: null;
+        $this->plugins = (object) $settings['plugins'] ?: null;
     }
 
     public static function instance($settings = null) {

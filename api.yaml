@@ -13,3 +13,9 @@ resources:
     users:
         enabled: true
         fields: ['username', 'fullname', 'title']
+    plugin:
+        enabled: true
+        fields: []
+    plugins:
+        enabled: true
+        fields: []
