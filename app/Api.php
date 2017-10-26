@@ -5,6 +5,7 @@ use \Monolog\Logger;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 use \GravApi\Config\Config;
+use \GravApi\Middlewares\AuthMiddleWare;
 use \GravApi\Handlers\ConfigHandler;
 use \GravApi\Handlers\PagesHandler;
 use \GravApi\Handlers\PluginsHandler;
@@ -61,44 +62,52 @@ class Api
             $this->group('/pages', function() use ($settings) {
 
                 if ( !empty($settings->pages->enabled) ) {
-                    $this->get('', PagesHandler::class . ':getPages');
+                    $this->get('', PagesHandler::class . ':getPages')
+                         ->add(new AuthMiddleWare($settings->pages));
                 }
 
                 if ( !empty($settings->page->enabled) ) {
-                    $this->get('/{page:.*}', PagesHandler::class . ':getPage');
+                    $this->get('/{page:.*}', PagesHandler::class . ':getPage')
+                         ->add(new AuthMiddleWare($settings->page));
                 }
             });
 
             $this->group('/users', function() use ($settings) {
 
                 if ( !empty($settings->users->enabled) ) {
-                    $this->get('', UsersHandler::class . ':getUsers');
+                    $this->get('', UsersHandler::class . ':getUsers')
+                         ->add(new AuthMiddleWare($settings->users));
                 }
 
                 if ( !empty($settings->user->enabled) ) {
-                    $this->get('/{user}', UsersHandler::class . ':getUser');
+                    $this->get('/{user}', UsersHandler::class . ':getUser')
+                         ->add(new AuthMiddleWare($settings->user));
                 }
             });
 
             $this->group('/plugins', function() use ($settings) {
 
                 if ( !empty($settings->plugins->enabled) ) {
-                    $this->get('', PluginsHandler::class . ':getPlugins');
+                    $this->get('', PluginsHandler::class . ':getPlugins')
+                         ->add(new AuthMiddleWare($settings->plugins));
                 }
 
                 if ( !empty($settings->plugin->enabled) ) {
-                    $this->get('/{plugin}', PluginsHandler::class . ':getPlugin');
+                    $this->get('/{plugin}', PluginsHandler::class . ':getPlugin')
+                         ->add(new AuthMiddleWare($settings->plugin));
                 }
             });
 
             $this->group('/config', function() use ($settings) {
 
                 if ( !empty($settings->configs->enabled) ) {
-                    $this->get('', ConfigHandler::class . ':getConfigs');
+                    $this->get('', ConfigHandler::class . ':getConfigs')
+                         ->add(new AuthMiddleWare($settings->configs));
                 }
 
                 if ( !empty($settings->config->enabled) ) {
-                    $this->get('/{config}', ConfigHandler::class . ':getConfig');
+                    $this->get('/{config}', ConfigHandler::class . ':getConfig')
+                         ->add(new AuthMiddleWare($settings->config));
                 }
             });
         });

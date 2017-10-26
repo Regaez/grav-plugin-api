@@ -3,27 +3,35 @@ route: /api
 resources:
     page:
         enabled: true
+        auth: false
         fields: []
     pages:
         enabled: true
+        auth: false
         # Only return these fields for each page
         fields: ['title', 'url', 'visible', 'modified']
     user:
         enabled: true
+        auth: true
         fields: []
     users:
         enabled: true
+        auth: true
         fields: ['username', 'fullname', 'title']
     plugin:
         enabled: true
+        auth: true
         fields: []
     plugins:
         enabled: true
+        auth: true
         fields: []
     config:
         enabled: true
+        auth: true
         fields: []
     configs:
         enabled: true
+        auth: true
         # Prevents API from accessing these config files
         ignore_files: ['streams']
