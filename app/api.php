@@ -5,6 +5,7 @@ use \Monolog\Logger;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 use \GravApi\Handlers\PagesHandler;
+use \GravApi\Handlers\UsersHandler;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -49,6 +50,11 @@ class Api
             $this->group('/pages', function() {
                 $this->get('', PagesHandler::class . ':getPages');
                 $this->get('/{page:.*}', PagesHandler::class . ':getPage');
+            });
+
+            $this->group('/users', function() {
+                $this->get('', UsersHandler::class . ':getUsers');
+                $this->get('/{user}', UsersHandler::class . ':getUser');
             });
 
         });
