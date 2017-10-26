@@ -16,30 +16,19 @@ class Config {
     private $plugin;
     private $plugins;
 
+    /**
+     * We map all settings to existing class properties
+     * @param [array] $settings
+     */
     private function __construct($settings = null) {
-        $this->page = !empty($settings['page'])
-            ? (object) $settings['page']
-            : null;
 
-        $this->pages = !empty($settings['pages'])
-            ? (object) $settings['pages']
-            : null;
-
-        $this->user = !empty($settings['user'])
-            ? (object) $settings['user']
-            : null;
-
-        $this->users = !empty($settings['users'])
-            ? (object) $settings['users']
-            : null;
-
-        $this->plugin = !empty($settings['plugin'])
-            ? (object) $settings['plugin']
-            : null;
-
-        $this->plugins = !empty($settings['plugins'])
-            ? (object) $settings['plugins']
-            : null;
+        foreach ($settings as $key => $value) {
+            if (property_exists($this, $key)) {
+                $this->{$key} = !empty($value)
+                    ? (object) $value
+                    : null;
+            }
+        }
     }
 
     public static function instance($settings = null) {
