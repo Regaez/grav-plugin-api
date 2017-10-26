@@ -3,9 +3,9 @@ namespace GravApi\Handlers;
 
 use Grav\Common\Grav;
 use Interop\Container\ContainerInterface;
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
-use \GravApi\Config\Config;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
+use GravApi\Config\Config;
 
 /**
  * Class BaseHandler

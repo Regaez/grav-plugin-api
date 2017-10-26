@@ -1,7 +1,8 @@
 <?php
 namespace GravApi\Handlers;
 
-use \GravApi\Resources\PluginResource;
+use GravApi\Responses\Response;
+use GravApi\Resources\PluginResource;
 
 /**
  * Class PluginsHandler
@@ -40,9 +41,7 @@ class PluginsHandler extends BaseHandler
         }
 
         if (!$plugin) {
-            return $response->withStatus(404)
-                            ->withHeader('Content-Type', 'text/html')
-                            ->write('Page not found');
+            return $response->withJson(Response::NotFound(), 404);
         }
 
         $resource = new PluginResource($plugin);

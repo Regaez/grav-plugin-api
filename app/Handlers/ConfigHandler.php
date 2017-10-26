@@ -3,8 +3,9 @@ namespace GravApi\Handlers;
 
 use Grav\Common\Config\ConfigFileFinder;
 use Grav\Common\Config\CompiledConfig;
-use \GravApi\Resources\ConfigCollectionResource;
-use \GravApi\Resources\ConfigResource;
+use GravApi\Responses\Response;
+use GravApi\Resources\ConfigResource;
+use GravApi\Resources\ConfigCollectionResource;
 
 /**
  * Class ConfigHandler
@@ -55,9 +56,7 @@ class ConfigHandler extends BaseHandler
         $config = $collection->toJson($collectionFilter);
 
         if (!$config) {
-            return $response->withStatus(404)
-                            ->withHeader('Content-Type', 'text/html')
-                            ->write('Page not found');
+            return $response->withJson(Response::NotFound(), 404);
         }
 
         // Access to config file is allowed, now we can proceed

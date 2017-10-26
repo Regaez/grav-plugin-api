@@ -1,8 +1,9 @@
 <?php
 namespace GravApi\Handlers;
 
-use \GravApi\Resources\PageResource;
-use \GravApi\Resources\PageCollectionResource;
+use GravApi\Responses\Response;
+use GravApi\Resources\PageResource;
+use GravApi\Resources\PageCollectionResource;
 
 /**
  * Class PagesHandler
@@ -33,9 +34,7 @@ class PagesHandler extends BaseHandler
         $page = $this->grav['pages']->find($route);
 
         if (!$page) {
-            return $response->withStatus(404)
-                            ->withHeader('Content-Type', 'text/html')
-                            ->write('Page not found');
+            return $response->withJson(Response::NotFound(), 404);
         }
 
         $resource = new PageResource($page);

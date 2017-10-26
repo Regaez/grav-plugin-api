@@ -1,15 +1,15 @@
 <?php
 namespace GravApi;
 
-use \Monolog\Logger;
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
-use \GravApi\Config\Config;
-use \GravApi\Middlewares\AuthMiddleWare;
-use \GravApi\Handlers\ConfigHandler;
-use \GravApi\Handlers\PagesHandler;
-use \GravApi\Handlers\PluginsHandler;
-use \GravApi\Handlers\UsersHandler;
+use Monolog\Logger;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
+use GravApi\Config\Config;
+use GravApi\Middlewares\AuthMiddleWare;
+use GravApi\Handlers\ConfigHandler;
+use GravApi\Handlers\PagesHandler;
+use GravApi\Handlers\PluginsHandler;
+use GravApi\Handlers\UsersHandler;
 
 require __DIR__ . '/../vendor/autoload.php';
 

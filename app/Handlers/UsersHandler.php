@@ -2,6 +2,7 @@
 namespace GravApi\Handlers;
 
 use GravApi\Resources\UserResource;
+use GravApi\Responses\Response;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -17,9 +18,7 @@ class UsersHandler extends BaseHandler
         $files = (array) glob($this->grav['locator']->findResource("account://") . '/*.yaml');
 
         if (!$files) {
-            return $response->withStatus(404)
-                            ->withHeader('Content-Type', 'text/html')
-                            ->write('Page not found');
+            return $response->withJson(Response::NotFound(), 404);
         }
 
         $filter = null;
@@ -46,9 +45,7 @@ class UsersHandler extends BaseHandler
         $file = $this->grav['locator']->findResource("account://") . "/{$args['user']}.yaml";
 
         if (!file_exists($file)) {
-            return $response->withStatus(404)
-                            ->withHeader('Content-Type', 'text/html')
-                            ->write('Page not found');
+            return $response->withJson(Response::NotFound(), 404);
         }
 
         $resource = new UserResource(array_merge(
