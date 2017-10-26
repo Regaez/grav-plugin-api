@@ -17,7 +17,7 @@ resources:
     users:
         enabled: true
         auth: true
-        fields: ['username', 'fullname', 'title']
+        fields: ['username', 'email', 'fullname', 'title', 'status', 'access']
     plugin:
         enabled: true
         auth: true

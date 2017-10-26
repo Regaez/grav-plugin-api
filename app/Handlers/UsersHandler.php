@@ -29,12 +29,13 @@ class UsersHandler extends BaseHandler
         }
 
         foreach ($files as $file) {
+            $username = basename($file, '.yaml');
             $details = array_merge(
-                array('username' => basename($file, '.yaml')),
+                array('username' => $username),
                 Yaml::parse($file)
             );
             $resource = new UserResource($details);
-            $users[] = $resource->toJson($filter);
+            $users[$username] = $resource->toJson($filter);
         }
 
         return $response->withJson($users);
