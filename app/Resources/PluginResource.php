@@ -13,7 +13,7 @@ class PluginResource
 
     public function __construct(Plugin $plugin)
     {
-        $this->plugin = $plugin->config();
+        $this->plugin = (object) $plugin->config();
     }
 
     /**
@@ -30,8 +30,8 @@ class PluginResource
             $data = [];
 
             foreach ($fields as $field) {
-                if ( method_exists($this->plugin, $field) ) {
-                    $data[$field] = $this->plugin->{$field}();
+                if ( property_exists($this->plugin, $field) ) {
+                    $data[$field] = $this->plugin->{$field};
                 }
             }
 
