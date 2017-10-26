@@ -21,11 +21,17 @@ class Api
     // Our base API route
     protected $baseRoute;
 
+    // Our Grav plugin endpoint settings
+    protected $settings;
+
     /**
      * @param $config
      */
-    public function __construct($baseRoute)
+    public function __construct($baseRoute, $settings)
     {
+        $this->baseRoute = trim($baseRoute, '/');
+        $this->settings = (object) $settings;
+
         // Initialise Slim
         $config = [
             'settings' => [
@@ -39,25 +45,31 @@ class Api
         ];
         $this->app = new \Slim\App($config);
 
-        $this->baseRoute = trim($baseRoute, '/');
-
         $this->attachHandlers();
     }
 
     protected function attachHandlers() {
-        $this->app->group("/{$this->baseRoute}", function () {
 
-            $this->group('/pages', function() {
-                $this->get('', PagesHandler::class . ':getPages');
-                $this->get('/{page:.*}', PagesHandler::class . ':getPage');
-            });
+        $settings = $this->settings;
 
-            $this->group('/users', function() {
-                $this->get('', UsersHandler::class . ':getUsers');
-                $this->get('/{user}', UsersHandler::class . ':getUser');
-            });
+        $handlers = function() use ($settings) {
 
-        });
+            if ( !empty($settings->pages) ) {
+                $this->group('/pages', function() {
+                    $this->get('', PagesHandler::class . ':getPages');
+                    $this->get('/{page:.*}', PagesHandler::class . ':getPage');
+                });
+            }
+
+            if ( !empty($settings->users) ) {
+                $this->group('/users', function() {
+                    $this->get('', UsersHandler::class . ':getUsers');
+                    $this->get('/{user}', UsersHandler::class . ':getUser');
+                });
+            }
+        };
+
+        $this->app->group("/{$this->baseRoute}", $handlers);
     }
 
     public function run()

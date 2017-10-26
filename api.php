@@ -59,7 +59,10 @@ class ApiPlugin extends Plugin
 
         require_once __DIR__ . '/app/Api.php';
 
-        $api = new \GravApi\Api($this->getBaseRoute());
+        $api = new \GravApi\Api(
+            $this->getBaseRoute(),
+            $this->config->get('plugins.api.endpoints')
+        );
         $api->run();
 
         // We don't need Grav to do any more
