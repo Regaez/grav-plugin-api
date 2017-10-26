@@ -17,12 +17,29 @@ class Config {
     private $plugins;
 
     private function __construct($settings = null) {
-        $this->page = (object) $settings['page'] ?: null;
-        $this->pages = (object) $settings['pages'] ?: null;
-        $this->user = (object) $settings['user'] ?: null;
-        $this->users = (object) $settings['users'] ?: null;
-        $this->plugin = (object) $settings['plugin'] ?: null;
-        $this->plugins = (object) $settings['plugins'] ?: null;
+        $this->page = !empty($settings['page'])
+            ? (object) $settings['page']
+            : null;
+
+        $this->pages = !empty($settings['pages'])
+            ? (object) $settings['pages']
+            : null;
+
+        $this->user = !empty($settings['user'])
+            ? (object) $settings['user']
+            : null;
+
+        $this->users = !empty($settings['users'])
+            ? (object) $settings['users']
+            : null;
+
+        $this->plugin = !empty($settings['plugin'])
+            ? (object) $settings['plugin']
+            : null;
+
+        $this->plugins = !empty($settings['plugins'])
+            ? (object) $settings['plugins']
+            : null;
     }
 
     public static function instance($settings = null) {
