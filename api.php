@@ -61,7 +61,7 @@ class ApiPlugin extends Plugin
 
         $api = new \GravApi\Api(
             $this->getBaseRoute(),
-            $this->config->get('plugins.api.endpoints')
+            $this->config->get('plugins.api.resources')
         );
         $api->run();
 

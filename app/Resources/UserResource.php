@@ -24,8 +24,21 @@ class UserResource
         $this->access = $details['access'] ?: null;
     }
 
-    public function toJson()
+    public function toJson($fields = null)
     {
+        // Filter for requested fields
+        if ( $fields ) {
+            $data = [];
+
+            foreach ($fields as $field) {
+                if ( property_exists($this, $field) ) {
+                    $data[$field] = $this->{$field};
+                }
+            }
+
+            return $data;
+        }
+
         return [
             'username' => $this->username,
             'email' => $this->email,

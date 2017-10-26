@@ -16,7 +16,15 @@ class PagesHandler extends BaseHandler
 
         $resource = new PageCollectionResource($collection);
 
-        return $response->withJson($resource->toJson());
+        $filter = null;
+
+        if ( !empty($this->config->pages->fields) ) {
+            $filter = $this->config->pages->fields;
+        }
+
+        $data = $resource->toJson($filter);
+
+        return $response->withJson($data);
     }
 
     public function getPage($request, $response, $args) {
@@ -32,6 +40,14 @@ class PagesHandler extends BaseHandler
 
         $resource = new PageResource($page);
 
-        return $response->withJson($resource->toJson());
+        $filter = null;
+
+        if ( !empty($this->config->page->fields) ) {
+            $filter = $this->config->page->fields;
+        }
+
+        $data = $resource->toJson($filter);
+
+        return $response->withJson($data);
     }
 }

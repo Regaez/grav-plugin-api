@@ -1,5 +1,15 @@
 enabled: true
 route: /api
-endpoints:
-    pages: true
-    users: true
+resources:
+    page:
+        enabled: true
+        fields: []
+    pages:
+        enabled: true
+        fields: ['title', 'url', 'visible', 'modified']
+    user:
+        enabled: true
+        fields: []
+    users:
+        enabled: true
+        fields: ['username', 'fullname', 'title']

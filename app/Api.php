@@ -4,6 +4,7 @@ namespace GravApi;
 use \Monolog\Logger;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
+use \GravApi\Config\Config;
 use \GravApi\Handlers\PagesHandler;
 use \GravApi\Handlers\UsersHandler;
 
@@ -30,7 +31,7 @@ class Api
     public function __construct($baseRoute, $settings)
     {
         $this->baseRoute = trim($baseRoute, '/');
-        $this->settings = (object) $settings;
+        $this->settings = Config::instance($settings);
 
         // Initialise Slim
         $config = [
@@ -50,26 +51,33 @@ class Api
 
     protected function attachHandlers() {
 
-        $settings = $this->settings;
+        // We must serve from the base route
+        $this->app->group("/{$this->baseRoute}", function() {
 
-        $handlers = function() use ($settings) {
+            $settings = Config::instance();
 
-            if ( !empty($settings->pages) ) {
-                $this->group('/pages', function() {
+            $this->group('/pages', function() use ($settings) {
+
+                if ( !empty($settings->pages->enabled) ) {
                     $this->get('', PagesHandler::class . ':getPages');
+                }
+
+                if ( !empty($settings->page->enabled) ) {
                     $this->get('/{page:.*}', PagesHandler::class . ':getPage');
-                });
-            }
+                }
+            });
 
-            if ( !empty($settings->users) ) {
-                $this->group('/users', function() {
+            $this->group('/users', function() use ($settings) {
+
+                if ( !empty($settings->users->enabled) ) {
                     $this->get('', UsersHandler::class . ':getUsers');
-                    $this->get('/{user}', UsersHandler::class . ':getUser');
-                });
-            }
-        };
+                }
 
-        $this->app->group("/{$this->baseRoute}", $handlers);
+                if ( !empty($settings->user->enabled) ) {
+                    $this->get('/{user}', UsersHandler::class . ':getUser');
+                }
+            });
+        });
     }
 
     public function run()

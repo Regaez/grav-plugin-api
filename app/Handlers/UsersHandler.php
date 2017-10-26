@@ -22,13 +22,19 @@ class UsersHandler extends BaseHandler
                             ->write('Page not found');
         }
 
+        $filter = null;
+
+        if ( !empty($this->config->users->fields) ) {
+            $filter = $this->config->users->fields;
+        }
+
         foreach ($files as $file) {
             $details = array_merge(
                 array('username' => basename($file, '.yaml')),
                 Yaml::parse($file)
             );
             $resource = new UserResource($details);
-            $users[] = $resource->toJson();
+            $users[] = $resource->toJson($filter);
         }
 
         return $response->withJson($users);
@@ -49,6 +55,14 @@ class UsersHandler extends BaseHandler
             Yaml::parse($file)
         ));
 
-        return $response->withJson($resource->toJson());
+        $filter = null;
+
+        if ( !empty($this->config->user->fields) ) {
+            $filter = $this->config->user->fields;
+        }
+
+        $data = $resource->toJson($filter);
+
+        return $response->withJson($data);
     }
 }

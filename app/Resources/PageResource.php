@@ -16,8 +16,29 @@ class PageResource
         $this->page = $page;
     }
 
-    public function toJson()
+    /**
+     * Returns the page object as an array/json.
+     * Also accepts an array of fields by which to filter.
+     *
+     * @param  [array] $fields optional
+     * @return [array]
+     */
+    public function toJson($fields = null)
     {
+        // Filter for requested fields
+        if ( $fields ) {
+            $data = [];
+
+            foreach ($fields as $field) {
+                if ( method_exists($this->page, $field) ) {
+                    $data[$field] = $this->page->{$field}();
+                }
+            }
+
+            return $data;
+        }
+
+        // Otherwise return everything
         return [
             'active' => $this->page->active(),
             'activeChild' => $this->page->activeChild(),
