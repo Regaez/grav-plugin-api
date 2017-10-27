@@ -18,4 +18,16 @@ class Response
         $response = new UnauthorizedResponse();
         return $response->get();
     }
+
+    public static function ResourceExists()
+    {
+        $response = new ResourceExistsResponse();
+        return $response->get();
+    }
+
+    public static function BadRequest($msg)
+    {
+        $response = new BadRequestResponse($msg);
+        return $response->get();
+    }
 }
