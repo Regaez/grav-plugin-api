@@ -23,7 +23,11 @@ class PageCollectionResource
 
         foreach($this->collection as $page) {
             $resource = new PageResource($page);
-            $data[] = $resource->toJson($filter, true);
+            $id = $resource->getId();
+            $data[] = [
+                'id' => $id,
+                'attributes' => $resource->toJson($filter, true)
+            ];
         }
 
         // Return Resource object

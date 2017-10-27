@@ -60,7 +60,10 @@ class PageResource
             'filePathClean' => $this->page->filePathClean(),
             'folder' => $this->page->folder(),
             'frontmatter' => $this->page->frontmatter(),
-            'getRawContent' => $this->page->getRawContent(),
+
+            // TODO: do we really need this and `content` field?
+            // 'getRawContent' => $this->page->getRawContent(),
+
             'header' => $this->page->header(),
             'home' => $this->page->home(),
             'id' => $this->page->id(),
@@ -70,7 +73,10 @@ class PageResource
             'isPage' => $this->page->isPage(),
             'language' => $this->page->language(),
             'lastModified' => $this->page->lastModified(),
-            'link' => $this->page->link(),
+
+            // Already have `route` and `permalink` fields
+            // 'link' => $this->page->link(),
+
             'maxCount' => $this->page->maxCount(),
             'menu' => $this->page->menu(),
             'metadata' => $this->page->metadata(),
@@ -113,7 +119,10 @@ class PageResource
             'translatedLanguages' => $this->page->translatedLanguages(),
             'unpublishDate' => $this->page->unpublishDate(),
             'untranslatedLanguages' => $this->page->untranslatedLanguages(),
-            'url' => $this->page->url(),
+
+            // Already have `route` and `permalink` fields
+            // 'url' => $this->page->url(),
+
             'visible' => $this->page->visible(),
         ];
 
@@ -139,7 +148,7 @@ class PageResource
         // Return Resource object
         return [
             'type' => 'page',
-            'id' => $this->page->route(),
+            'id' => $this->getId(),
             'attributes' => $attributes,
             'meta' => [
                 'links' => [
@@ -161,5 +170,11 @@ class PageResource
             $children[] = $this->page->route().'/'.$child['slug'];
         }
         return $children;
+    }
+
+    public function getId() {
+        // we use raw route so that the homepage
+        // returns a query-able identifier
+        return ltrim($this->page->rawRoute(), '/');
     }
 }
