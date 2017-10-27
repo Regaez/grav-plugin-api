@@ -34,10 +34,17 @@ class UsersHandler extends BaseHandler
                 Yaml::parse($file)
             );
             $resource = new UserResource($details);
-            $users[$username] = $resource->toJson($filter);
+            $users[] = $resource->toJson($filter, true);
         }
 
-        return $response->withJson($users);
+        $data = [
+            'items' => $users,
+            'meta' => [
+                'count' => count($users)
+            ]
+        ];
+
+        return $response->withJson($data);
     }
 
     public function getUser($request, $response, $args) {

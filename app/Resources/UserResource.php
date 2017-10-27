@@ -24,28 +24,37 @@ class UserResource
         $this->access = $details['access'] ?: null;
     }
 
-    public function toJson($fields = null)
+    public function toJson($fields = null, $attributes_only = false)
     {
-        // Filter for requested fields
-        if ( $fields ) {
-            $data = [];
-
-            foreach ($fields as $field) {
-                if ( property_exists($this, $field) ) {
-                    $data[$field] = $this->{$field};
-                }
-            }
-
-            return $data;
-        }
-
-        return [
+        $attributes = [
             'username' => $this->username,
             'email' => $this->email,
             'fullname' => $this->fullname,
             'title' => $this->title,
             'state' => $this->state,
             'access' => $this->access
+        ];
+
+        // Filter for requested fields
+        if ( $fields ) {
+            $attributes = [];
+
+            foreach ($fields as $field) {
+                if ( property_exists($this, $field) ) {
+                    $attributes[$field] = $this->{$field};
+                }
+            }
+        }
+
+        if ($attributes_only) {
+            return $attributes;
+        }
+
+        // Return Resource object
+        return [
+            'type' => 'user',
+            'id' => $this->username,
+            'attributes' => $attributes
         ];
     }
 }
