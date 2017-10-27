@@ -134,33 +134,35 @@ class PagesHandler extends BaseHandler
             $page->file()->delete();
         } else {
             Folder::delete($page->path());
-        }
 
-        $child = $page;
-        $parentRoute = dirname($page->route());
-        // recursively check parent directories for files, and delete them if empty
-        while($parentRoute !== '') {
-            $parent = $this->grav['pages']->find($parentRoute);
+            // since this page has no children, we can clean up the unused directories too
 
-            // if we hit the root, stop
-            if ($parent === null) {
-                break;
+            $child = $page;
+            $parentRoute = dirname($page->route());
+            // recursively check parent directories for files, and delete them if empty
+            while($parentRoute !== '') {
+                $parent = $this->grav['pages']->find($parentRoute);
+
+                // if we hit the root, stop
+                if ($parent === null) {
+                    break;
+                }
+
+                // Get the parents children, minus the child we just deleted
+                $filteredChildren = $parent->children()->remove($child);
+
+                // if the parent directory exists, or has children, we should stop
+                if( $parent->isPage() || 0 < count($filteredChildren->toArray()) )
+                {
+                    break;
+                }
+
+                // set this parent as the next child to delete
+                $child = $parent;
+                // delete the folder
+                Folder::delete($parent->path());
+                $parentRoute = dirname($parentRoute);
             }
-
-            // Get the parents children, minus the child we just deleted
-            $filteredChildren = $parent->children()->remove($child);
-
-            // if the parent directory exists, or has children, we should stop
-            if( $parent->isPage() || 0 < count($filteredChildren->toArray()) )
-            {
-                break;
-            }
-
-            // set this parent as the next child to delete
-            $child = $parent;
-            // delete the folder
-            Folder::delete($parent->path());
-            $parentRoute = dirname($parentRoute);
         }
 
         return $response->withStatus(204);
