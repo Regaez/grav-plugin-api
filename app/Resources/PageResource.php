@@ -25,27 +25,21 @@ class PageResource
      */
     public function toJson($fields = null)
     {
-        // Filter for requested fields
-        if ( $fields ) {
-            $data = [];
+        // All our Page attributes
+        $attributes = [
+            // TODO: is this useful here?
+            // 'active' => $this->page->active(),
 
-            foreach ($fields as $field) {
-                if ( method_exists($this->page, $field) ) {
-                    $data[$field] = $this->page->{$field}();
-                }
-            }
+            // TODO: is this useful here?
+            // 'activeChild' => $this->page->activeChild(),
 
-            return $data;
-        }
+            // TODO: how to use this? always seems empty.
+            // 'adjacentSibling' => $this->page->adjacentSibling(),
 
-        // Otherwise return everything
-        return [
-            'active' => $this->page->active(),
-            'activeChild' => $this->page->activeChild(),
-            'adjacentSibling' => $this->page->adjacentSibling(),
             // TODO: Are blueprints really necessary output???
             // 'blueprintName' => $this->page->blueprintName(),
             // 'blueprints' => $this->page->blueprints(),
+
             'children' => $this->page->children()->toArray(),
             'childType' => $this->page->childType(),
             'content' => $this->page->content(),
@@ -55,8 +49,13 @@ class PageResource
             'exists' => $this->page->exists(),
             'extension' => $this->page->extension(),
             'extra' => $this->page->extra(),
-            'file' => $this->page->file(),
-            'filePath' => $this->page->filePath(),
+
+            // TODO: would this be any use?
+            // 'file' => $this->page->file(),
+
+            // this would expose server directory structure, so shouldn't be returned
+            // 'filePath' => $this->page->filePath(),
+
             'filePathClean' => $this->page->filePathClean(),
             'folder' => $this->page->folder(),
             'frontmatter' => $this->page->frontmatter(),
@@ -78,7 +77,10 @@ class PageResource
             'modularTwig' => $this->page->modularTwig(),
             'modular' => $this->page->modular(),
             'name' => $this->page->name(),
-            'nextSibling' => $this->page->nextSibling(),
+
+            // TODO: how to use this? always seems empty.
+            // 'nextSibling' => $this->page->nextSibling(),
+
             'order' => $this->page->order(),
             'orderDir' => $this->page->orderDir(),
             'orderBy' => $this->page->orderBy(),
@@ -86,7 +88,10 @@ class PageResource
             'parent' => $this->page->parent()->route(),
             'path' => $this->page->path(),
             'permalink' => $this->page->permalink(),
-            'prevSibling' => $this->page->prevSibling(),
+
+            // TODO: how to use this? always seems empty.
+            // 'prevSibling' => $this->page->prevSibling(),
+
             'publishDate' => $this->page->publishDate(),
             'published' => $this->page->published(),
             'raw' => $this->page->raw(),
@@ -106,6 +111,31 @@ class PageResource
             'untranslatedLanguages' => $this->page->untranslatedLanguages(),
             'url' => $this->page->url(),
             'visible' => $this->page->visible(),
+        ];
+
+        // Filter for requested fields
+        if ( $fields ) {
+            $attributes = [];
+
+            foreach ($fields as $field) {
+                if ( method_exists($this->page, $field) ) {
+                    $attributes[$field] = $this->page->{$field}();
+                }
+            }
+
+            return $attributes;
+        }
+
+        // Return Resource object
+        return [
+            'type' => 'page',
+            'id' => $this->page->route(),
+            'attributes' => $attributes,
+            'meta' => [
+                'links' => [
+                    'self' => $this->page->permalink()
+                ]
+            ]
         ];
     }
 }
