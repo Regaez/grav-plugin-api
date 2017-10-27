@@ -23,9 +23,15 @@ class PageCollectionResource
 
         foreach($this->collection as $page) {
             $resource = new PageResource($page);
-            $data[$page->route()] = $resource->toJson($filter);
+            $data[] = $resource->toJson($filter, true);
         }
 
-        return $data;
+        // Return Resource object
+        return [
+            'items' => $data,
+            'meta' => [
+                'count' => count($data)
+            ]
+        ];
     }
 }

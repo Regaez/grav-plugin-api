@@ -21,9 +21,10 @@ class PageResource
      * Also accepts an array of fields by which to filter.
      *
      * @param  [array] $fields optional
+     * @param  [bool] $attributes_only optional
      * @return [array]
      */
-    public function toJson($fields = null)
+    public function toJson($fields = null, $attributes_only = false)
     {
         // All our Page attributes
         $attributes = [
@@ -122,7 +123,9 @@ class PageResource
                     $attributes[$field] = $this->page->{$field}();
                 }
             }
+        }
 
+        if ($attributes_only) {
             return $attributes;
         }
 
