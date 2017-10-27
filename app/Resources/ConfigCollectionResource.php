@@ -18,7 +18,7 @@ class ConfigCollectionResource
         $this->filter = array('security');
     }
 
-    public function toJson($filter = array(), $attributes_only)
+    public function toJson($filter = array(), $attributes_only = false)
     {
         $data = [];
 
