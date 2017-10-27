@@ -63,18 +63,24 @@ class PagesHandler extends BaseHandler
         $route = $parsedBody['route'];
         $existingPage = $this->grav['pages']->find($route);
 
-        // TODO:
-        // Allow page creation when existing page isDir
-        if ($existingPage) {
+        // if existingPage is a directory, we can still create a file, so check if isPage
+        if ($existingPage && $existingPage->isPage()) {
             return $response->withJson(Response::ResourceExists(), 403);
         }
 
         $template = !empty($parsedBody['template']) ? $parsedBody['template'] : 'default';
 
+        // Our helper is used to create a page in new directories
         $helper = new PageHelper($route, $template);
 
         try {
-            $page = $helper->getOrCreatePage();
+            // if existingPage evals true, it means a directory
+            // already exists, we just need to save the file
+            $page = $existingPage ?: $helper->getOrCreatePage();
+
+            // Our Helper will set a template when creating a new page
+            // but we set it here too in case we are using an existing dir 'page'
+            $page->name($helper->getFilename());
 
             // Add frontmatter to our page
             if (!empty($parsedBody['header']) ) {

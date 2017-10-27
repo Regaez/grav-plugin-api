@@ -81,7 +81,7 @@ class PageHelper
         return $page;
      }
 
-    protected function getFilename()
+    public function getFilename()
     {
         if (!$this->template) {
             return null;
