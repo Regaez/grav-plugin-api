@@ -8,10 +8,16 @@ namespace GravApi\Resources;
 class ConfigResource
 {
     protected $config;
+    protected $id;
 
     public function __construct($config)
     {
-        $this->config = (object) $config;
+        // we should only ever have a single item array
+        foreach ($config as $key => $value) {
+            $this->id = $key;
+        }
+
+        $this->config = (object) $config[$this->id];
     }
 
     /**
@@ -23,20 +29,24 @@ class ConfigResource
      */
     public function toJson($fields = null)
     {
+        $attributes = (array) $this->config;
+
         // Filter for requested fields
         if ( $fields ) {
-            $data = [];
+            $attributes = [];
 
             foreach ($fields as $field) {
-                if ( property_exists($this->plugin, $field) ) {
-                    $data[$field] = $this->plugin->{$field};
+                if ( property_exists($this->config, $field) ) {
+                    $attributes[$field] = $this->config->{$field};
                 }
             }
-
-            return $data;
         }
 
-        // Otherwise return everything
-        return (array) $this->config;
+        // Return Resource object
+        return [
+            'type' => 'config',
+            'id' => $this->id,
+            'attributes' => $attributes
+        ];
     }
 }

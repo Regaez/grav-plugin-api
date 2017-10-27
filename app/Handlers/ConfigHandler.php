@@ -53,7 +53,7 @@ class ConfigHandler extends BaseHandler
         if ( !empty($this->config->configs->ignore_files) ) {
             $collectionFilter = $this->config->configs->ignore_files;
         }
-        $config = $collection->toJson($collectionFilter);
+        $config = $collection->toJson($collectionFilter, true);
 
         if (!$config) {
             return $response->withJson(Response::NotFound(), 404);

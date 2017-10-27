@@ -18,7 +18,7 @@ class ConfigCollectionResource
         $this->filter = array('security');
     }
 
-    public function toJson($filter = array())
+    public function toJson($filter = array(), $attributes_only)
     {
         $data = [];
 
@@ -31,6 +31,16 @@ class ConfigCollectionResource
             $data[$name] = $config;
         }
 
-        return $data;
+        if ($attributes_only) {
+            return $data;
+        }
+
+        // Return Resource object
+        return [
+            'items' => $data,
+            'meta' => [
+                'count' => count($data)
+            ]
+        ];
     }
 }
