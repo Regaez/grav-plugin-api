@@ -63,6 +63,8 @@ class PagesHandler extends BaseHandler
         $route = $parsedBody['route'];
         $existingPage = $this->grav['pages']->find($route);
 
+        // TODO:
+        // Allow page creation when existing page isDir
         if ($existingPage) {
             return $response->withJson(Response::ResourceExists(), 403);
         }
