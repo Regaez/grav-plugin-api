@@ -1,6 +1,7 @@
 <?php
 namespace GravApi\Resources;
 
+use GravApi\Config\Config;
 use GravApi\Resources\PageResource;
 use Grav\Common\Page\Collection;
 
@@ -21,12 +22,21 @@ class PageCollectionResource
     {
         $data = [];
 
+        $settings = Config::instance();
+
         foreach($this->collection as $page) {
             $resource = new PageResource($page);
             $id = $resource->getId();
+            $apiUrl = $settings->api->permalink.'/pages/'.$id;
             $data[] = [
                 'id' => $id,
-                'attributes' => $resource->toJson($filter, true)
+                'attributes' => $resource->toJson($filter, true),
+                'links' => [
+                    'self' => $page->permalink(),
+                    'related' => [
+                        'self' => $apiUrl
+                    ]
+                ]
             ];
         }
 

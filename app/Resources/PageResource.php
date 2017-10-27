@@ -150,10 +150,8 @@ class PageResource
             'type' => 'page',
             'id' => $this->getId(),
             'attributes' => $attributes,
-            'meta' => [
-                'links' => [
-                    'self' => $this->page->permalink()
-                ]
+            'links' => [
+                'self' => $this->page->permalink()
             ]
         ];
     }

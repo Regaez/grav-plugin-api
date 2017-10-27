@@ -9,6 +9,7 @@ class Config {
 
     private static $instance = null;
 
+    private $api;
     private $page;
     private $pages;
     private $user;

@@ -53,15 +53,20 @@ class ApiPlugin extends Plugin
         $paths = $this->grav['uri']->paths();
 
         // Check if the requested page is an intended API call, return if not
-        if ( !$paths || $paths[0] !== $this->getBaseRoute()) {
+        $apiRoute = $this->getBaseRoute();
+        if ( !$paths || $paths[0] !== $apiRoute['route']) {
             return;
         }
 
         require_once __DIR__ . '/app/Api.php';
 
         $api = new \GravApi\Api(
-            $this->getBaseRoute(),
-            $this->config->get('plugins.api.resources')
+            array_merge(
+                array(
+                    'api' => $this->getBaseRoute()
+                ),
+                $this->config->get('plugins.api.resources')
+            )
         );
         $api->run();
 
@@ -79,9 +84,12 @@ class ApiPlugin extends Plugin
 
         // Return default route if config not set
         if (!$baseRoute) {
-            return $this->defaultBaseRoute;
+            $baseRoute = $this->defaultBaseRoute;
         }
 
-        return trim($baseRoute, '/');
+        return [
+            'route' => trim($baseRoute, '/'),
+            'permalink' => $this->grav['uri']->rootUrl(true).'/'.trim($baseRoute, '/')
+        ];
     }
 }

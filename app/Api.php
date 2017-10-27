@@ -4,6 +4,7 @@ namespace GravApi;
 use Monolog\Logger;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
+use Grav\Common\Grav;
 use GravApi\Config\Config;
 use GravApi\Middlewares\AuthMiddleWare;
 use GravApi\Handlers\ConfigHandler;
@@ -22,18 +23,14 @@ class Api
     // Our Slim app instance
     protected $app;
 
-    // Our base API route
-    protected $baseRoute;
-
     // Our Grav plugin endpoint settings
     protected $settings;
 
     /**
      * @param $config
      */
-    public function __construct($baseRoute, $settings)
+    public function __construct($settings)
     {
-        $this->baseRoute = trim($baseRoute, '/');
         $this->settings = Config::instance($settings);
 
         // Initialise Slim
@@ -55,7 +52,21 @@ class Api
     protected function attachHandlers() {
 
         // We must serve from the base route
-        $this->app->group("/{$this->baseRoute}", function() {
+        $this->app->group("/{$this->settings->api->route}", function() {
+
+            $this->get('', function($request, $response, $args) {
+                $settings = Config::instance();
+                $url = $settings->api->permalink;
+
+                $urls = [
+                    'pages' => "{$url}/pages",
+                    'users' => "{$url}/users",
+                    'config' => "{$url}/config",
+                    'plugins' => "{$url}/plugins",
+                ];
+
+                return $response->withJson($urls);
+            });
 
             $settings = Config::instance();
 
