@@ -41,7 +41,7 @@ class PageResource
             // 'blueprintName' => $this->page->blueprintName(),
             // 'blueprints' => $this->page->blueprints(),
 
-            'children' => $this->page->children()->toArray(),
+            'children' => $this->processChildren(),
             'childType' => $this->page->childType(),
             'content' => $this->page->content(),
             'date' => $this->page->date(),
@@ -87,7 +87,10 @@ class PageResource
             'orderBy' => $this->page->orderBy(),
             'orderManual' => $this->page->orderManual(),
             'parent' => $this->page->parent()->route(),
-            'path' => $this->page->path(),
+
+            // this would expose server directory structure, so shouldn't be returned
+            // 'path' => $this->page->path(),
+
             'permalink' => $this->page->permalink(),
 
             // TODO: how to use this? always seems empty.
@@ -120,7 +123,11 @@ class PageResource
 
             foreach ($fields as $field) {
                 if ( method_exists($this->page, $field) ) {
-                    $attributes[$field] = $this->page->{$field}();
+                    if ($field === 'children') {
+                        $attributes[$field] = $this->processChildren();
+                    } else {
+                        $attributes[$field] = $this->page->{$field}();
+                    }
                 }
             }
         }
@@ -140,5 +147,19 @@ class PageResource
                 ]
             ]
         ];
+    }
+
+    /**
+     * We have to process children because the collection's
+     * toArray method will expose our server directory structure
+     * @return [array]
+     */
+    protected function processChildren() {
+        $children = [];
+        foreach ($this->page->children()->toArray() as $child) {
+            // we generate the routes for each child
+            $children[] = $this->page->route().'/'.$child['slug'];
+        }
+        return $children;
     }
 }
