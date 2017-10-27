@@ -46,7 +46,7 @@ class PageResource
             // TODO: Are blueprints really necessary output???
             // 'blueprintName' => $this->page->blueprintName(),
             // 'blueprints' => $this->page->blueprints(),
-            'children' => $this->page->children(),
+            'children' => $this->page->children()->toArray(),
             'childType' => $this->page->childType(),
             'content' => $this->page->content(),
             'date' => $this->page->date(),
@@ -83,7 +83,7 @@ class PageResource
             'orderDir' => $this->page->orderDir(),
             'orderBy' => $this->page->orderBy(),
             'orderManual' => $this->page->orderManual(),
-            'parent' => $this->page->parent(),
+            'parent' => $this->page->parent()->route(),
             'path' => $this->page->path(),
             'permalink' => $this->page->permalink(),
             'prevSibling' => $this->page->prevSibling(),
