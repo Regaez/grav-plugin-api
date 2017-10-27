@@ -111,4 +111,50 @@ class PagesHandler extends BaseHandler
 
         return $response->withJson($data);
     }
+
+    public function deletePage($request, $response, $args)
+    {
+        $route = "/{$request->getAttribute('page')}";
+        $page = $this->grav['pages']->find($route);
+
+        if (!$page || !$page->exists()) {
+            return $response->withJson(Response::NotFound(), 404);
+        }
+
+        // if the requested route has non-modular children, we just delete the route's markdown file, keeping the directory
+        if ( 0 < count($page->children()->nonModular()) ) {
+            $page->file()->delete();
+        } else {
+            Folder::delete($page->path());
+        }
+
+        $child = $page;
+        $parentRoute = dirname($page->route());
+        // recursively check parent directories for files, and delete them if empty
+        while($parentRoute !== '') {
+            $parent = $this->grav['pages']->find($parentRoute);
+
+            // if we hit the root, stop
+            if ($parent === null) {
+                break;
+            }
+
+            // Get the parents children, minus the child we just deleted
+            $filteredChildren = $parent->children()->remove($child);
+
+            // if the parent directory exists, or has children, we should stop
+            if( $parent->isPage() || 0 < count($filteredChildren->toArray()) )
+            {
+                break;
+            }
+
+            // set this parent as the next child to delete
+            $child = $parent;
+            // delete the folder
+            Folder::delete($parent->path());
+            $parentRoute = dirname($parentRoute);
+        }
+
+        return $response->withStatus(204);
+    }
 }

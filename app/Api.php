@@ -72,6 +72,9 @@ class Api
                 if ( !empty($settings->page->enabled) ) {
                     $this->get('/{page:.*}', PagesHandler::class . ':getPage')
                          ->add(new AuthMiddleWare($settings->page));
+
+                    $this->delete('/{page:.*}', PagesHandler::class . ':deletePage')
+                         ->add(new AuthMiddleWare($settings->page));
                 }
             });
 
