@@ -60,8 +60,8 @@ class PageHelper
             $this->grav['pages']->addPage($page, $this->route);
 
             // Set if Modular
-            if ($this->template) {
-                $page->modularTwig($this->template[0] == '_');
+            if ($this->slug) {
+                $page->modularTwig($this->slug[0] == '_');
             }
 
             // Set to non-routable if not final destination
