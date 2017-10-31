@@ -78,6 +78,7 @@ class PageResource
             // 'link' => $this->page->link(),
 
             'maxCount' => $this->page->maxCount(),
+            'media' => $this->processMedia(),
             'menu' => $this->page->menu(),
             'metadata' => $this->page->metadata(),
             'modified' => $this->page->modified(),
@@ -168,6 +169,19 @@ class PageResource
             $children[] = $this->page->route().'/'.$child['slug'];
         }
         return $children;
+    }
+
+    protected function processMedia() {
+        $medium = [];
+
+        foreach ($this->page->media()->all() as $name => $media) {
+            $medium[] = [
+                'name' => $name,
+                'url' => $media->url(),
+            ];
+        }
+
+        return $medium;
     }
 
     public function getId() {
