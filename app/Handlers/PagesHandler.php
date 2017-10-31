@@ -178,17 +178,22 @@ class PagesHandler extends BaseHandler
         }
 
         $parsedBody = $request->getParsedBody();
+        $template = $parsedBody['template'] ?: '';
 
         if ( empty($parsedBody['route']) ) {
             return $response->withJson(Response::BadRequest('You must provide a `route` field!'), 400);
         }
 
+        // update the page content
         if ( !empty($parsedBody['content']) ) {
             $page->content($parsedBody['content']);
         }
 
+        // create new helper for updating header and template
+        $helper = new PageHelper($route, $template);
+
+        // update the page header
         if ( !empty($parsedBody['header']) ) {
-            $helper = new PageHelper($route);
 
             $updatedHeader = $helper->updateHeader(
                 $page->header(),
@@ -198,9 +203,24 @@ class PagesHandler extends BaseHandler
             $page->header($updatedHeader);
         }
 
+        // update the page template
+        if ( !empty($parsedBody['template']) ) {
+
+            // we need to trigger a fake 'move'
+            // (i.e. to the same parent)
+            // otherwise a new file will be made
+            // instead of renaming the existing one
+            $page->move($page->parent());
+
+            // sets the file to use our new template
+            $page->name($helper->getFilename());
+        }
+
+        // save the changes to the file
+        // (this is when the 'move' would actually happen)
         $page->save();
 
-        // Use our resource to return the filtered page
+        // Use our resource to return the updated page
         $resource = new PageResource($page);
 
         $filter = null;
