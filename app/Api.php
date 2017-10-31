@@ -86,6 +86,9 @@ class Api
 
                     $this->delete('/{page:.*}', PagesHandler::class . ':deletePage')
                          ->add(new AuthMiddleWare($settings->page));
+
+                    $this->patch('/{page:.*}', PagesHandler::class . ':updatePage')
+                         ->add(new AuthMiddleWare($settings->page));
                 }
             });
 

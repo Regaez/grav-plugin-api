@@ -167,4 +167,50 @@ class PagesHandler extends BaseHandler
 
         return $response->withStatus(204);
     }
+
+    public function updatePage($request, $response, $args)
+    {
+        $route = "/{$request->getAttribute('page')}";
+        $page = $this->grav['pages']->find($route);
+
+        if (!$page || !$page->exists()) {
+            return $response->withJson(Response::NotFound(), 404);
+        }
+
+        $parsedBody = $request->getParsedBody();
+
+        if ( empty($parsedBody['route']) ) {
+            return $response->withJson(Response::BadRequest('You must provide a `route` field!'), 400);
+        }
+
+        if ( !empty($parsedBody['content']) ) {
+            $page->content($parsedBody['content']);
+        }
+
+        if ( !empty($parsedBody['header']) ) {
+            $helper = new PageHelper($route);
+
+            $updatedHeader = $helper->updateHeader(
+                $page->header(),
+                $parsedBody['header']
+            );
+
+            $page->header($updatedHeader);
+        }
+
+        $page->save();
+
+        // Use our resource to return the filtered page
+        $resource = new PageResource($page);
+
+        $filter = null;
+
+        if ( !empty($this->config->page->fields) ) {
+            $filter = $this->config->page->fields;
+        }
+
+        $data = $resource->toJson($filter);
+
+        return $response->withJson($data);
+    }
 }
