@@ -91,6 +91,7 @@ class UsersHandler extends BaseHandler
         }
 
         $inflector = new Inflector();
+        // formats username to be all lowercase, with underscores instead of spaces
         $username = $inflector->underscorize($parsedBody['username']);
 
         $user = User::load($username);
@@ -100,32 +101,36 @@ class UsersHandler extends BaseHandler
         }
 
         $data = [];
+
+        // password should always exist
         $data['password'] = $parsedBody['password'];
-        $data['email'] = isset($parsedBody['email']);
-        $data['fullname'] = isset($parsedBody['fullname']) ? $parsedBody['fullname'] : $inflector->titleize($username);
-        $data['title'] = isset($parsedBody['title']) ? $parsedBody['title'] : 'User';
-        $data['state'] = 'enabled';
-        $data['access'] = !empty($parsedBody['access']) ? $parsedBody['access'] : ['site' => ['login' => true]];
 
-        // Create user object and save it
-        $user = new User($data);
-        $file = CompiledYamlFile::instance($this->grav['locator']->findResource('user://accounts/' . $username . YAML_EXT,
-            true, true));
-        $user->file($file);
-        $user->save();
+        $data['email'] = isset($parsedBody['email'])
+            ? $parsedBody['email']
+            : '';
 
-        $resource = new UserResource(array_merge(
-            array('username' => $username),
-            $user->toArray()
-        ));
+        // if no fullname is set, fall back to username
+        $data['fullname'] = isset($parsedBody['fullname'])
+            ? $parsedBody['fullname']
+            : $inflector->titleize($username);
 
-        $filter = null;
+        $data['title'] = isset($parsedBody['title'])
+            ? $parsedBody['title']
+            : 'User';
 
-        if ( !empty($this->config->user->fields) ) {
-            $filter = $this->config->user->fields;
-        }
+        // by default, we want to enable new users
+        $data['state'] = isset($parsedBody['state'])
+            ? $parsedBody['state']
+            : 'enabled';
 
-        $data = $resource->toJson($filter);
+        // by default, the user should at least be able to log in to the site
+        $data['access'] = !empty($parsedBody['access'])
+            ? $parsedBody['access']
+            : ['site' => ['login' => true]];
+
+        $user = $this->createUser($username, $data);
+
+        $data = $this->getFilteredResource($username, $user);
 
         return $response->withJson($data);
     }
@@ -144,25 +149,9 @@ class UsersHandler extends BaseHandler
         // merge the existing user with the new settings
         $updatedUser = ArrayHelper::merge($user->toArray(), $parsedBody);
 
-        // Create user object and save it
-        $user = new User($updatedUser);
-        $file = CompiledYamlFile::instance($this->grav['locator']->findResource('user://accounts/' . $username . YAML_EXT,
-            true, true));
-        $user->file($file);
-        $user->save();
+        $user = $this->createUser($username, $updatedUser);
 
-        $resource = new UserResource(array_merge(
-            array('username' => $username),
-            $user->toArray()
-        ));
-
-        $filter = null;
-
-        if ( !empty($this->config->user->fields) ) {
-            $filter = $this->config->user->fields;
-        }
-
-        $data = $resource->toJson($filter);
+        $data = $this->getFilteredResource($username, $user);
 
         return $response->withJson($data);
     }
@@ -180,5 +169,34 @@ class UsersHandler extends BaseHandler
         $user->file()->delete();
 
         return $response->withStatus(204);
+    }
+
+    // Create user object and save it
+    protected function createUser($username, $data)
+    {
+        $user = new User($data);
+        $file = CompiledYamlFile::instance($this->grav['locator']->findResource('user://accounts/' . $username . YAML_EXT,
+            true, true));
+        $user->file($file);
+        $user->save();
+
+        return $user;
+    }
+
+    // Create a new User resource and return filtered data
+    protected function getFilteredResource($username, $user)
+    {
+        $resource = new UserResource(array_merge(
+            $user->toArray(),
+            array('username' => $username)
+        ));
+
+        $filter = null;
+
+        if ( !empty($this->config->user->fields) ) {
+            $filter = $this->config->user->fields;
+        }
+
+        return $resource->toJson($filter);
     }
 }
