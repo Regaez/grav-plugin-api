@@ -97,6 +97,9 @@ class Api
                 if ( !empty($settings->users->enabled) ) {
                     $this->get('', UsersHandler::class . ':getUsers')
                          ->add(new AuthMiddleWare($settings->users));
+
+                    $this->post('', UsersHandler::class . ':newUser')
+                         ->add(new AuthMiddleWare($settings->users));
                 }
 
                 if ( !empty($settings->user->enabled) ) {
