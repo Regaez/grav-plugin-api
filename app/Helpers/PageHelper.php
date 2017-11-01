@@ -79,7 +79,7 @@ class PageHelper
         $this->page = $page;
 
         return $page;
-     }
+    }
 
     public function getFilename()
     {
@@ -88,33 +88,5 @@ class PageHelper
         }
 
         return $this->template . CONTENT_EXT;
-    }
-
-    public function updateHeader($header, $new)
-    {
-        $header = (array) $header;
-
-        foreach ($new as $key => $value) {
-
-            // if a value is null, we remove it from the header
-            if ($value === null) {
-                unset($header[$key]);
-                continue;
-            }
-
-            // handle associative array header info:
-            // recursively iterate through child arrays,
-            // and update nested properties
-            if (array_key_exists($key, $header) && is_array($value)) {
-                $header[$key] = $this->updateHeader($header[$key], $value);
-                continue;
-            }
-
-            // create new entry, as key doesn't exist
-            // or value is a single field
-            $header[$key] = $value;
-        }
-
-        return $header;
     }
 }

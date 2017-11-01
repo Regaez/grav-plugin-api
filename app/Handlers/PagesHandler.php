@@ -6,6 +6,7 @@ use GravApi\Responses\Response;
 use GravApi\Resources\PageResource;
 use GravApi\Resources\PageCollectionResource;
 use GravApi\Helpers\PageHelper;
+use GravApi\Helpers\ArrayHelper;
 
 /**
  * Class PagesHandler
@@ -195,7 +196,7 @@ class PagesHandler extends BaseHandler
         // update the page header
         if ( !empty($parsedBody['header']) ) {
 
-            $updatedHeader = $helper->updateHeader(
+            $updatedHeader = ArrayHelper::merge(
                 $page->header(),
                 $parsedBody['header']
             );
