@@ -105,6 +105,9 @@ class Api
                 if ( !empty($settings->user->enabled) ) {
                     $this->get('/{user}', UsersHandler::class . ':getUser')
                          ->add(new AuthMiddleWare($settings->user));
+
+                    $this->patch('/{user}', UsersHandler::class . ':updateUser')
+                         ->add(new AuthMiddleWare($settings->user));
                 }
             });
 

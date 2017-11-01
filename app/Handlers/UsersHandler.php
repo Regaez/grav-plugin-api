@@ -3,6 +3,7 @@ namespace GravApi\Handlers;
 
 use GravApi\Resources\UserResource;
 use GravApi\Responses\Response;
+use GravApi\Helpers\ArrayHelper;
 use Grav\Common\User\User;
 use Grav\Common\Inflector;
 use Grav\Common\File\CompiledYamlFile;
@@ -85,17 +86,22 @@ class UsersHandler extends BaseHandler
             return $response->withJson(Response::BadRequest('You must provide a `password` field!'), 400);
         }
 
+        if ( empty($parsedBody['email']) ) {
+            return $response->withJson(Response::BadRequest('You must provide a `email` field!'), 400);
+        }
+
         $inflector = new Inflector();
         $username = $inflector->underscorize($parsedBody['username']);
 
-        $file = $this->grav['locator']->findResource("account://") . "/{$username}.yaml";
+        $user = User::load($username);
 
-        if (file_exists($file)) {
+        if ( $user->exists() ) {
             return $response->withJson(Response::ResourceExists(), 403);
         }
 
         $data = [];
         $data['password'] = $parsedBody['password'];
+        $data['email'] = isset($parsedBody['email']);
         $data['fullname'] = isset($parsedBody['fullname']) ? $parsedBody['fullname'] : $inflector->titleize($username);
         $data['title'] = isset($parsedBody['title']) ? $parsedBody['title'] : 'User';
         $data['state'] = 'enabled';
@@ -107,11 +113,10 @@ class UsersHandler extends BaseHandler
             true, true));
         $user->file($file);
         $user->save();
-        $user = User::load($username);
 
         $resource = new UserResource(array_merge(
             array('username' => $username),
-            $user
+            $user->toArray()
         ));
 
         $filter = null;
@@ -125,36 +130,40 @@ class UsersHandler extends BaseHandler
         return $response->withJson($data);
     }
 
-    public function updateUser($user, $new)
+    public function updateUser($request, $response, $args)
     {
-        $user = (array) $user;
+        $parsedBody = $request->getParsedBody();
+        $username = $args['user'];
 
-        foreach ($new as $key => $value) {
+        $user = User::load($username);
 
-            // if a value is null, we remove it from the user
-            if ($value === null) {
-                unset($user[$key]);
-                continue;
-            }
-
-            // ignore any hashed password changes
-            if ($key === 'hashed_password') {
-                continue;
-            }
-
-            // handle associative array user info:
-            // recursively iterate through child arrays,
-            // and update nested properties
-            if (array_key_exists($key, $user) && is_array($value)) {
-                $user[$key] = $this->updateUser($user[$key], $value);
-                continue;
-            }
-
-            // create new entry, as key doesn't exist
-            // or value is a single field
-            $user[$key] = $value;
+        if ( !$user->exists() ) {
+            return $response->withJson(Response::NotFound(), 404);
         }
 
-        return $user;
+        // merge the existing user with the new settings
+        $updatedUser = ArrayHelper::merge($user->toArray(), $parsedBody);
+
+        // Create user object and save it
+        $user = new User($updatedUser);
+        $file = CompiledYamlFile::instance($this->grav['locator']->findResource('user://accounts/' . $username . YAML_EXT,
+            true, true));
+        $user->file($file);
+        $user->save();
+
+        $resource = new UserResource(array_merge(
+            array('username' => $username),
+            $user->toArray()
+        ));
+
+        $filter = null;
+
+        if ( !empty($this->config->user->fields) ) {
+            $filter = $this->config->user->fields;
+        }
+
+        $data = $resource->toJson($filter);
+
+        return $response->withJson($data);
     }
 }
