@@ -166,4 +166,19 @@ class UsersHandler extends BaseHandler
 
         return $response->withJson($data);
     }
+
+    public function deleteUser($request, $response, $args)
+    {
+        $username = $args['user'];
+
+        $user = User::load($username);
+
+        if ( !$user->exists() ) {
+            return $response->withJson(Response::NotFound(), 404);
+        }
+
+        $user->file()->delete();
+
+        return $response->withStatus(204);
+    }
 }
