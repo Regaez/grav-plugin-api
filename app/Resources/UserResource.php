@@ -1,6 +1,8 @@
 <?php
 namespace GravApi\Resources;
 
+use GravApi\Config\Config;
+
 /**
  * Class UserResource
  * @package GravApi\UserResource
@@ -50,11 +52,19 @@ class UserResource
             return $attributes;
         }
 
+        $settings = Config::instance();
+        $apiUrl = $settings->api->permalink.'/users/'.$this->username;
+
         // Return Resource object
         return [
             'type' => 'user',
             'id' => $this->username,
-            'attributes' => $attributes
+            'attributes' => $attributes,
+            'links' => [
+                'related' => [
+                    'self' => $apiUrl
+                ]
+            ]
         ];
     }
 }

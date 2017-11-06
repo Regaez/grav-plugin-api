@@ -28,8 +28,8 @@ class UsersHandler extends BaseHandler
 
         $filter = null;
 
-        if ( !empty($this->config->users->fields) ) {
-            $filter = $this->config->users->fields;
+        if ( !empty($this->config->users->get['fields']) ) {
+            $filter = $this->config->users->get['fields'];
         }
 
         foreach ($files as $file) {
@@ -39,7 +39,7 @@ class UsersHandler extends BaseHandler
                 Yaml::parse($file)
             );
             $resource = new UserResource($details);
-            $users[] = $resource->toJson($filter, true);
+            $users[] = $resource->toJson($filter);
         }
 
         $data = [
@@ -67,8 +67,8 @@ class UsersHandler extends BaseHandler
 
         $filter = null;
 
-        if ( !empty($this->config->user->fields) ) {
-            $filter = $this->config->user->fields;
+        if ( !empty($this->config->users->get['fields']) ) {
+            $filter = $this->config->users->get['fields'];
         }
 
         $data = $resource->toJson($filter);
@@ -220,8 +220,8 @@ class UsersHandler extends BaseHandler
 
         $filter = null;
 
-        if ( !empty($this->config->user->fields) ) {
-            $filter = $this->config->user->fields;
+        if ( !empty($this->config->users->get['fields']) ) {
+            $filter = $this->config->users->get['fields'];
         }
 
         return $resource->toJson($filter);
