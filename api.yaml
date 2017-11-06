@@ -1,19 +1,19 @@
 enabled: true
 route: /api
-resources:
+endpoints:
     pages:
         get:
             enabled: true
             auth: false
             # Only return these fields for each page
             fields: ['title', 'frontmatter', 'header', 'rawMarkdown', 'content', 'children', 'route', 'slug', 'permalink', 'template', 'published', 'date', 'modified']
+        post:
+            enabled: true
+            auth: true
         patch:
             enabled: true
             auth: true
         delete:
-            enabled: true
-            auth: true
-        post:
             enabled: true
             auth: true
     users:
@@ -22,13 +22,13 @@ resources:
             auth: true
             # Only return these fields for each user
             fields: ['username', 'email', 'fullname', 'title', 'status', 'access']
+        post:
+            enabled: true
+            auth: true
         patch:
             enabled: true
             auth: true
         delete:
-            enabled: true
-            auth: true
-        post:
             enabled: true
             auth: true
     plugin:

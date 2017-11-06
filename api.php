@@ -65,7 +65,7 @@ class ApiPlugin extends Plugin
                 array(
                     'api' => $this->getBaseRoute()
                 ),
-                $this->config->get('plugins.api.resources')
+                $this->config->get('plugins.api.endpoints')
             )
         );
         $api->run();
