@@ -32,7 +32,7 @@ class AuthMiddleware
      */
     public function __invoke($request, $response, $next)
     {
-        if ( !empty($this->config->auth) ) {
+        if ( !empty($this->config['auth']) ) {
 
             $authUser = implode(' ', $request->getHeader('PHP_AUTH_USER')) ?: '';
             $authPass = implode(' ', $request->getHeader('PHP_AUTH_PW')) ?: '';

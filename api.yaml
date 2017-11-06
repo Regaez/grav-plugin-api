@@ -1,23 +1,36 @@
 enabled: true
 route: /api
 resources:
-    page:
-        enabled: true
-        auth: false
-        fields: []
     pages:
-        enabled: true
-        auth: false
-        # Only return these fields for each page
-        fields: ['title', 'frontmatter', 'header', 'rawMarkdown', 'content', 'route', 'slug', 'permalink', 'template', 'published', 'date', 'modified']
-    user:
-        enabled: true
-        auth: true
-        fields: []
+        get:
+            enabled: true
+            auth: false
+            # Only return these fields for each page
+            fields: ['title', 'frontmatter', 'header', 'rawMarkdown', 'content', 'children', 'route', 'slug', 'permalink', 'template', 'published', 'date', 'modified']
+        patch:
+            enabled: true
+            auth: true
+        delete:
+            enabled: true
+            auth: true
+        post:
+            enabled: true
+            auth: true
     users:
-        enabled: true
-        auth: true
-        fields: ['username', 'email', 'fullname', 'title', 'status', 'access']
+        get:
+            enabled: true
+            auth: true
+            # Only return these fields for each user
+            fields: ['username', 'email', 'fullname', 'title', 'status', 'access']
+        patch:
+            enabled: true
+            auth: true
+        delete:
+            enabled: true
+            auth: true
+        post:
+            enabled: true
+            auth: true
     plugin:
         enabled: true
         auth: true

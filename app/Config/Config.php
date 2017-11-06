@@ -10,9 +10,7 @@ class Config {
     private static $instance = null;
 
     private $api;
-    private $page;
     private $pages;
-    private $user;
     private $users;
     private $plugin;
     private $plugins;
@@ -48,5 +46,4 @@ class Config {
     {
         return $this->{$name};
     }
-
 }

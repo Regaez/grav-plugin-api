@@ -22,8 +22,8 @@ class PagesHandler extends BaseHandler
 
         $filter = null;
 
-        if ( !empty($this->config->pages->fields) ) {
-            $filter = $this->config->pages->fields;
+        if ( !empty($this->config->pages->get['fields']) ) {
+            $filter = $this->config->pages->get['fields'];
         }
 
         $data = $resource->toJson($filter);
@@ -44,8 +44,8 @@ class PagesHandler extends BaseHandler
 
         $filter = null;
 
-        if ( !empty($this->config->page->fields) ) {
-            $filter = $this->config->page->fields;
+        if ( !empty($this->config->pages->get['fields']) ) {
+            $filter = $this->config->pages->get['fields'];
         }
 
         $data = $resource->toJson($filter);
@@ -112,8 +112,8 @@ class PagesHandler extends BaseHandler
 
         $filter = null;
 
-        if ( !empty($this->config->page->fields) ) {
-            $filter = $this->config->page->fields;
+        if ( !empty($this->config->pages->get['fields']) ) {
+            $filter = $this->config->pages->get['fields'];
         }
 
         $data = $resource->toJson($filter);
@@ -226,8 +226,8 @@ class PagesHandler extends BaseHandler
 
         $filter = null;
 
-        if ( !empty($this->config->page->fields) ) {
-            $filter = $this->config->page->fields;
+        if ( !empty($this->config->pages->get['fields']) ) {
+            $filter = $this->config->pages->get['fields'];
         }
 
         $data = $resource->toJson($filter);

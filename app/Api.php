@@ -72,45 +72,53 @@ class Api
 
             $this->group('/pages', function() use ($settings) {
 
-                if ( !empty($settings->pages->enabled) ) {
+                if ( !empty($settings->pages->get['enabled']) ) {
                     $this->get('', PagesHandler::class . ':getPages')
                          ->add(new AuthMiddleWare($settings->pages));
 
-                    $this->post('', PagesHandler::class . ':newPage')
-                         ->add(new AuthMiddleWare($settings->pages));
+                    $this->get('/{page:.*}', PagesHandler::class . ':getPage')
+                         ->add(new AuthMiddleWare($settings->pages->get));
                 }
 
-                if ( !empty($settings->page->enabled) ) {
-                    $this->get('/{page:.*}', PagesHandler::class . ':getPage')
-                         ->add(new AuthMiddleWare($settings->page));
+                if ( !empty($settings->pages->post['enabled']) ) {
+                    $this->post('', PagesHandler::class . ':newPage')
+                         ->add(new AuthMiddleWare($settings->pages->post));
+                }
 
+                if ( !empty($settings->pages->delete['enabled']) ) {
                     $this->delete('/{page:.*}', PagesHandler::class . ':deletePage')
-                         ->add(new AuthMiddleWare($settings->page));
+                         ->add(new AuthMiddleWare($settings->pages->delete));
+                }
 
+                if ( !empty($settings->pages->patch['enabled']) ) {
                     $this->patch('/{page:.*}', PagesHandler::class . ':updatePage')
-                         ->add(new AuthMiddleWare($settings->page));
+                         ->add(new AuthMiddleWare($settings->pages->patch));
                 }
             });
 
             $this->group('/users', function() use ($settings) {
 
-                if ( !empty($settings->users->enabled) ) {
+                if ( !empty($settings->users->get['enabled']) ) {
                     $this->get('', UsersHandler::class . ':getUsers')
-                         ->add(new AuthMiddleWare($settings->users));
+                         ->add(new AuthMiddleWare($settings->users->get));
 
-                    $this->post('', UsersHandler::class . ':newUser')
-                         ->add(new AuthMiddleWare($settings->users));
+                    $this->get('/{user}', UsersHandler::class . ':getUser')
+                         ->add(new AuthMiddleWare($settings->users->get));
                 }
 
-                if ( !empty($settings->user->enabled) ) {
-                    $this->get('/{user}', UsersHandler::class . ':getUser')
-                         ->add(new AuthMiddleWare($settings->user));
+                if ( !empty($settings->users->post['enabled']) ) {
+                    $this->post('', UsersHandler::class . ':newUser')
+                         ->add(new AuthMiddleWare($settings->users->post));
+                }
 
+                if ( !empty($settings->users->delete['enabled']) ) {
                     $this->delete('/{user}', UsersHandler::class . ':deleteUser')
-                         ->add(new AuthMiddleWare($settings->user));
+                         ->add(new AuthMiddleWare($settings->users->delete));
+                }
 
+                if ( !empty($settings->users->patch['enabled']) ) {
                     $this->patch('/{user}', UsersHandler::class . ':updateUser')
-                         ->add(new AuthMiddleWare($settings->user));
+                         ->add(new AuthMiddleWare($settings->users->patch));
                 }
             });
 
