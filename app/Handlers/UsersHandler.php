@@ -5,6 +5,7 @@ use GravApi\Resources\UserResource;
 use GravApi\Responses\Response;
 use GravApi\Helpers\ArrayHelper;
 use Grav\Common\User\User;
+use Grav\Common\User\Authentication;
 use Grav\Common\Inflector;
 use Grav\Common\File\CompiledYamlFile;
 use Symfony\Component\Yaml\Yaml;
@@ -144,6 +145,32 @@ class UsersHandler extends BaseHandler
 
         if ( !$user->exists() ) {
             return $response->withJson(Response::NotFound(), 404);
+        }
+
+        // handle updating a user password
+        if (isset($parsedBody['new_password'])) {
+
+            if (!isset($parsedBody['password']) ) {
+                return $response->withJson(Response::BadRequest('You must provide the existing `password` in order to set a new one!'), 400);
+            }
+
+            // check existing credentials are valid
+            if ($user->authenticate($parsedBody['password'])) {
+                // creates a hashed version of the password
+                $parsedBody['hashed_password'] = Authentication::create($parsedBody['new_password']);
+            } else {
+                return $response->withJson(Response::BadRequest('The existing `password` was invalid! Unable to set a new password.'), 400);
+            }
+
+            // we unset this in favour of the hashed one
+            // and always unset so a plain password isn't stored
+            unset($parsedBody['new_password']);
+        }
+
+        // we never want to store a plain `password` in the user,
+        // so we always unset it
+        if (isset($parsedBody['password'])) {
+            unset($parsedBody['password']);
         }
 
         // merge the existing user with the new settings
