@@ -74,7 +74,7 @@ class Api
 
                 if ( !empty($settings->pages->get['enabled']) ) {
                     $this->get('', PagesHandler::class . ':getPages')
-                         ->add(new AuthMiddleWare($settings->pages));
+                         ->add(new AuthMiddleWare($settings->pages->get));
 
                     $this->get('/{page:.*}', PagesHandler::class . ':getPage')
                          ->add(new AuthMiddleWare($settings->pages->get));
