@@ -20,15 +20,9 @@ class PagesHandler extends BaseHandler
 
         $resource = new PageCollectionResource($collection);
 
-        $filter = null;
-
-        if ( !empty($this->config->pages->get['fields']) ) {
-            $filter = $this->config->pages->get['fields'];
-        }
-
-        $data = $resource->toJson($filter);
-
-        return $response->withJson($data);
+        return $response->withJson(
+            $this->getFilteredResource($resource)
+        );
     }
 
     public function getPage($request, $response, $args)
@@ -42,15 +36,9 @@ class PagesHandler extends BaseHandler
 
         $resource = new PageResource($page);
 
-        $filter = null;
-
-        if ( !empty($this->config->pages->get['fields']) ) {
-            $filter = $this->config->pages->get['fields'];
-        }
-
-        $data = $resource->toJson($filter);
-
-        return $response->withJson($data);
+        return $response->withJson(
+            $this->getFilteredResource($resource)
+        );
     }
 
     public function newPage($request, $response, $args)
@@ -110,15 +98,9 @@ class PagesHandler extends BaseHandler
         // Use our resource to return the filtered page
         $resource = new PageResource($page);
 
-        $filter = null;
-
-        if ( !empty($this->config->pages->get['fields']) ) {
-            $filter = $this->config->pages->get['fields'];
-        }
-
-        $data = $resource->toJson($filter);
-
-        return $response->withJson($data);
+        return $response->withJson(
+            $this->getFilteredResource($resource)
+        );
     }
 
     public function deletePage($request, $response, $args)
@@ -224,14 +206,20 @@ class PagesHandler extends BaseHandler
         // Use our resource to return the updated page
         $resource = new PageResource($page);
 
+        return $response->withJson(
+            $this->getFilteredResource($resource)
+        );
+    }
+
+    // Applies our config field filter to the resource and
+    // returns the remaining data as JSON
+    protected function getFilteredResource($resource) {
         $filter = null;
 
         if ( !empty($this->config->pages->get['fields']) ) {
             $filter = $this->config->pages->get['fields'];
         }
 
-        $data = $resource->toJson($filter);
-
-        return $response->withJson($data);
+        return $resource->toJson($filter);
     }
 }
