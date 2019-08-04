@@ -54,11 +54,13 @@ class ApiPlugin extends Plugin
 
         // Check if the requested page is an intended API call, return if not
         $apiRoute = $this->getBaseRoute();
-        if ( !$paths || $paths[0] !== $apiRoute['route']) {
+        if (!$paths || $paths[0] !== $apiRoute['route']) {
             return;
         }
 
-        require_once __DIR__ . '/app/Api.php';
+        // Load app dependencies once we know the request is for the API
+        require_once __DIR__.'/vendor/autoload.php';
+        require_once __DIR__.'/src/Api.php';
 
         $api = new \GravApi\Api(
             array_merge(
@@ -78,7 +80,8 @@ class ApiPlugin extends Plugin
      * Gets base API route from config, or falls back to default
      * @return string base API route
      */
-    protected function getBaseRoute() {
+    protected function getBaseRoute()
+    {
 
         $baseRoute = $this->config->get('plugins.api.route');
 

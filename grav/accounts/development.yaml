@@ -1,0 +1,11 @@
+email: dummy@email.com
+fullname: Development
+title: Administrator
+state: enabled
+access:
+  admin:
+    login: true
+    super: true
+  site:
+    login: true
+hashed_password: $2y$10$aIw9wIWgj6bVuOk.sGRgw.TSZFOkIFmteDOLUFNj5Uka4ugxp5cTu

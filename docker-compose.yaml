@@ -1,0 +1,11 @@
+version: '2'
+
+services:
+  grav:
+    image: grav:latest
+    ports:
+      - 8080:80
+    volumes:
+      - ./:/var/www/html/user/plugins/api
+      - ./grav/accounts:/var/www/html/user/accounts
+      - ./grav/pages:/var/www/html/user/pages

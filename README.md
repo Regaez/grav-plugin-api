@@ -1,8 +1,6 @@
 # Api Plugin
 
-**This README.md file should be modified to describe the features, installation, configuration, and general usage of this plugin.**
-
-The **Api** Plugin is for [Grav CMS](http://github.com/getgrav/grav). A Rest API for GravCMS
+The **Api** Plugin is for [Grav CMS](http://github.com/getgrav/grav). It exposes a Rest API on top of your existing site in order to allow you to interact with your site programmatically.
 
 ## Installation
 
@@ -23,7 +21,7 @@ To install this plugin, just download the zip version of this repository and unz
 You should now have all the plugin files under
 
     /your/site/grav/user/plugins/api
-	
+
 > NOTE: This plugin is a modular component for Grav which requires [Grav](http://github.com/getgrav/grav) and the [Error](https://github.com/getgrav/grav-plugin-error) and [Problems](https://github.com/getgrav/grav-plugin-problems) to operate.
 
 ## Configuration
@@ -48,3 +46,6 @@ enabled: true
 
 - [ ] Future plans, if any
 
+## Development
+
+If you want to develop, or contribute to the plugin, please refer to the [Development](https://github.com/Regaez/grav-plugin-api/tree/master/docs/DEVELOPMENT.md) readme in the Docs section.

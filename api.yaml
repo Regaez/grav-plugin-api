@@ -1,50 +1,70 @@
 enabled: true
 route: /api
 endpoints:
-    pages:
-        get:
-            enabled: true
-            auth: false
-            # Only return these fields for each page
-            fields: ['title', 'frontmatter', 'header', 'rawMarkdown', 'content', 'children', 'route', 'slug', 'permalink', 'template', 'published', 'date', 'modified']
-        post:
-            enabled: true
-            auth: true
-        patch:
-            enabled: true
-            auth: true
-        delete:
-            enabled: true
-            auth: true
-    users:
-        get:
-            enabled: true
-            auth: true
-            # Only return these fields for each user
-            fields: ['username', 'email', 'fullname', 'title', 'status', 'access']
-        post:
-            enabled: true
-            auth: true
-        patch:
-            enabled: true
-            auth: true
-        delete:
-            enabled: true
-            auth: true
-    plugin:
-        enabled: true
-        auth: true
-        fields: []
-    plugins:
-        enabled: true
-        auth: true
-        fields: []
-    config:
-        enabled: true
-        auth: true
-        fields: []
-    configs:
-        enabled: true
-        auth: true
-        # Prevents API from accessing these config files
-        ignore_files: ['streams']
+  pages:
+    get:
+      enabled: true
+      auth: false
+      # Only return these fields for each page
+      fields:
+        - title
+        - frontmatter
+        - header
+        - rawMarkdown
+        - content
+        - children
+        - route
+        - slug
+        - permalink
+        - template
+        - published
+        - date
+        - modified
+    post:
+      enabled: true
+      auth: true
+    patch:
+      enabled: true
+      auth: true
+    delete:
+      enabled: true
+      auth: true
+  users:
+    get:
+      enabled: true
+      auth: true
+      # Only return these fields for each user
+      fields:
+        - username
+        - email
+        - fullname
+        - title
+        - status
+        - access
+    post:
+      enabled: true
+      auth: true
+    patch:
+      enabled: true
+      auth: true
+    delete:
+      enabled: true
+      auth: true
+  plugin:
+    enabled: true
+    auth: true
+    fields: []
+  plugins:
+    enabled: true
+    auth: true
+    fields: []
+  config:
+    enabled: true
+    auth: true
+    fields: []
+  configs:
+    enabled: true
+    auth: true
+    # Prevents API from accessing these config files
+    ignore_files:
+      - streams

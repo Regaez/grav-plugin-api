@@ -1,10 +1,37 @@
 {
-    "require": {
-        "slim/slim": "^3.0"
-    },
-    "autoload" : {
-        "psr-4": {
-            "GravApi\\":"app/"
-        }
+  "autoload": {
+    "psr-4": {
+      "GravApi\\": "src/"
     }
+  },
+  "require": {
+    "slim/slim": "^3.12"
+  },
+  "require-dev": {
+    "squizlabs/php_codesniffer": "^3.4",
+    "brainmaestro/composer-git-hooks": "^2.7",
+    "phpunit/phpunit": "^8",
+    "overtrue/phplint": "^1.1"
+  },
+  "scripts": {
+    "lint": [
+      "./vendor/bin/phpcs --colors --standard=PSR2 --encoding=utf-8 ./src api.php",
+      "./vendor/bin/phplint ./src --ansi --configuration=phplint.yaml"
+    ],
+    "lint:fix": "./vendor/bin/phpcbf --colors --standard=PSR2 --encoding=utf-8 --basepath=$(pwd) ./src ./tests api.php",
+    "post-install-cmd": "vendor/bin/cghooks add --ignore-lock",
+    "post-update-cmd": "vendor/bin/cghooks update",
+    "start": "docker-compose -f docker-compose.yaml up -d",
+    "stop": "docker-compose -f docker-compose.yaml down",
+    "test": [
+      "./vendor/bin/phpunit --bootstrap vendor/autoload.php --testdox ./tests"
+    ]
+  },
+  "extra": {
+    "hooks": {
+      "pre-commit": "composer lint",
+      "pre-push": "composer test",
+      "post-merge": "composer install"
+    }
+  }
 }
