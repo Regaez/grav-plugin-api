@@ -2,7 +2,10 @@ version: '2'
 
 services:
   grav:
-    image: grav:latest
+    image: grav-api-dev
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - 8080:80
     volumes:
