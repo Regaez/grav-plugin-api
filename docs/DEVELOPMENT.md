@@ -38,6 +38,7 @@ There are a number of scripts set up to make development easier:
 - `composer lint`: Checks the project source code for PHP style errors.
 - `composer lint:fix`: Attempts to resolve any linting errors if possible.
 - `composer test`: Runs the unit tests.
+- `composer docker:clean`: Deletes the existing docker development environment.
 
 ### Admin Credentials
 
