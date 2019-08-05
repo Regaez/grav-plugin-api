@@ -1,0 +1,391 @@
+openapi: 3.0.2
+info:
+  description: The GravCMS Plugin API exposes a REST API on top of your existing GravCMS site that allows you to manipulate the site's content and configuration programmatically.
+  version: 0.0.1
+  title: GravCMS Plugin API
+  contact:
+    name: Plugin Support
+    url: https://github.com/Regaez/grav-plugin-api/issues
+  license:
+    name: MIT
+    url: https://github.com/Regaez/grav-plugin-api/blob/master/LICENSE
+tags:
+  - name: pages
+  - name: config
+  - name: users
+  - name: plugins
+paths:
+  /pages:
+    get:
+      tags:
+        - pages
+      summary: Get all the pages on the site
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PageResponse'
+                  meta:
+                    $ref: '#/components/schemas/PagesMetadata'
+        401:
+          description: Invalid authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                InvalidAuth:
+                  $ref: '#/components/examples/InvalidAuthResponse'
+    post:
+      tags:
+        - pages
+      summary: Add a new page to the site
+      description: >-
+        In order to create a new page, one must **not** already exist at the specified route.
+
+
+        There are a minimum of two required fields you must provide for the `POST` request to be successful. These are: `route` and `header`. If neither of these are specified, then the page will not be created. Additionally, the `header` field must be **valid JSON**.
+
+
+        There are two further optional fields you may specify: `content` and `template`. If a `template` is not defined, it will fallback to `default`.
+
+        > NOTE: You should **not** include an extension in the template value.
+
+
+        The `content` should be a plain string, formatted using markdown syntax. If no `content` is given, then the page will simply be empty.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PageRequestBody'
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PageResponse'
+        400:
+          description: Bad request. You must provide a `route` and a valid `header` field.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                BadRequest:
+                  $ref: '#/components/examples/BadRequestResponse'
+        401:
+          description: Invalid authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                InvalidAuth:
+                  $ref: '#/components/examples/InvalidAuthResponse'
+        403:
+          description: Forbidden. This page already exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Forbidden:
+                  $ref: '#/components/examples/ForbiddenResponse'
+  /pages/{id}:
+    get:
+      tags:
+        - pages
+      summary: Get a specific page
+      parameters:
+        - name: id
+          in: path
+          description: The id/route of the page to return
+          required: true
+          schema:
+            type: string
+            example: "blog/my-first-post"
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PageResponse'
+        401:
+          description: Invalid authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                InvalidAuth:
+                  $ref: '#/components/examples/InvalidAuthResponse'
+        404:
+          description: Page not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                NotFound:
+                  $ref: '#/components/examples/NotFoundResponse'
+    patch:
+      tags:
+        - pages
+      summary: Update a specific page
+      description: >-
+        When passing new content via a `PATCH` request, the existing page content will be _entirely overridden_.
+
+
+        Existing `header` information will not be changed, unless the corresponding key is explicitly set. In order to remove an existing field, you must set the field's value to null, such as "custom_field" in the example above.
+
+
+        Setting `template` to a new value will rename the file to the newly specified `template`. If undefined, the template will not be changed.
+      parameters:
+        - name: id
+          in: path
+          description: The id/route of the page to update
+          required: true
+          schema:
+            type: string
+            example: "blog/my-first-post"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PageRequestBody'
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PageResponse'
+        400:
+          description: Bad request. You must provide a `route` field.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                BadRequest:
+                  $ref: '#/components/examples/BadRequestResponse'
+        401:
+          description: Invalid authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                InvalidAuth:
+                  $ref: '#/components/examples/InvalidAuthResponse'
+        404:
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                NotFound:
+                  $ref: '#/components/examples/NotFoundResponse'
+    delete:
+      tags:
+        - pages
+      summary: Delete a specific page
+      description: >-
+        If the deletion is successful, the API will respond with a `204` no-content status code.
+
+        > **WARNING:** THIS WILL PERMANENTLY DELETE A PAGE. IT CANNOT BE UNDONE. It is recommended to instead `PATCH` a page and set `"published": false` in the page's `header` if you do not want the page active on your site.
+      parameters:
+        - name: id
+          in: path
+          description: The id/route of the page to delete
+          required: true
+          schema:
+            type: string
+            example: "blog/my-first-post"
+      responses:
+        204:
+          description: Successful operation
+        401:
+          description: Invalid authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                InvalidAuth:
+                  $ref: '#/components/examples/InvalidAuthResponse'
+        404:
+          description: Page not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                NotFound:
+                  $ref: '#/components/examples/NotFoundResponse'
+components:
+  schemas:
+    PageResponse:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The resource type
+          example: "page"
+        id:
+          type: string
+          description: The ID of the page (this is the page's route)
+          example: "blog/my-first-post"
+        attributes:
+          $ref: '#/components/schemas/PageResource'
+        links:
+          $ref: '#/components/schemas/PageHypermedia'
+    PageResource:
+      type: object
+      properties:
+        title:
+          type: string
+          description: The page's title
+          example: "My first post"
+        frontmatter:
+          type: string
+          description: The page's frontmatter, formatted as yaml
+          example: "title: My first post\ncustom_field: You can add custom frontmatter fields, too!"
+        header:
+          type: object
+          description: An object representation of the frontmatter
+          example:
+            title: My first post
+            custom_field: You can add custom frontmatter fields, too!
+        rawMarkdown:
+          type: string
+          description: The page content, formatted as raw markdown text
+          example: "# My first post\n\nThis is some **markdown**."
+        content:
+          type: string
+          description: The page content, formatted as HTML markup
+          example: "<h1>My first post</h1><p>This is some <strong>markdown</strong>.</p>"
+        children:
+          type: array
+          items:
+            type: string
+            description: The route of the child page
+            example: "/blog/my-first-post/child-page"
+          description: An array of routes for the children of the page
+        route:
+          type: string
+          description: The route for this page
+          example: "/blog/my-first-post"
+        slug:
+          type: string
+          description: The slug for the page
+          example: "my-first-post"
+        permalink:
+          type: string
+          description: The URL for the page, including the site domain
+          example: "https://www.mysite.com/blog/my-first-post"
+        template:
+          type: string
+          description: The theme template used for the page
+          example: "post"
+        published:
+          type: boolean
+          description: True or False depending on whether the page has been published
+        date:
+          type: number
+          description: The date/time of when the post was created, as UNIX timestamp
+          example: 1564936730
+        modified:
+          type: number
+          description: The date/time of when the post was last modified, as UNIX timestamp
+          example: 1564936730
+    PageHypermedia:
+      type: object
+      properties:
+        self:
+          type: string
+          description: A link to this resource on the site
+          example: "https://www.mysite.com/blog/my-first-post"
+        related:
+          type: object
+          properties:
+            self:
+              type: string
+              description: A link to this resource through the API
+              example: "https://www.mysite.com/api/pages/blog/my-first-post"
+    PagesMetadata:
+      type: object
+      properties:
+        count:
+          type: number
+          description: The number of pages returned by the request
+          example: 2
+      required:
+        - count
+    PageRequestBody:
+      type: object
+      properties:
+        route:
+          type: string
+          description: The page route to create
+          example: "/the-new-page-slug"
+        header:
+          type: object
+          description: The page frontmatter
+          properties:
+            title:
+              type: string
+              example: "The new page's title"
+            custom_field:
+              type: string
+              example: "You can add custom frontmatter fields, too!"
+          required:
+            - title
+        template:
+          type: string
+          description: The theme template to be used for the page
+          example: "post"
+        content:
+          type: string
+          description: The new page's content, formatted as markdown
+          example: "This is a _new_ page's content in **markdown**!"
+      required:
+        - route
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A short message describing the error
+          example: "Resource not found"
+        documentation:
+          type: string
+          description: A URL to the documentation for reference
+          example: "https://github.com/regaez/grav-plugin-api/tree/master/docs"
+  examples:
+    InvalidAuthResponse:
+      value:
+        message: "Invalid authentication"
+        documentation: "https://github.com/regaez/grav-plugin-api/tree/master/docs"
+    BadRequestResponse:
+      value:
+        message: "Bad request."
+        documentation: "https://github.com/regaez/grav-plugin-api/tree/master/docs"
+    ForbiddenResponse:
+      value:
+        message: "Forbidden. Resource already exists."
+        documentation: "https://github.com/regaez/grav-plugin-api/tree/master/docs"
+    NotFoundResponse:
+      value:
+        message: "Resource not found"
+        documentation: "https://github.com/regaez/grav-plugin-api/tree/master/docs"
