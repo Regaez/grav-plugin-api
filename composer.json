@@ -14,6 +14,10 @@
     "overtrue/phplint": "^1.1"
   },
   "scripts": {
+    "docker:clean": [
+      "docker-compose -f docker-compose.yaml rm",
+      "docker rmi -f grav-api-dev"
+    ],
     "lint": [
       "./vendor/bin/phpcs --colors --standard=PSR2 --encoding=utf-8 ./src api.php",
       "./vendor/bin/phplint ./src --ansi --configuration=phplint.yaml"
