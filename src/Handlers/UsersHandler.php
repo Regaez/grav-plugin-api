@@ -37,7 +37,7 @@ class UsersHandler extends BaseHandler
             $username = basename($file, '.yaml');
             $details = array_merge(
                 array('username' => $username),
-                Yaml::parse($file)
+                Yaml::parse(file_get_contents($file))
             );
             $resource = new UserResource($details);
             $users[] = $resource->toJson($filter);
@@ -64,7 +64,7 @@ class UsersHandler extends BaseHandler
 
         $resource = new UserResource(array_merge(
             array('username' => basename($file, '.yaml')),
-            Yaml::parse($file)
+            Yaml::parse(file_get_contents($file))
         ));
 
         $filter = null;
