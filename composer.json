@@ -26,6 +26,11 @@
     "post-install-cmd": "vendor/bin/cghooks add --ignore-lock",
     "post-update-cmd": "vendor/bin/cghooks update",
     "start": "docker-compose -f docker-compose.yaml up -d",
+    "start:clean": [
+      "composer stop",
+      "composer docker:clean",
+      "composer start"
+    ],
     "stop": "docker-compose -f docker-compose.yaml down",
     "test": [
       "./vendor/bin/phpunit --bootstrap vendor/autoload.php --testdox ./tests"
