@@ -28,12 +28,23 @@ RUN { \
     echo 'post_max_size=128M'; \
     } > /usr/local/etc/php/conf.d/php-recommended.ini
 
-# provide container inside image for data persistance
-# VOLUME /var/www/html
-
 RUN pecl install apcu \
     && pecl install yaml \
-    && docker-php-ext-enable apcu yaml
+    && pecl install xdebug
+
+RUN { \
+    echo "extension=apcu.so"; \
+    echo "extension=yaml.so"; \
+    echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)"; \
+    echo '[XDebug]'; \
+    echo 'xdebug.default_enable=1'; \
+    echo 'xdebug.remote_autostart=1'; \
+    echo 'xdebug.remote_connect_back=0'; \
+    echo 'xdebug.remote_enable=1'; \
+    echo 'xdebug.remote_host=host.docker.internal'; \
+    echo 'xdebug.remote_log=/tmp/xdebug.log'; \
+    echo 'xdebug.remote_port=9073'; \
+    } > /usr/local/etc/php/conf.d/php-recommended.ini
 
 # Set user to www-data
 RUN chown www-data:www-data /var/www
@@ -53,9 +64,3 @@ RUN curl -o grav-admin.zip -SL https://getgrav.org/download/core/grav-admin/${GR
 
 # Return to root user
 USER root
-
-# Copy init scripts
-# COPY docker-entrypoint.sh /entrypoint.sh
-
-# ENTRYPOINT ["/entrypoint.sh"]
-# CMD ["apache2-foreground"]
