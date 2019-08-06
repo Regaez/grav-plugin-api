@@ -11,8 +11,8 @@ info:
     url: https://github.com/Regaez/grav-plugin-api/blob/master/LICENSE
 tags:
   - name: pages
-  - name: config
   - name: users
+  - name: config
   - name: plugins
 paths:
   /pages:
@@ -33,7 +33,7 @@ paths:
                     items:
                       $ref: '#/components/schemas/PageResponse'
                   meta:
-                    $ref: '#/components/schemas/PagesMetadata'
+                    $ref: '#/components/schemas/ResponseMetadata'
         401:
           description: Invalid authentication
           content:
@@ -233,8 +233,258 @@ paths:
               examples:
                 NotFound:
                   $ref: '#/components/examples/NotFoundResponse'
+  /users:
+    get:
+      tags:
+        - users
+      summary: Get all the users on the site
+      security:
+        - basic: ['admin.api', 'admin.super']
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/UserResponse'
+                  meta:
+                    $ref: '#/components/schemas/ResponseMetadata'
+        401:
+          description: Invalid authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                InvalidAuth:
+                  $ref: '#/components/examples/InvalidAuthResponse'
+    post:
+      tags:
+        - users
+      summary: Add a new user
+      security:
+        - basic: ['admin.api', 'admin.super']
+      description: >-
+        There are a minimum of three required fields you must provide for the POST request to be successful. These are: `username`, `password` and `email`. If any of these are not specified, then the user will not be created. They are all expected as plain strings. Additionally, the `email` field must be a **valid email format**.
+
+
+        There are further optional fields you may specify: `fullname`, `title`, `state`, and `access`.
+
+
+        The `fullname` should be a plain string. If no `fullname` is provided, then the user will simply be a fullname which is a [titleized](https://learn.getgrav.org/themes/twig-filters-functions#titleize) version of their username.
+
+
+        The `title` field should be a plain string. If no `title` is provided, then the user will simply be given the title: "User".
+
+
+        The `state` field should be a string, either `'enabled'` or `'disabled'`. If this field is not provided, then the user will be `enabled` by default.
+
+
+        The `access` field should be a JSON structure, matching a set of access roles on the site.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequestBody'
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        400:
+          description: Bad request. You must provide a `username`, `password` and a valid `email` field.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                BadRequest:
+                  $ref: '#/components/examples/BadRequestResponse'
+        401:
+          description: Invalid authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                InvalidAuth:
+                  $ref: '#/components/examples/InvalidAuthResponse'
+        403:
+          description: Forbidden. This user already exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Forbidden:
+                  $ref: '#/components/examples/ForbiddenResponse'
+  /users/{id}:
+    get:
+      tags:
+        - users
+      summary: Get a specific user
+      security:
+        - basic: ['admin.api', 'admin.super']
+      parameters:
+        - name: id
+          in: path
+          description: The username of the user to return
+          required: true
+          schema:
+            type: string
+            example: "joe"
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        401:
+          description: Invalid authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                InvalidAuth:
+                  $ref: '#/components/examples/InvalidAuthResponse'
+        404:
+          description: Page not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                NotFound:
+                  $ref: '#/components/examples/NotFoundResponse'
+    patch:
+      tags:
+        - users
+      summary: Update a specific user
+      security:
+        - basic: ['admin.api', 'admin.super']
+      description: >-
+        In order to change user information, you **must** provide a valid `password` for that user.
+
+
+        Similarly to a `POST` request, you can also submit the following fields: `email`, `title`, `fullname`, and `new_password`.
+
+
+        Additionally, if you authenticate as an `admin`, you may also change the `access` rights for the user.
+
+
+        Existing `access` information will not changed, unless the corresponding key is explicitly set. In order to remove an existing role, you must set the field's value to `null`.
+      parameters:
+        - name: id
+          in: path
+          description: The username of the user to update
+          required: true
+          schema:
+            type: string
+            example: "joe"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdateRequestBody'
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        400:
+          description: Bad request. You must provide a `password` field.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                BadRequest:
+                  $ref: '#/components/examples/BadRequestResponse'
+        401:
+          description: Invalid authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                InvalidAuth:
+                  $ref: '#/components/examples/InvalidAuthResponse'
+        404:
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                NotFound:
+                  $ref: '#/components/examples/NotFoundResponse'
+    delete:
+      tags:
+        - users
+      summary: Delete a specific user
+      security:
+        - basic: ['admin.api', 'admin.super']
+      description: >-
+        If the deletion is successful, the API will respond with a `204` no-content status code.
+
+        > **WARNING:** THIS WILL PERMANENTLY DELETE A USER. IT CANNOT BE UNDONE. It is recommended to instead `PATCH` a user and set `"state": "disabled"` for the user, if you do not want the user active any longer.
+      parameters:
+        - name: id
+          in: path
+          description: The username of the user to delete
+          required: true
+          schema:
+            type: string
+            example: "joe"
+      responses:
+        204:
+          description: Successful operation
+        401:
+          description: Invalid authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                InvalidAuth:
+                  $ref: '#/components/examples/InvalidAuthResponse'
+        404:
+          description: Page not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                NotFound:
+                  $ref: '#/components/examples/NotFoundResponse'
 components:
+  securitySchemes:
+    basic:
+      type: http
+      scheme: Basic
   schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A short message describing the error
+          example: "Resource not found"
+        documentation:
+          type: string
+          description: A URL to the documentation for reference
+          example: "https://github.com/regaez/grav-plugin-api/tree/master/docs"
     PageResponse:
       type: object
       properties:
@@ -309,29 +559,6 @@ components:
           type: number
           description: The date/time of when the post was last modified, as UNIX timestamp
           example: 1564936730
-    PageHypermedia:
-      type: object
-      properties:
-        self:
-          type: string
-          description: A link to this resource on the site
-          example: "https://www.mysite.com/blog/my-first-post"
-        related:
-          type: object
-          properties:
-            self:
-              type: string
-              description: A link to this resource through the API
-              example: "https://www.mysite.com/api/pages/blog/my-first-post"
-    PagesMetadata:
-      type: object
-      properties:
-        count:
-          type: number
-          description: The number of pages returned by the request
-          example: 2
-      required:
-        - count
     PageRequestBody:
       type: object
       properties:
@@ -361,17 +588,199 @@ components:
           example: "This is a _new_ page's content in **markdown**!"
       required:
         - route
-    ErrorResponse:
+    PageHypermedia:
       type: object
       properties:
-        message:
+        self:
           type: string
-          description: A short message describing the error
-          example: "Resource not found"
-        documentation:
+          description: A link to this resource on the site
+          example: "https://www.mysite.com/blog/my-first-post"
+        related:
+          type: object
+          properties:
+            self:
+              type: string
+              description: A link to this resource through the API
+              example: "https://www.mysite.com/api/pages/blog/my-first-post"
+    ResponseMetadata:
+      type: object
+      properties:
+        count:
+          type: number
+          description: The number of pages returned by the request
+          example: 2
+      required:
+        - count
+    UserHypermedia:
+      type: object
+      properties:
+        related:
+          type: object
+          properties:
+            self:
+              type: string
+              description: A link to this resource through the API
+              example: "https://www.mysite.com/api/users/joe"
+    UserResponse:
+      type: object
+      properties:
+        type:
           type: string
-          description: A URL to the documentation for reference
-          example: "https://github.com/regaez/grav-plugin-api/tree/master/docs"
+          description: The resource type
+          example: "user"
+        id:
+          type: string
+          description: The ID of the user (this is also the username)
+          example: "admin"
+        attributes:
+          $ref: '#/components/schemas/UserResource'
+        links:
+          $ref: '#/components/schemas/UserHypermedia'
+    UserResource:
+      type: object
+      properties:
+        username:
+          type: string
+          description: The username
+          example: "admin"
+        email:
+          type: string
+          description: The user's registered email address
+          example: "admin@mysite.com"
+        fullname:
+          type: string
+          description: The user's fullname
+          example: "Joe Bloggs"
+        title:
+          type: string
+          description: The user's title
+          example: "Administrator"
+        access:
+          type: object
+          description: The user's access roles
+          properties:
+            admin:
+              type: object
+              properties:
+                login:
+                  type: boolean
+                  example: true
+                super:
+                  type: boolean
+                  example: true
+            site:
+              type: object
+              properties:
+                login:
+                  type: boolean
+                  example: true
+    UserRequestBody:
+      type: object
+      properties:
+        username:
+          type: string
+          description: The new user's username
+          example: "joe"
+        password:
+          type: string
+          description: The new user's password
+          example: "P4ssw0rd!"
+        email:
+          type: string
+          description: The new user's email
+          example: "joe@bloggs.com"
+        fullname:
+          type: string
+          description: The new user's fullname.
+          example: "Joe Bloggs"
+        title:
+          type: string
+          description: The new user's title.
+          example: "Editor"
+          default: "User"
+        state:
+          type: string
+          enum:
+            - enabled
+            - disabled
+          description: Whether or not the user account should be active.
+          default: enabled
+        access:
+          type: object
+          description: The user's access roles
+          properties:
+            admin:
+              type: object
+              properties:
+                login:
+                  type: boolean
+                  example: true
+                super:
+                  type: boolean
+                  example: true
+            site:
+              type: object
+              properties:
+                login:
+                  type: boolean
+                  example: true
+          default:
+            site:
+              login: true
+      required:
+        - username
+        - password
+        - email
+    UserUpdateRequestBody:
+      type: object
+      properties:
+        password:
+          type: string
+          description: The user's existing password
+          example: "P4ssw0rd!"
+        new_password:
+          type: string
+          description: The user's new password
+          example: "P4ssw0rd!"
+        email:
+          type: string
+          description: The user's new email
+          example: "joe@bloggs.com"
+        fullname:
+          type: string
+          description: The user's new fullname.
+          example: "Joe Bloggs"
+        title:
+          type: string
+          description: The user's new title.
+          example: "Editor"
+        state:
+          type: string
+          enum:
+            - enabled
+            - disabled
+          description: Whether or not the user account should be active.
+        access:
+          type: object
+          description: The user's new access roles. Can only be set by an administrator.
+          properties:
+            admin:
+              type: object
+              properties:
+                login:
+                  type: boolean
+                  example: true
+                super:
+                  type: boolean
+                  example: true
+            site:
+              type: object
+              properties:
+                login:
+                  type: boolean
+                  example: true
+      required:
+        - password
   examples:
     InvalidAuthResponse:
       value:
