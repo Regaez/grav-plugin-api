@@ -468,6 +468,76 @@ paths:
               examples:
                 NotFound:
                   $ref: '#/components/examples/NotFoundResponse'
+  /plugins:
+    get:
+      tags:
+        - plugins
+      summary: Get all the plugins installed on the site
+      security:
+        - basic: ['admin.api', 'admin.super']
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PluginResponse'
+                  meta:
+                    $ref: '#/components/schemas/ResponseMetadata'
+        401:
+          description: Invalid authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                InvalidAuth:
+                  $ref: '#/components/examples/InvalidAuthResponse'
+  /plugins/{id}:
+    get:
+      tags:
+        - plugins
+      summary: Get a specific plugin
+      security:
+        - basic: ['admin.api', 'admin.super']
+      parameters:
+        - name: id
+          in: path
+          description: The id of the plugin to return
+          required: true
+          schema:
+            type: string
+            example: "joe"
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PluginResponse'
+        401:
+          description: Invalid authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                InvalidAuth:
+                  $ref: '#/components/examples/InvalidAuthResponse'
+        404:
+          description: Plugin not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                NotFound:
+                  $ref: '#/components/examples/NotFoundResponse'
 components:
   securitySchemes:
     basic:
@@ -602,6 +672,43 @@ components:
               type: string
               description: A link to this resource through the API
               example: "https://www.mysite.com/api/pages/blog/my-first-post"
+    PluginHypermedia:
+      type: object
+      properties:
+        related:
+          type: object
+          properties:
+            self:
+              type: string
+              description: A link to this resource through the API
+              example: "https://www.mysite.com/api/plugins/api"
+    PluginResponse:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The resource type
+          example: "plugin"
+        id:
+          type: string
+          description: The ID of the plugin
+          example: "api"
+        attributes:
+          $ref: '#/components/schemas/PluginResource'
+        links:
+          $ref: '#/components/schemas/PluginHypermedia'
+    PluginResource:
+      type: object
+      description: The plugin's configuration options. The returned fields vary depending on the plugin.
+      properties:
+        enabled:
+          type: boolean
+          description: Whether or not the plugin is active
+          example: true
+        custom_field:
+          type: string
+          description: Each plugin might have different custom fields
+          example: "An example plugin custom field"
     ResponseMetadata:
       type: object
       properties:
