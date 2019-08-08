@@ -1,44 +1,53 @@
 <?php
 namespace GravApi\Resources;
 
+use GravApi\Resources\Resource;
 use Grav\Common\Plugin;
+use GravApi\Config\Constants;
 
 /**
- * Class BaseHandler
- * @package GravApi\Handlers
+ * Class PluginResource
+ * @package GravApi\Resources
  */
-class PluginResource
+class PluginResource extends Resource
 {
-    protected $plugin;
+    /**
+     * @var Plugin
+     */
+    protected $resource;
 
     public function __construct(Plugin $plugin)
     {
-        $this->plugin = (object) $plugin->config();
+        $this->resource = $plugin;
     }
 
     /**
-     * Returns the plugin object as an array/json.
-     * Also accepts an array of fields by which to filter.
+     * Returns the identifier for this resource
      *
-     * @param  [array] $fields optional
-     * @return [array]
+     * @return string
      */
-    public function toJson($fields = null)
+    public function getId()
     {
-        // Filter for requested fields
-        if ($fields) {
-            $data = [];
+        return $this->resource->name;
+    }
 
-            foreach ($fields as $field) {
-                if (property_exists($this->plugin, $field)) {
-                    $data[$field] = $this->plugin->{$field};
-                }
-            }
+    /**
+     * Returns the resource type
+     *
+     * @return string
+     */
+    protected function getResourceType()
+    {
+        return Constants::TYPE_PLUGIN;
+    }
 
-            return $data;
-        }
-
-        // Otherwise return everything
-        return (array) $this->plugin;
+    /**
+     * Returns the attributes associated with this resource
+     *
+     * @return array
+     */
+    protected function getResourceAttributes()
+    {
+        return (array) $this->resource->config();
     }
 }
