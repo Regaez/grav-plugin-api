@@ -11,9 +11,9 @@ abstract class CollectionResource
      * Returns the resource object as an array/json.
      * Also accepts an array of fields by which to filter.
      *
-     * @param  [array] $filter optional
-     * @param  [bool] $attributes_only optional
-     * @return [array]
+     * @param  array $filter optional
+     * @param  bool  $attributes_only optional
+     * @return array
      */
     public function toJson($filter = array(), $attributes_only = false)
     {

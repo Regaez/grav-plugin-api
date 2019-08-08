@@ -11,6 +11,11 @@ use GravApi\Config\Constants;
  */
 class PluginResource extends Resource
 {
+    /**
+     * @var Plugin
+     */
+    protected $resource;
+
     public function __construct(Plugin $plugin)
     {
         $this->resource = $plugin;
@@ -19,7 +24,7 @@ class PluginResource extends Resource
     /**
      * Returns the identifier for this resource
      *
-     * @return [string]
+     * @return string
      */
     public function getId()
     {
@@ -29,7 +34,7 @@ class PluginResource extends Resource
     /**
      * Returns the resource type
      *
-     * @return [string]
+     * @return string
      */
     protected function getResourceType()
     {
@@ -39,7 +44,7 @@ class PluginResource extends Resource
     /**
      * Returns the attributes associated with this resource
      *
-     * @return [array]
+     * @return array
      */
     protected function getResourceAttributes()
     {

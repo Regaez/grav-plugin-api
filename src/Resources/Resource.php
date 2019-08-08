@@ -14,7 +14,7 @@ abstract class Resource
     /**
      * Returns the API endpoint for this resource type
      *
-     * @return [string]
+     * @return string
      */
     protected function getResourceEndpoint()
     {
@@ -26,7 +26,7 @@ abstract class Resource
     /**
      * Returns the hypermedia URL for this resource
      *
-     * @return [string]
+     * @return string
      */
     protected function getRelatedSelf()
     {
@@ -37,8 +37,8 @@ abstract class Resource
      * Returns the resource object as an array/json.
      * Also accepts an array of fields by which to filter.
      *
-     * @param  [array] $fields optional
-     * @return [array]
+     * @param  array $fields optional
+     * @return array
      */
     public function toJson()
     {
