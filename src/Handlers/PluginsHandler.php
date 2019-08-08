@@ -3,6 +3,7 @@ namespace GravApi\Handlers;
 
 use GravApi\Responses\Response;
 use GravApi\Resources\PluginResource;
+use GravApi\Resources\PluginCollectionResource;
 
 /**
  * Class PluginsHandler
@@ -12,50 +13,24 @@ class PluginsHandler extends BaseHandler
 {
     public function getPlugins($request, $response, $args)
     {
-
         $plugins = $this->grav['plugins'];
 
-        $filter = null;
+        $resource = new PluginCollectionResource($plugins);
 
-        if (!empty($this->config->plugins->fields)) {
-            $filter = $this->config->plugins->fields;
-        }
-
-        $data = [];
-
-        foreach ($plugins as $plugin) {
-            $resource = new PluginResource($plugin);
-            $data[$plugin->name] = $resource->toJson($filter);
-        }
-
-        return $response->withJson($data);
+        return $response->withJson($resource->toJson());
     }
 
     public function getPlugin($request, $response, $args)
     {
-
-        $plugin = null;
-
+        // Check all plugins against requested plugin id
         foreach ($this->grav['plugins'] as $p) {
             if ($p->name === $args['plugin']) {
-                $plugin = $p;
+                $resource = new PluginResource($p);
+                return $response->withJson($resource->toJson());
             }
         }
 
-        if (!$plugin) {
-            return $response->withJson(Response::notFound(), 404);
-        }
-
-        $resource = new PluginResource($plugin);
-
-        $filter = null;
-
-        if (!empty($this->config->plugin->fields)) {
-            $filter = $this->config->plugin->fields;
-        }
-
-        $data = $resource->toJson($filter);
-
-        return $response->withJson($data);
+        // If no matching plugin is found
+        return $response->withJson(Response::notFound(), 404);
     }
 }
