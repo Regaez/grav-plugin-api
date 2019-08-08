@@ -9,7 +9,14 @@ abstract class Resource
 
     abstract public function getId();
     abstract protected function getResourceType();
-    abstract protected function getResourceAttributes();
+
+    /**
+    * Returns the attributes associated with this resource
+    *
+    * @param array|null $fields optional
+    * @return array
+    */
+    abstract protected function getResourceAttributes($fields);
 
     /**
      * Returns the API endpoint for this resource type
@@ -37,17 +44,22 @@ abstract class Resource
      * Returns the resource object as an array/json.
      * Also accepts an array of fields by which to filter.
      *
-     * @param  array $fields optional
+     * @param  array|null   $fields         optional
+     * @param  bool         $attributesOnly optional
      * @return array
      */
-    public function toJson()
+    public function toJson($fields = null, $attributesOnly = false)
     {
-        // TODO: filter attributes based on field param
+        $attributes = $this->getResourceAttributes($fields);
+
+        if ($attributesOnly) {
+            return $attributes;
+        }
 
         return [
             'type' => $this->getResourceType(),
             'id' => $this->getId(),
-            'attributes' => $this->getResourceAttributes(),
+            'attributes' => $attributes,
             // TODO: improve hypermedia linking
             'links' => [
                 'related' => [

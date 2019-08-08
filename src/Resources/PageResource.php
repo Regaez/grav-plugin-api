@@ -2,129 +2,154 @@
 namespace GravApi\Resources;
 
 use Grav\Common\Page\Page;
+use GravApi\Config\Constants;
+use GravApi\Resources\Resource;
 
 /**
  * Class BaseHandler
  * @package GravApi\Handlers
  */
-class PageResource
+class PageResource extends Resource
 {
-    protected $page;
+    /**
+     * @var Page
+     */
+    protected $resource;
 
     public function __construct(Page $page)
     {
-        $this->page = $page;
+        $this->resource = $page;
     }
 
     /**
-     * Returns the page object as an array/json.
-     * Also accepts an array of fields by which to filter.
+     * Returns the identifier for this resource
      *
-     * @param  [array] $fields optional
-     * @param  [bool] $attributes_only optional
-     * @return [array]
+     * @return string
      */
-    public function toJson($fields = null, $attributes_only = false)
+    public function getId()
+    {
+        // we use raw route so that the homepage
+        // returns a query-able identifier
+        return ltrim($this->resource->rawRoute(), '/');
+    }
+
+    /**
+     * Returns the resource type
+     *
+     * @return string
+     */
+    protected function getResourceType()
+    {
+        return Constants::TYPE_PAGE;
+    }
+
+    /**
+     * Returns the attributes associated with this resource
+     *
+     * @param array|null $fields
+     * @return array
+     */
+    protected function getResourceAttributes($fields)
     {
         // All our Page attributes
         $attributes = [
             // TODO: is this useful here?
-            // 'active' => $this->page->active(),
+            // 'active' => $this->resource->active(),
 
             // TODO: is this useful here?
-            // 'activeChild' => $this->page->activeChild(),
+            // 'activeChild' => $this->resource->activeChild(),
 
             // TODO: how to use this? always seems empty.
-            // 'adjacentSibling' => $this->page->adjacentSibling(),
+            // 'adjacentSibling' => $this->resource->adjacentSibling(),
 
             // TODO: Are blueprints really necessary output???
-            // 'blueprintName' => $this->page->blueprintName(),
-            // 'blueprints' => $this->page->blueprints(),
+            // 'blueprintName' => $this->resource->blueprintName(),
+            // 'blueprints' => $this->resource->blueprints(),
 
             'children' => $this->processChildren(),
-            'childType' => $this->page->childType(),
-            'content' => $this->page->content(),
-            'date' => $this->page->date(),
-            'eTag' => $this->page->eTag(),
-            'expires' => $this->page->expires(),
-            'exists' => $this->page->exists(),
-            'extension' => $this->page->extension(),
-            'extra' => $this->page->extra(),
+            'childType' => $this->resource->childType(),
+            'content' => $this->resource->content(),
+            'date' => $this->resource->date(),
+            'eTag' => $this->resource->eTag(),
+            'expires' => $this->resource->expires(),
+            'exists' => $this->resource->exists(),
+            'extension' => $this->resource->extension(),
+            'extra' => $this->resource->extra(),
 
             // TODO: would this be any use?
-            // 'file' => $this->page->file(),
+            // 'file' => $this->resource->file(),
 
-            // this would expose server directory structure, so shouldn't be returned
-            // 'filePath' => $this->page->filePath(),
+            // This would expose server directory structure, so shouldn't be returned
+            // 'filePath' => $this->resource->filePath(),
 
-            'filePathClean' => $this->page->filePathClean(),
-            'folder' => $this->page->folder(),
-            'frontmatter' => $this->page->frontmatter(),
+            'filePathClean' => $this->resource->filePathClean(),
+            'folder' => $this->resource->folder(),
+            'frontmatter' => $this->resource->frontmatter(),
 
             // TODO: do we really need this and `content` field?
-            // 'getRawContent' => $this->page->getRawContent(),
+            // 'getRawContent' => $this->resource->getRawContent(),
 
-            'header' => $this->page->header(),
-            'home' => $this->page->home(),
-            'id' => $this->page->id(),
-            'isDir' => $this->page->isDir(),
-            'isFirst' => $this->page->isFirst(),
-            'isLast' => $this->page->isLast(),
-            'isPage' => $this->page->isPage(),
-            'language' => $this->page->language(),
-            'lastModified' => $this->page->lastModified(),
+            'header' => $this->resource->header(),
+            'home' => $this->resource->home(),
+            'id' => $this->resource->id(),
+            'isDir' => $this->resource->isDir(),
+            'isFirst' => $this->resource->isFirst(),
+            'isLast' => $this->resource->isLast(),
+            'isPage' => $this->resource->isPage(),
+            'language' => $this->resource->language(),
+            'lastModified' => $this->resource->lastModified(),
 
             // Already have `route` and `permalink` fields
-            // 'link' => $this->page->link(),
+            // 'link' => $this->resource->link(),
 
-            'maxCount' => $this->page->maxCount(),
+            'maxCount' => $this->resource->maxCount(),
             'media' => $this->processMedia(),
-            'menu' => $this->page->menu(),
-            'metadata' => $this->page->metadata(),
-            'modified' => $this->page->modified(),
-            'modularTwig' => $this->page->modularTwig(),
-            'modular' => $this->page->modular(),
-            'name' => $this->page->name(),
+            'menu' => $this->resource->menu(),
+            'metadata' => $this->resource->metadata(),
+            'modified' => $this->resource->modified(),
+            'modularTwig' => $this->resource->modularTwig(),
+            'modular' => $this->resource->modular(),
+            'name' => $this->resource->name(),
 
             // TODO: how to use this? always seems empty.
-            // 'nextSibling' => $this->page->nextSibling(),
+            // 'nextSibling' => $this->resource->nextSibling(),
 
-            'order' => $this->page->order(),
-            'orderDir' => $this->page->orderDir(),
-            'orderBy' => $this->page->orderBy(),
-            'orderManual' => $this->page->orderManual(),
-            'parent' => $this->page->parent()->route(),
+            'order' => $this->resource->order(),
+            'orderDir' => $this->resource->orderDir(),
+            'orderBy' => $this->resource->orderBy(),
+            'orderManual' => $this->resource->orderManual(),
+            'parent' => $this->resource->parent()->route(),
 
-            // this would expose server directory structure, so shouldn't be returned
-            // 'path' => $this->page->path(),
+            // This would expose server directory structure, so shouldn't be returned
+            // 'path' => $this->resource->path(),
 
-            'permalink' => $this->page->permalink(),
+            'permalink' => $this->resource->permalink(),
 
             // TODO: how to use this? always seems empty.
-            // 'prevSibling' => $this->page->prevSibling(),
+            // 'prevSibling' => $this->resource->prevSibling(),
 
-            'publishDate' => $this->page->publishDate(),
-            'published' => $this->page->published(),
-            'raw' => $this->page->raw(),
-            'rawMarkdown' => $this->page->rawMarkdown(),
-            'rawRoute' => $this->page->rawRoute(),
-            'root' => $this->page->root(),
-            'routable' => $this->page->routable(),
-            'route' => $this->page->route(),
-            'routeCanonical' => $this->page->routeCanonical(),
-            'slug' => $this->page->slug(),
-            'summary' => $this->page->summary(),
-            'taxonomy' => $this->page->taxonomy(),
-            'template' => $this->page->template(),
-            'title' => $this->page->title(),
-            'translatedLanguages' => $this->page->translatedLanguages(),
-            'unpublishDate' => $this->page->unpublishDate(),
-            'untranslatedLanguages' => $this->page->untranslatedLanguages(),
+            'publishDate' => $this->resource->publishDate(),
+            'published' => $this->resource->published(),
+            'raw' => $this->resource->raw(),
+            'rawMarkdown' => $this->resource->rawMarkdown(),
+            'rawRoute' => $this->resource->rawRoute(),
+            'root' => $this->resource->root(),
+            'routable' => $this->resource->routable(),
+            'route' => $this->resource->route(),
+            'routeCanonical' => $this->resource->routeCanonical(),
+            'slug' => $this->resource->slug(),
+            'summary' => $this->resource->summary(),
+            'taxonomy' => $this->resource->taxonomy(),
+            'template' => $this->resource->template(),
+            'title' => $this->resource->title(),
+            'translatedLanguages' => $this->resource->translatedLanguages(),
+            'unpublishDate' => $this->resource->unpublishDate(),
+            'untranslatedLanguages' => $this->resource->untranslatedLanguages(),
 
             // Already have `route` and `permalink` fields
-            // 'url' => $this->page->url(),
+            // 'url' => $this->resource->url(),
 
-            'visible' => $this->page->visible(),
+            'visible' => $this->resource->visible(),
         ];
 
         // Filter for requested fields
@@ -132,64 +157,63 @@ class PageResource
             $attributes = [];
 
             foreach ($fields as $field) {
-                if (method_exists($this->page, $field)) {
+                if (method_exists($this->resource, $field)) {
                     if ($field === 'children') {
                         $attributes[$field] = $this->processChildren();
+                    } elseif ($field === 'media') {
+                        $attributes[$field] = $this->processMedia();
                     } else {
-                        $attributes[$field] = $this->page->{$field}();
+                        $attributes[$field] = $this->resource->{$field}();
                     }
                 }
             }
         }
 
-        if ($attributes_only) {
-            return $attributes;
-        }
-
-        // Return Resource object
-        return [
-            'type' => 'page',
-            'id' => $this->getId(),
-            'attributes' => $attributes,
-            'links' => [
-                'self' => $this->page->permalink()
-            ]
-        ];
+        return $attributes;
     }
 
     /**
-     * We have to process children because the collection's
+     * We process the children because the collection's
      * toArray method will expose our server directory structure
-     * @return [array]
+     *
+     * @return array
      */
     protected function processChildren()
     {
         $children = [];
-        foreach ($this->page->children()->toArray() as $child) {
+        foreach ($this->resource->children()->toArray() as $child) {
             // we generate the routes for each child
-            $children[] = $this->page->route().'/'.$child['slug'];
+            $children[] = $this->resource->route().'/'.$child['slug'];
         }
         return $children;
     }
 
+    /**
+     * We process the media to return a prettier respresentation of the media.
+     *
+     * @return array
+     */
     protected function processMedia()
     {
-        $medium = [];
+        // TODO: handle other page media types; probably make this a resource type, or its own class
+        $media = [];
 
-        foreach ($this->page->media()->all() as $name => $media) {
-            $medium[] = [
-                'name' => $name,
-                'url' => $media->url(),
+        foreach ($this->resource->media()->all() as $medium) {
+            $url = $this->resource->permalink() . '/' . rawurlencode($medium->filename);
+
+            // We also need to omit some media properties, since
+            // they would expose our server directory structure.
+            $media[] = [
+                'height' => $medium->height,
+                'mime' => $medium->mime,
+                'name' => $medium->basename,
+                'size' => $medium->size,
+                'type' => $medium->type,
+                'url' => $url,
+                'width' => $medium->width
             ];
         }
 
-        return $medium;
-    }
-
-    public function getId()
-    {
-        // we use raw route so that the homepage
-        // returns a query-able identifier
-        return ltrim($this->page->rawRoute(), '/');
+        return $media;
     }
 }
