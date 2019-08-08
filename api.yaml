@@ -39,7 +39,7 @@ endpoints:
         - email
         - fullname
         - title
-        - status
+        - state
         - access
     post:
       enabled: true
