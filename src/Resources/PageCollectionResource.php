@@ -1,51 +1,33 @@
 <?php
 namespace GravApi\Resources;
 
-use GravApi\Config\Config;
-use GravApi\Resources\PageResource;
+use Grav\Common\Page\Page;
 use Grav\Common\Page\Collection;
+use GravApi\Resources\PageResource;
 
 /**
  * Class BaseHandler
  * @package GravApi\Handlers
  */
-class PageCollectionResource
+class PageCollectionResource extends CollectionResource
 {
-    protected $collection;
-
+    /**
+     * @param Collection $collection
+     */
     public function __construct(Collection $collection)
     {
         $this->collection = $collection;
     }
 
-    public function toJson($filter = null)
+    /**
+     * Accepts an resource from the collection and
+     * returns a new PageResource instance
+     *
+     * @param  Page $plugin
+     * @return PageResource
+     */
+    protected function getResource($page)
     {
-        $data = [];
-
-        $settings = Config::instance();
-
-        foreach ($this->collection as $page) {
-            $resource = new PageResource($page);
-            $id = $resource->getId();
-            $apiUrl = $settings->api->permalink.'/pages/'.$id;
-            $data[] = [
-                'id' => $id,
-                'attributes' => $resource->toJson($filter, true),
-                'links' => [
-                    'self' => $page->permalink(),
-                    'related' => [
-                        'self' => $apiUrl
-                    ]
-                ]
-            ];
-        }
-
-        // Return Resource object
-        return [
-            'items' => $data,
-            'meta' => [
-                'count' => count($data)
-            ]
-        ];
+        return new PageResource($page);
     }
 }

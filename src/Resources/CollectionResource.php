@@ -19,7 +19,7 @@ abstract class CollectionResource
     {
         $data = [];
 
-        foreach ($this->collection as $name => $item) {
+        foreach ($this->collection as $item) {
             $resource = $this->getResource($item);
             $data[] = $resource->toJson();
         }
