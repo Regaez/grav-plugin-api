@@ -20,6 +20,7 @@ endpoints:
         - published
         - date
         - modified
+        - media
     post:
       enabled: true
       auth: true
@@ -53,11 +54,9 @@ endpoints:
   plugin:
     enabled: true
     auth: true
-    fields: []
   plugins:
     enabled: true
     auth: true
-    fields: []
   config:
     enabled: true
     auth: true
