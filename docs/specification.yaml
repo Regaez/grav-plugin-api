@@ -12,8 +12,8 @@ info:
 tags:
   - name: pages
   - name: users
-  - name: config
   - name: plugins
+  - name: configs
 paths:
   /pages:
     get:
@@ -512,7 +512,7 @@ paths:
           required: true
           schema:
             type: string
-            example: "joe"
+            example: "api"
       responses:
         200:
           description: Successful operation
@@ -538,12 +538,115 @@ paths:
               examples:
                 NotFound:
                   $ref: '#/components/examples/NotFoundResponse'
+  /configs:
+    get:
+      tags:
+        - configs
+      summary: Get all the site configuration files
+      security:
+        - basic: ['admin.api', 'admin.super']
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ConfigResponse'
+                  meta:
+                    $ref: '#/components/schemas/ResponseMetadata'
+        401:
+          description: Invalid authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                InvalidAuth:
+                  $ref: '#/components/examples/InvalidAuthResponse'
+  /configs/{id}:
+    get:
+      tags:
+        - configs
+      summary: Get a specific config file
+      security:
+        - basic: ['admin.api', 'admin.super']
+      parameters:
+        - name: id
+          in: path
+          description: The id of the config file to return
+          required: true
+          schema:
+            type: string
+            example: "site"
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfigResponse'
+        401:
+          description: Invalid authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                InvalidAuth:
+                  $ref: '#/components/examples/InvalidAuthResponse'
+        404:
+          description: Configuration file not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                NotFound:
+                  $ref: '#/components/examples/NotFoundResponse'
 components:
   securitySchemes:
     basic:
       type: http
       scheme: Basic
   schemas:
+    ConfigHypermedia:
+      type: object
+      properties:
+        related:
+          type: object
+          properties:
+            self:
+              type: string
+              description: A link to this resource through the API
+              example: "https://www.mysite.com/api/config/site"
+    ConfigResponse:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The resource type
+          example: "config"
+        id:
+          type: string
+          description: The ID of the config
+          example: "api"
+        attributes:
+          $ref: '#/components/schemas/ConfigResource'
+        links:
+          $ref: '#/components/schemas/ConfigHypermedia'
+    ConfigResource:
+      type: object
+      description: The configuration file's properties. The returned fields vary depending on the configuration file.
+      properties:
+        some_field:
+          type: string
+          description: Each config file will have different fields
+          example: "An example config field"
     ErrorResponse:
       type: object
       properties:
