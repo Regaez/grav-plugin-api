@@ -1,0 +1,544 @@
+{
+	"info": {
+		"_postman_id": "141e3db4-9b53-4fe5-88f8-f701385aea60",
+		"name": "Grav API Plugin",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Pages",
+			"item": [
+				{
+					"name": "Get Pages",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/api/pages",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"pages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Page",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/api/pages/test",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"pages",
+								"test"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Page",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"route\": \"/test\",\n    \"template\": \"default\",\n    \"header\": {\n    \t\"title\": \"Test page\",\n    \t\"custom_field\": \"WORLD\"\n    },\n    \"content\" : \"HELLO {{page.header.custom_field}}!\"\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/api/pages",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"pages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Page",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"route\": \"/test\",\n    \"template\": \"default\",\n    \"header\": {\n    \t\"custom_field\": \"WORLD\"\n    },\n    \"content\" : \"HELLO {{page.header.custom_field}}! How are you doin'?\"\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/api/pages/test",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"pages",
+								"test"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Page",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/api/pages/test",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"pages",
+								"test"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Get Users",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "D3velopment",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "development",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/api/users",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single User",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "D3velopment",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "development",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/api/pages/typography",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"pages",
+								"typography"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "D3velopment",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "development",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"bob\",\n    \"password\": \"p4ssw0rd!\",\n    \"email\": \"bob@example.com\"\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/api/users",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "D3velopment",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "development",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"password\": \"p4ssw0rd!\",\n    \"email\": \"bob2@example.com\"\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/api/users/bob",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users",
+								"bob"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "D3velopment",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "development",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/api/users/bob",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users",
+								"bob"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Plugins",
+			"item": [
+				{
+					"name": "Get Plugins",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "D3velopment",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "development",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/api/plugins",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"plugins"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Plugin",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "D3velopment",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "development",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/api/plugins/api",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"plugins",
+								"api"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Config",
+			"item": [
+				{
+					"name": "Get Configs",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "D3velopment",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "development",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/api/configs",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"configs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Config",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "D3velopment",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "development",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/api/configs/site",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"configs",
+								"site"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "API",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:8080/api",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
