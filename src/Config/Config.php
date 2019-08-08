@@ -58,7 +58,8 @@ class Config
      * @param  [string] $resourceType e.g. Constants::TYPE_PAGE
      * @return [string] e.g. https://www.example.com/api/pages/
      */
-    public function getEndpoint(string $resourceType) {
+    public function getEndpoint(string $resourceType)
+    {
         $endpoint = '';
 
         switch ($resourceType) {
