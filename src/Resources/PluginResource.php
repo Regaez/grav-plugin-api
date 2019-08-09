@@ -47,7 +47,7 @@ class PluginResource extends Resource
      * @param array|null $fields
      * @return array
      */
-    protected function getResourceAttributes($fields)
+    protected function getResourceAttributes()
     {
         return (array) $this->resource->config();
     }

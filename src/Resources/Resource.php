@@ -7,8 +7,14 @@ abstract class Resource
 {
     protected $resource;
 
+    /**
+     * A list of fields to remove from the resource attributes response
+     *
+     * @var string[]
+     */
+    protected $filter = null;
+
     abstract public function getId();
-    abstract protected function getResourceType();
 
     /**
      * Returns the hypermedia array for this resource
@@ -20,22 +26,16 @@ abstract class Resource
     /**
     * Returns the attributes associated with this resource
     *
-    * @param array|null $fields optional
     * @return array
     */
-    abstract protected function getResourceAttributes($fields);
+    abstract protected function getResourceAttributes();
 
     /**
-     * Returns the API endpoint for this resource type
+     * Returns the resource type
      *
      * @return string
      */
-    protected function getResourceEndpoint()
-    {
-        return Config::instance()->getEndpoint(
-            $this->getResourceType()
-        );
-    }
+    abstract protected function getResourceType();
 
     /**
      * Returns the releated hypermedia array for this resource type
@@ -61,16 +61,27 @@ abstract class Resource
     }
 
     /**
+     * Returns the API endpoint for this resource type
+     *
+     * @return string
+     */
+    protected function getResourceEndpoint()
+    {
+        return Config::instance()->getEndpoint(
+            $this->getResourceType()
+        );
+    }
+
+    /**
      * Returns the resource object as an array/json.
      * Also accepts an array of fields by which to filter.
      *
-     * @param  array|null   $fields         optional
      * @param  bool         $attributesOnly optional
      * @return array
      */
-    public function toJson($fields = null, $attributesOnly = false)
+    public function toJson($attributesOnly = false)
     {
-        $attributes = $this->getResourceAttributes($fields);
+        $attributes = $this->getResourceAttributes();
 
         if ($attributesOnly) {
             return $attributes;

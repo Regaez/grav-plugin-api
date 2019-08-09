@@ -2,6 +2,7 @@
 namespace GravApi\Resources;
 
 use Grav\Common\Page\Page;
+use GravApi\Config\Config;
 use GravApi\Config\Constants;
 use GravApi\Resources\Resource;
 
@@ -19,28 +20,9 @@ class PageResource extends Resource
     public function __construct(Page $page)
     {
         $this->resource = $page;
-    }
 
-    /**
-     * Returns the identifier for this resource
-     *
-     * @return string
-     */
-    public function getId()
-    {
-        // we use raw route so that the homepage
-        // returns a query-able identifier
-        return ltrim($this->resource->rawRoute(), '/');
-    }
-
-    /**
-     * Returns the resource type
-     *
-     * @return string
-     */
-    protected function getResourceType()
-    {
-        return Constants::TYPE_PAGE;
+        // Set the attribute filter
+        $this->setFilter();
     }
 
     /**
@@ -57,12 +39,24 @@ class PageResource extends Resource
     }
 
     /**
+     * Returns the identifier for this resource
+     *
+     * @return string
+     */
+    public function getId()
+    {
+        // we use raw route so that the homepage
+        // returns a query-able identifier
+        return ltrim($this->resource->rawRoute(), '/');
+    }
+
+    /**
      * Returns the attributes associated with this resource
      *
      * @param array|null $fields
      * @return array
      */
-    protected function getResourceAttributes($fields)
+    protected function getResourceAttributes()
     {
         // All our Page attributes
         $attributes = [
@@ -166,16 +160,19 @@ class PageResource extends Resource
         ];
 
         // Filter for requested fields
-        if ($fields) {
+        if ($this->filter) {
             $attributes = [];
 
-            foreach ($fields as $field) {
+            foreach ($this->filter as $field) {
+                // We have to handle certain fields differently by calling
+                // helper functions to preprocess the data
                 if (method_exists($this->resource, $field)) {
                     if ($field === 'children') {
                         $attributes[$field] = $this->processChildren();
                     } elseif ($field === 'media') {
                         $attributes[$field] = $this->processMedia();
                     } else {
+                        // Call the method with the associated field name
                         $attributes[$field] = $this->resource->{$field}();
                     }
                 }
@@ -183,6 +180,15 @@ class PageResource extends Resource
         }
 
         return $attributes;
+    }
+    /**
+     * Returns the resource type
+     *
+     * @return string
+     */
+    protected function getResourceType()
+    {
+        return Constants::TYPE_PAGE;
     }
 
     /**
@@ -228,5 +234,21 @@ class PageResource extends Resource
         }
 
         return $media;
+    }
+
+    /**
+     * Sets a filter for the list of attributes based on the
+     * API plugin's config setting.
+
+     * @return void
+     */
+    private function setFilter()
+    {
+        $filter = Config::instance()->pages->get['fields'];
+
+        // TODO: improve validation of filter input
+        if ($filter) {
+            $this->filter = $filter;
+        }
     }
 }
