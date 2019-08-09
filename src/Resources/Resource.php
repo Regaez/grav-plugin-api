@@ -11,6 +11,13 @@ abstract class Resource
     abstract protected function getResourceType();
 
     /**
+     * Returns the hypermedia array for this resource
+     *
+     * @return array
+     */
+    abstract protected function getHypermedia();
+
+    /**
     * Returns the attributes associated with this resource
     *
     * @param array|null $fields optional
@@ -28,6 +35,19 @@ abstract class Resource
         return Config::instance()->getEndpoint(
             $this->getResourceType()
         );
+    }
+
+    /**
+     * Returns the releated hypermedia array for this resource type
+     *
+     * @return array
+     */
+    protected function getRelatedHypermedia()
+    {
+        return [
+            'self' => $this->getRelatedSelf(),
+            'resource' => $this->getResourceEndpoint()
+        ];
     }
 
     /**
@@ -60,12 +80,7 @@ abstract class Resource
             'type' => $this->getResourceType(),
             'id' => $this->getId(),
             'attributes' => $attributes,
-            // TODO: improve hypermedia linking
-            'links' => [
-                'related' => [
-                    'self' => $this->getRelatedSelf()
-                ]
-            ]
+            'links' => $this->getHypermedia()
         ];
     }
 }

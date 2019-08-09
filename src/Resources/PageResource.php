@@ -44,6 +44,19 @@ class PageResource extends Resource
     }
 
     /**
+     * Returns the hypermedia array for this resource
+     *
+     * @return string
+     */
+    protected function getHypermedia()
+    {
+        return [
+            'self' => $this->resource->permalink(),
+            'related' => $this->getRelatedHypermedia()
+        ];
+    }
+
+    /**
      * Returns the attributes associated with this resource
      *
      * @param array|null $fields

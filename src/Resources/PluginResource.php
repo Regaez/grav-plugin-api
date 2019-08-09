@@ -51,4 +51,16 @@ class PluginResource extends Resource
     {
         return (array) $this->resource->config();
     }
+
+    /**
+     * Returns the hypermedia array for this resource
+     *
+     * @return string
+     */
+    protected function getHypermedia()
+    {
+        return [
+            'related' => $this->getRelatedHypermedia()
+        ];
+    }
 }
