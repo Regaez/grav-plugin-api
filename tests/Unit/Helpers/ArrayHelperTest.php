@@ -48,12 +48,4 @@ final class ArrayHelperTest extends TestCase
             ArrayHelper::merge($mockCurrent, $mockNew)
         );
     }
-
-    // public function testGravInstanceHasPlugins(): void
-    // {
-    //     $name = 'myplugin';
-    //     $plugin = Grav::instance()['plugins']->get($name);
-
-    //     $this->assertEquals($name, $plugin->name);
-    // }
 }
