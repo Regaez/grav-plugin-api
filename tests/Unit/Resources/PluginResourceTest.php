@@ -34,7 +34,7 @@ final class PluginResourceTest extends Test
         Config::instance([
             'api' => [
                 'route' => 'api',
-                'permalink' => 'https://test.domain/api'
+                'permalink' => 'http://localhost/api'
             ]
         ]);
 
@@ -73,7 +73,7 @@ final class PluginResourceTest extends Test
     public function testGetResourceEndpointReturnsExpectedUrl(): void
     {
         $this->assertEquals(
-            'https://test.domain/api/plugins/',
+            'http://localhost/api/plugins/',
             $this->resource->getResourceEndpoint()
         );
     }
@@ -81,7 +81,7 @@ final class PluginResourceTest extends Test
     public function testGetRelatedSelfReturnsExpectedUrl(): void
     {
         $this->assertEquals(
-            'https://test.domain/api/plugins/api',
+            'http://localhost/api/plugins/api',
             $this->resource->getRelatedSelf()
         );
     }
@@ -89,8 +89,8 @@ final class PluginResourceTest extends Test
     public function testGetRelatedHypermediaReturnsSelfAndResourceUrls(): void
     {
         $expected = [
-            'self' => 'https://test.domain/api/plugins/api',
-            'resource' => 'https://test.domain/api/plugins/'
+            'self' => 'http://localhost/api/plugins/api',
+            'resource' => 'http://localhost/api/plugins/'
         ];
 
         $this->assertEquals(
@@ -103,8 +103,8 @@ final class PluginResourceTest extends Test
     {
         $expected = [
             'related' => [
-                'self' => 'https://test.domain/api/plugins/api',
-                'resource' => 'https://test.domain/api/plugins/'
+                'self' => 'http://localhost/api/plugins/api',
+                'resource' => 'http://localhost/api/plugins/'
             ]
         ];
 
@@ -122,8 +122,8 @@ final class PluginResourceTest extends Test
             'attributes' => $this->plugin->config(),
             'links' => [
                 'related' => [
-                    'self' => 'https://test.domain/api/plugins/api',
-                    'resource' => 'https://test.domain/api/plugins/'
+                    'self' => 'http://localhost/api/plugins/api',
+                    'resource' => 'http://localhost/api/plugins/'
                 ]
             ]
         ];

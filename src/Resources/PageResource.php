@@ -30,7 +30,7 @@ class PageResource extends Resource
      *
      * @return string
      */
-    protected function getHypermedia()
+    public function getHypermedia()
     {
         return [
             'self' => $this->resource->permalink(),
@@ -56,7 +56,7 @@ class PageResource extends Resource
      * @param array|null $fields
      * @return array
      */
-    protected function getResourceAttributes()
+    public function getResourceAttributes()
     {
         // All our Page attributes
         $attributes = [
@@ -81,7 +81,7 @@ class PageResource extends Resource
             'expires' => $this->resource->expires(),
             'exists' => $this->resource->exists(),
             'extension' => $this->resource->extension(),
-            'extra' => $this->resource->extra(),
+            // 'extra' => $this->resource->extra(),
 
             // TODO: would this be any use?
             // 'file' => $this->resource->file(),
@@ -94,9 +94,9 @@ class PageResource extends Resource
             'frontmatter' => $this->resource->frontmatter(),
 
             // TODO: do we really need this and `content` field?
-            // 'getRawContent' => $this->resource->getRawContent(),
+            // 'getRawContent' => $this->resource-> getRawContent(),
 
-            'header' => $this->resource->header(),
+            'header' => (array) $this->resource->header(),
             'home' => $this->resource->home(),
             'id' => $this->resource->id(),
             'isDir' => $this->resource->isDir(),
@@ -186,7 +186,7 @@ class PageResource extends Resource
      *
      * @return string
      */
-    protected function getResourceType()
+    public function getResourceType()
     {
         return Constants::TYPE_PAGE;
     }
@@ -197,7 +197,7 @@ class PageResource extends Resource
      *
      * @return array
      */
-    protected function processChildren()
+    public function processChildren()
     {
         $children = [];
         foreach ($this->resource->children()->toArray() as $child) {
@@ -212,7 +212,7 @@ class PageResource extends Resource
      *
      * @return array
      */
-    protected function processMedia()
+    public function processMedia()
     {
         // TODO: handle other page media types; probably make this a resource type, or its own class
         $media = [];

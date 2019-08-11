@@ -42,6 +42,11 @@ class Config
             self::$instance = new Config($settings);
         }
 
+        // Recreate config instance if new settings are passed
+        if (!empty($settings)) {
+            self::$instance = new Config($settings);
+        }
+
         return self::$instance;
     }
 
