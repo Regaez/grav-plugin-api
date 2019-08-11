@@ -36,7 +36,7 @@ class PluginResource extends Resource
      *
      * @return string
      */
-    protected function getResourceType()
+    public function getResourceType()
     {
         return Constants::TYPE_PLUGIN;
     }
@@ -47,7 +47,7 @@ class PluginResource extends Resource
      * @param array|null $fields
      * @return array
      */
-    protected function getResourceAttributes()
+    public function getResourceAttributes()
     {
         return (array) $this->resource->config();
     }
@@ -57,7 +57,7 @@ class PluginResource extends Resource
      *
      * @return string
      */
-    protected function getHypermedia()
+    public function getHypermedia()
     {
         return [
             'related' => $this->getRelatedHypermedia()

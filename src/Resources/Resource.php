@@ -42,7 +42,7 @@ abstract class Resource
      *
      * @return array
      */
-    protected function getRelatedHypermedia()
+    public function getRelatedHypermedia()
     {
         return [
             'self' => $this->getRelatedSelf(),
@@ -55,7 +55,7 @@ abstract class Resource
      *
      * @return string
      */
-    protected function getRelatedSelf()
+    public function getRelatedSelf()
     {
         return $this->getResourceEndpoint() . $this->getId();
     }
@@ -65,7 +65,7 @@ abstract class Resource
      *
      * @return string
      */
-    protected function getResourceEndpoint()
+    public function getResourceEndpoint()
     {
         return Config::instance()->getEndpoint(
             $this->getResourceType()

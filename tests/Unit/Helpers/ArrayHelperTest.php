@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 use GravApi\Helpers\ArrayHelper;
+use Grav\Common\Grav;
 
 final class ArrayHelperTest extends TestCase
 {
@@ -47,4 +48,12 @@ final class ArrayHelperTest extends TestCase
             ArrayHelper::merge($mockCurrent, $mockNew)
         );
     }
+
+    // public function testGravInstanceHasPlugins(): void
+    // {
+    //     $name = 'myplugin';
+    //     $plugin = Grav::instance()['plugins']->get($name);
+
+    //     $this->assertEquals($name, $plugin->name);
+    // }
 }

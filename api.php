@@ -11,6 +11,7 @@ use RocketTheme\Toolbox\Event\Event;
 class ApiPlugin extends Plugin
 {
     protected $defaultBaseRoute = 'api';
+    protected $api;
 
     /**
      * @return array
@@ -58,11 +59,24 @@ class ApiPlugin extends Plugin
             return;
         }
 
-        // Load app dependencies once we know the request is for the API
-        require_once __DIR__.'/vendor/autoload.php';
-        require_once __DIR__.'/src/Api.php';
+        $this->loadApi()->run();
 
-        $api = new \GravApi\Api(
+        // We don't need Grav to do any more
+        exit();
+    }
+
+    /**
+     * Loads the GravApi dependencies and returns a new instance the Api app
+     *
+     * @return GravApi\Api $api
+     */
+    public function loadApi()
+    {
+        // Load app dependencies once we know the request is for the API
+        require_once __DIR__ . '/vendor/autoload.php';
+        require_once __DIR__ . '/src/Api.php';
+
+        return new \GravApi\Api(
             array_merge(
                 array(
                     'api' => $this->getBaseRoute()
@@ -70,10 +84,6 @@ class ApiPlugin extends Plugin
                 $this->config->get('plugins.api.endpoints')
             )
         );
-        $api->run();
-
-        // We don't need Grav to do any more
-        exit();
     }
 
     /**

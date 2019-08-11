@@ -24,7 +24,7 @@ class Config
      * We map all settings to existing class properties
      * @param [array] $settings
      */
-    private function __construct($settings = null)
+    private function __construct($settings = array())
     {
         foreach ($settings as $key => $value) {
             if (property_exists($this, $key)) {
@@ -35,7 +35,7 @@ class Config
         }
     }
 
-    public static function instance($settings = null)
+    public static function instance($settings = array())
     {
         // Check if instance is already exists
         if (self::$instance == null) {
