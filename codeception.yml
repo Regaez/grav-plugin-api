@@ -1,0 +1,16 @@
+actor: Tester
+paths:
+    tests: tests
+    log: build/tests/_output
+    data: build/tests/_data
+    support: build/tests/_support
+    envs: build/tests/_envs
+settings:
+    bootstrap: _bootstrap.php
+    colors: true
+    memory_limit: 1024M
+extensions:
+    enabled:
+        - Codeception\Extension\RunFailed
+modules:
+    config:

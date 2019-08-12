@@ -7,20 +7,47 @@ abstract class Resource
 {
     protected $resource;
 
+    /**
+     * A list of fields to remove from the resource attributes response
+     *
+     * @var string[]
+     */
+    protected $filter = null;
+
     abstract public function getId();
-    abstract protected function getResourceType();
+
+    /**
+     * Returns the hypermedia array for this resource
+     *
+     * @return array
+     */
+    abstract protected function getHypermedia();
+
+    /**
+    * Returns the attributes associated with this resource
+    *
+    * @return array
+    */
     abstract protected function getResourceAttributes();
 
     /**
-     * Returns the API endpoint for this resource type
+     * Returns the resource type
      *
      * @return string
      */
-    protected function getResourceEndpoint()
+    abstract protected function getResourceType();
+
+    /**
+     * Returns the releated hypermedia array for this resource type
+     *
+     * @return array
+     */
+    public function getRelatedHypermedia()
     {
-        return Config::instance()->getEndpoint(
-            $this->getResourceType()
-        );
+        return [
+            'self' => $this->getRelatedSelf(),
+            'resource' => $this->getResourceEndpoint()
+        ];
     }
 
     /**
@@ -28,32 +55,43 @@ abstract class Resource
      *
      * @return string
      */
-    protected function getRelatedSelf()
+    public function getRelatedSelf()
     {
         return $this->getResourceEndpoint() . $this->getId();
+    }
+
+    /**
+     * Returns the API endpoint for this resource type
+     *
+     * @return string
+     */
+    public function getResourceEndpoint()
+    {
+        return Config::instance()->getEndpoint(
+            $this->getResourceType()
+        );
     }
 
     /**
      * Returns the resource object as an array/json.
      * Also accepts an array of fields by which to filter.
      *
-     * @param  array $fields optional
+     * @param  bool         $attributesOnly optional
      * @return array
      */
-    public function toJson()
+    public function toJson($attributesOnly = false)
     {
-        // TODO: filter attributes based on field param
+        $attributes = $this->getResourceAttributes();
+
+        if ($attributesOnly) {
+            return $attributes;
+        }
 
         return [
             'type' => $this->getResourceType(),
             'id' => $this->getId(),
-            'attributes' => $this->getResourceAttributes(),
-            // TODO: improve hypermedia linking
-            'links' => [
-                'related' => [
-                    'self' => $this->getRelatedSelf()
-                ]
-            ]
+            'attributes' => $attributes,
+            'links' => $this->getHypermedia()
         ];
     }
 }

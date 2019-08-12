@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-use PHPUnit\Framework\TestCase;
+use Codeception\TestCase\Test;
 use GravApi\Helpers\ArrayHelper;
 
-final class ArrayHelperTest extends TestCase
+final class ArrayHelperTest extends Test
 {
     public function testCanMergeUniqueArrays(): void
     {

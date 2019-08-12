@@ -36,7 +36,7 @@ class PluginResource extends Resource
      *
      * @return string
      */
-    protected function getResourceType()
+    public function getResourceType()
     {
         return Constants::TYPE_PLUGIN;
     }
@@ -44,10 +44,23 @@ class PluginResource extends Resource
     /**
      * Returns the attributes associated with this resource
      *
+     * @param array|null $fields
      * @return array
      */
-    protected function getResourceAttributes()
+    public function getResourceAttributes()
     {
         return (array) $this->resource->config();
+    }
+
+    /**
+     * Returns the hypermedia array for this resource
+     *
+     * @return string
+     */
+    public function getHypermedia()
+    {
+        return [
+            'related' => $this->getRelatedHypermedia()
+        ];
     }
 }

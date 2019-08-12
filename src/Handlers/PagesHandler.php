@@ -20,9 +20,7 @@ class PagesHandler extends BaseHandler
 
         $resource = new PageCollectionResource($collection);
 
-        return $response->withJson(
-            $this->getFilteredResource($resource)
-        );
+        return $response->withJson($resource->toJson());
     }
 
     public function getPage($request, $response, $args)
@@ -36,9 +34,7 @@ class PagesHandler extends BaseHandler
 
         $resource = new PageResource($page);
 
-        return $response->withJson(
-            $this->getFilteredResource($resource)
-        );
+        return $response->withJson($resource->toJson());
     }
 
     public function newPage($request, $response, $args)
@@ -97,9 +93,7 @@ class PagesHandler extends BaseHandler
         // Use our resource to return the filtered page
         $resource = new PageResource($page);
 
-        return $response->withJson(
-            $this->getFilteredResource($resource)
-        );
+        return $response->withJson($resource->toJson());
     }
 
     public function deletePage($request, $response, $args)
@@ -203,21 +197,6 @@ class PagesHandler extends BaseHandler
         // Use our resource to return the updated page
         $resource = new PageResource($page);
 
-        return $response->withJson(
-            $this->getFilteredResource($resource)
-        );
-    }
-
-    // Applies our config field filter to the resource and
-    // returns the remaining data as JSON
-    protected function getFilteredResource($resource)
-    {
-        $filter = null;
-
-        if (!empty($this->config->pages->get['fields'])) {
-            $filter = $this->config->pages->get['fields'];
-        }
-
-        return $resource->toJson($filter);
+        return $response->withJson($resource->toJson());
     }
 }

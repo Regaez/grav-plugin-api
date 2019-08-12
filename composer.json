@@ -10,7 +10,7 @@
   "require-dev": {
     "squizlabs/php_codesniffer": "^3.4",
     "brainmaestro/composer-git-hooks": "^2.7",
-    "phpunit/phpunit": "^8",
+    "codeception/codeception": "^2.4",
     "overtrue/phplint": "^1.1"
   },
   "scripts": {
@@ -33,7 +33,9 @@
     ],
     "stop": "docker-compose -f docker-compose.yaml down",
     "test": [
-      "./vendor/bin/phpunit --bootstrap vendor/autoload.php --testdox ./tests"
+      "composer start",
+      "./vendor/bin/codecept build",
+      "docker-compose exec -T --workdir /var/www/html grav ./user/plugins/api/vendor/bin/codecept -c ./user/plugins/api/ run unit"
     ]
   },
   "extra": {
