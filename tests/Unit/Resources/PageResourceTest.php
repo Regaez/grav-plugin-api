@@ -85,9 +85,9 @@ final class PageResourceTest extends Test
             "expires" => 604800,
             "exists" => true,
             "extension" => ".md",
-            // "extra" => [
-            //     "header.custom_field" => "WORLD"
-            // ],
+            "extra" => [
+                "header.custom_field" => "WORLD"
+            ],
             "filePathClean" => "user/pages/test/default.md",
             "folder" => "test",
             "frontmatter" => "title: 'Test page'\ncustom_field: WORLD",
@@ -224,9 +224,9 @@ final class PageResourceTest extends Test
             "expires" => 604800,
             "exists" => true,
             "extension" => ".md",
-            // "extra" => [
-            //     "header.custom_field" => "WORLD"
-            // ],
+            "extra" => [
+                "header.custom_field" => "WORLD"
+            ],
             "filePathClean" => "user/pages/test/default.md",
             "folder" => "test",
             "frontmatter" => "title: 'Test page'\ncustom_field: WORLD",
@@ -315,9 +315,9 @@ final class PageResourceTest extends Test
             "expires" => 604800,
             "exists" => true,
             "extension" => ".md",
-            // "extra" => [
-            //     "header.custom_field" => "WORLD"
-            // ],
+            "extra" => [
+                "header.custom_field" => "WORLD"
+            ],
             "filePathClean" => "user/pages/test/default.md",
             "folder" => "test",
             "frontmatter" => "title: 'Test page'\ncustom_field: WORLD",

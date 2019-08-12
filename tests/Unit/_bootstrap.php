@@ -15,6 +15,8 @@ $grav = function () {
     }
     $grav['streams'];
     $grav['plugins']->init();
+    $grav['themes'];
+    $grav['themes']->configure();
     $grav['uri']->init();
     $grav['debugger']->init();
     $grav['assets']->init();

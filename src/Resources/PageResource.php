@@ -81,7 +81,7 @@ class PageResource extends Resource
             'expires' => $this->resource->expires(),
             'exists' => $this->resource->exists(),
             'extension' => $this->resource->extension(),
-            // 'extra' => $this->resource->extra(),
+            'extra' => $this->resource->extra(),
 
             // TODO: would this be any use?
             // 'file' => $this->resource->file(),
