@@ -80,7 +80,7 @@ final class PageResourceTest extends Test
             "children" => [],
             "childType" => "",
             "content" => "<h1>Hello {{custom_field}}! This is a test.</h1>",
-            "date" => 1565545434,
+            "date" => 1565642012,
             "eTag" => false,
             "expires" => 604800,
             "exists" => true,
@@ -96,7 +96,7 @@ final class PageResourceTest extends Test
                 "custom_field" => "WORLD"
             ],
             "home" => false,
-            "id" => "156554543472ebcd1270d0fccaa9958b7c3952fe87",
+            "id" => "156564201272ebcd1270d0fccaa9958b7c3952fe87",
             "isDir" => false,
             "isFirst" => false,
             "isLast" => false,
@@ -116,7 +116,7 @@ final class PageResourceTest extends Test
                     "name" => "description"
                 ]
             ],
-            "modified" => 1565545434,
+            "modified" => 1565642012,
             "modularTwig" => false,
             "modular" => false,
             "name" => "default.md",
@@ -219,7 +219,7 @@ final class PageResourceTest extends Test
             "children" => [],
             "childType" => "",
             "content" => "<h1>Hello {{custom_field}}! This is a test.</h1>",
-            "date" => 1565545434,
+            "date" => 1565642012,
             "eTag" => false,
             "expires" => 604800,
             "exists" => true,
@@ -235,7 +235,7 @@ final class PageResourceTest extends Test
                 "custom_field" => "WORLD"
             ],
             "home" => false,
-            "id" => "156554543472ebcd1270d0fccaa9958b7c3952fe87",
+            "id" => "156564201272ebcd1270d0fccaa9958b7c3952fe87",
             "isDir" => false,
             "isFirst" => false,
             "isLast" => false,
@@ -255,7 +255,7 @@ final class PageResourceTest extends Test
                     "name" => "description"
                 ]
             ],
-            "modified" => 1565545434,
+            "modified" => 1565642012,
             "modularTwig" => false,
             "modular" => false,
             "name" => "default.md",
@@ -310,7 +310,7 @@ final class PageResourceTest extends Test
             "children" => [],
             "childType" => "",
             "content" => "<h1>Hello {{custom_field}}! This is a test.</h1>",
-            "date" => 1565545434,
+            "date" => 1565642012,
             "eTag" => false,
             "expires" => 604800,
             "exists" => true,
@@ -326,7 +326,7 @@ final class PageResourceTest extends Test
                 "custom_field" => "WORLD"
             ],
             "home" => false,
-            "id" => "156554543472ebcd1270d0fccaa9958b7c3952fe87",
+            "id" => "156564201272ebcd1270d0fccaa9958b7c3952fe87",
             "isDir" => false,
             "isFirst" => false,
             "isLast" => false,
@@ -346,7 +346,7 @@ final class PageResourceTest extends Test
                     "name" => "description"
                 ]
             ],
-            "modified" => 1565545434,
+            "modified" => 1565642012,
             "modularTwig" => false,
             "modular" => false,
             "name" => "default.md",
