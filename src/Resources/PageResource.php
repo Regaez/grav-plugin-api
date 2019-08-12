@@ -181,6 +181,7 @@ class PageResource extends Resource
 
         return $attributes;
     }
+
     /**
      * Returns the resource type
      *

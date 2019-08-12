@@ -2,13 +2,12 @@
 namespace GravApi\Handlers;
 
 use GravApi\Resources\UserResource;
+use GravApi\Resources\UserCollectionResource;
 use GravApi\Responses\Response;
 use GravApi\Helpers\ArrayHelper;
-use Grav\Common\User\User;
 use Grav\Common\User\Authentication;
 use Grav\Common\Inflector;
 use Grav\Common\File\CompiledYamlFile;
-use Symfony\Component\Yaml\Yaml;
 
 /**
  * Class PagesHandler
@@ -18,7 +17,6 @@ class UsersHandler extends BaseHandler
 {
     public function getUsers($request, $response, $args)
     {
-
         $users = [];
 
         $files = (array) glob($this->grav['locator']->findResource("account://") . '/*.yaml');
@@ -27,55 +25,27 @@ class UsersHandler extends BaseHandler
             return $response->withJson(Response::notFound(), 404);
         }
 
-        $filter = null;
-
-        if (!empty($this->config->users->get['fields'])) {
-            $filter = $this->config->users->get['fields'];
-        }
-
         foreach ($files as $file) {
             $username = basename($file, '.yaml');
-            $details = array_merge(
-                array('username' => $username),
-                Yaml::parse(file_get_contents($file))
-            );
-            $resource = new UserResource($details);
-            $users[] = $resource->toJson($filter);
+            $users[] = $this->grav['accounts']->load($username);
         }
 
-        $data = [
-            'items' => $users,
-            'meta' => [
-                'count' => count($users)
-            ]
-        ];
+        $resource = new UserCollectionResource($users);
 
-        return $response->withJson($data);
+        return $response->withJson($resource->toJson());
     }
 
     public function getUser($request, $response, $args)
     {
+        $user = $this->grav['accounts']->load($args['user']);
 
-        $file = $this->grav['locator']->findResource("account://") . "/{$args['user']}.yaml";
-
-        if (!file_exists($file)) {
+        if (!$user->exists()) {
             return $response->withJson(Response::notFound(), 404);
         }
 
-        $resource = new UserResource(array_merge(
-            array('username' => basename($file, '.yaml')),
-            Yaml::parse(file_get_contents($file))
-        ));
+        $resource = new UserResource($user);
 
-        $filter = null;
-
-        if (!empty($this->config->users->get['fields'])) {
-            $filter = $this->config->users->get['fields'];
-        }
-
-        $data = $resource->toJson($filter);
-
-        return $response->withJson($data);
+        return $response->withJson($resource->toJson());
     }
 
     public function newUser($request, $response, $args)
@@ -98,7 +68,7 @@ class UsersHandler extends BaseHandler
         // formats username to be all lowercase, with underscores instead of spaces
         $username = $inflector->underscorize($parsedBody['username']);
 
-        $user = User::load($username);
+        $user = $this->grav['accounts']->load($username);
 
         if ($user->exists()) {
             return $response->withJson(Response::resourceExists(), 403);
@@ -134,9 +104,9 @@ class UsersHandler extends BaseHandler
 
         $user = $this->createUser($username, $data);
 
-        $data = $this->getFilteredResource($username, $user);
+        $resource = new UserResource($user);
 
-        return $response->withJson($data);
+        return $response->withJson($resource->toJson());
     }
 
     public function updateUser($request, $response, $args)
@@ -144,7 +114,7 @@ class UsersHandler extends BaseHandler
         $parsedBody = $request->getParsedBody();
         $username = $args['user'];
 
-        $user = User::load($username);
+        $user = $this->grav['accounts']->load($username);
 
         if (!$user->exists()) {
             return $response->withJson(Response::notFound(), 404);
@@ -186,16 +156,16 @@ class UsersHandler extends BaseHandler
 
         $user = $this->createUser($username, $updatedUser);
 
-        $data = $this->getFilteredResource($username, $user);
+        $resource = new UserResource($user);
 
-        return $response->withJson($data);
+        return $response->withJson($resource->toJson());
     }
 
     public function deleteUser($request, $response, $args)
     {
         $username = $args['user'];
 
-        $user = User::load($username);
+        $user = $this->grav['accounts']->load($username);
 
         if (!$user->exists()) {
             return $response->withJson(Response::notFound(), 404);
@@ -209,7 +179,8 @@ class UsersHandler extends BaseHandler
     // Create user object and save it
     protected function createUser($username, $data)
     {
-        $user = new User($data);
+        $user = $this->grav['accounts']->load($username);
+        $user->update($data);
         $file = CompiledYamlFile::instance($this->grav['locator']->findResource(
             'user://accounts/' . $username . YAML_EXT,
             true,
@@ -219,22 +190,5 @@ class UsersHandler extends BaseHandler
         $user->save();
 
         return $user;
-    }
-
-    // Create a new User resource and return filtered data
-    protected function getFilteredResource($username, $user)
-    {
-        $resource = new UserResource(array_merge(
-            $user->toArray(),
-            array('username' => $username)
-        ));
-
-        $filter = null;
-
-        if (!empty($this->config->users->get['fields'])) {
-            $filter = $this->config->users->get['fields'];
-        }
-
-        return $resource->toJson($filter);
     }
 }
