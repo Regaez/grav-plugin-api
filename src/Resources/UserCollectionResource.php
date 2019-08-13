@@ -25,7 +25,7 @@ class UserCollectionResource extends CollectionResource
      * @param  User $user
      * @return UserResource
      */
-    protected function getResource($user)
+    public function getResource($user)
     {
         return new UserResource($user);
     }

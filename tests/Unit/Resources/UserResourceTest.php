@@ -52,7 +52,7 @@ final class UserResourceTest extends Test
 
     //
     // TODO: Uncomment other tests once this issue is resolved:
-    // https://github.com/getgrav/grav/issues/2620
+    // https://github.com/Regaez/grav-plugin-api/issues/38
     //
 
     // public function testGetIdReturnsPluginName(): void
