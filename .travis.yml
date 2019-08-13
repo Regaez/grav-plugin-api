@@ -17,3 +17,8 @@ script: composer test
 cache:
     directories:
         - "$HOME/.composer/cache"
+
+addons:
+  apt:
+    packages:
+      - docker-ce
