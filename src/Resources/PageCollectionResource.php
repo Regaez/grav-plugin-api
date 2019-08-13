@@ -26,7 +26,7 @@ class PageCollectionResource extends CollectionResource
      * @param  Page $plugin
      * @return PageResource
      */
-    protected function getResource($page)
+    public function getResource($page)
     {
         return new PageResource($page);
     }
