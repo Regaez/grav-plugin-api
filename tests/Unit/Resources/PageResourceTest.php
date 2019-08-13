@@ -69,11 +69,6 @@ final class PageResourceTest extends Test
         );
     }
 
-    /**
-     * TODO: https://github.com/Regaez/grav-plugin-api/issues/36
-     *
-     * Figure out why the `extra` field causes an error running tests
-     */
     public function testGetResourceAttributesReturnsPageData(): void
     {
         $attributes = [
@@ -144,22 +139,6 @@ final class PageResourceTest extends Test
             "unpublishDate" => null,
             "untranslatedLanguages" => [],
             "visible" => false
-        ];
-
-        $this->assertEquals(
-            $attributes,
-            $this->resource->getResourceAttributes()
-        );
-    }
-
-    public function testGetResourceAttributesReturnsPageDataAgain(): void
-    {
-        $this->_before(['title', 'rawMarkdown', 'slug']);
-
-        $attributes = [
-            'title' => 'Test page',
-            'rawMarkdown' => "# Hello {{custom_field}}! This is a test.\n",
-            'slug' => 'test'
         ];
 
         $this->assertEquals(
