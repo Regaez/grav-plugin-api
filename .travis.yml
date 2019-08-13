@@ -1,0 +1,7 @@
+language: php
+services:
+    - docker
+script: composer test
+cache:
+    directories:
+        - "$HOME/.composer/cache"
