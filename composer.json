@@ -34,7 +34,6 @@
     "stop": "docker-compose -f docker-compose.yaml down",
     "test": [
       "composer start",
-      "./vendor/bin/codecept build",
       "docker-compose exec -T --workdir /var/www/html grav ./user/plugins/api/vendor/bin/codecept -c ./user/plugins/api/ run unit"
     ]
   },
