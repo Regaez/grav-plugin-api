@@ -69,18 +69,13 @@ final class PageResourceTest extends Test
         );
     }
 
-    /**
-     * TODO: https://github.com/Regaez/grav-plugin-api/issues/36
-     *
-     * Figure out why the `extra` field causes an error running tests
-     */
     public function testGetResourceAttributesReturnsPageData(): void
     {
         $attributes = [
             "children" => [],
             "childType" => "",
             "content" => "<h1>Hello {{custom_field}}! This is a test.</h1>",
-            "date" => 1565545434,
+            "date" => 1565642012,
             "eTag" => false,
             "expires" => 604800,
             "exists" => true,
@@ -96,7 +91,7 @@ final class PageResourceTest extends Test
                 "custom_field" => "WORLD"
             ],
             "home" => false,
-            "id" => "156554543472ebcd1270d0fccaa9958b7c3952fe87",
+            "id" => "156564201272ebcd1270d0fccaa9958b7c3952fe87",
             "isDir" => false,
             "isFirst" => false,
             "isLast" => false,
@@ -116,7 +111,7 @@ final class PageResourceTest extends Test
                     "name" => "description"
                 ]
             ],
-            "modified" => 1565545434,
+            "modified" => 1565642012,
             "modularTwig" => false,
             "modular" => false,
             "name" => "default.md",
@@ -144,22 +139,6 @@ final class PageResourceTest extends Test
             "unpublishDate" => null,
             "untranslatedLanguages" => [],
             "visible" => false
-        ];
-
-        $this->assertEquals(
-            $attributes,
-            $this->resource->getResourceAttributes()
-        );
-    }
-
-    public function testGetResourceAttributesReturnsPageDataAgain(): void
-    {
-        $this->_before(['title', 'rawMarkdown', 'slug']);
-
-        $attributes = [
-            'title' => 'Test page',
-            'rawMarkdown' => "# Hello {{custom_field}}! This is a test.\n",
-            'slug' => 'test'
         ];
 
         $this->assertEquals(
@@ -219,7 +198,7 @@ final class PageResourceTest extends Test
             "children" => [],
             "childType" => "",
             "content" => "<h1>Hello {{custom_field}}! This is a test.</h1>",
-            "date" => 1565545434,
+            "date" => 1565642012,
             "eTag" => false,
             "expires" => 604800,
             "exists" => true,
@@ -235,7 +214,7 @@ final class PageResourceTest extends Test
                 "custom_field" => "WORLD"
             ],
             "home" => false,
-            "id" => "156554543472ebcd1270d0fccaa9958b7c3952fe87",
+            "id" => "156564201272ebcd1270d0fccaa9958b7c3952fe87",
             "isDir" => false,
             "isFirst" => false,
             "isLast" => false,
@@ -255,7 +234,7 @@ final class PageResourceTest extends Test
                     "name" => "description"
                 ]
             ],
-            "modified" => 1565545434,
+            "modified" => 1565642012,
             "modularTwig" => false,
             "modular" => false,
             "name" => "default.md",
@@ -310,7 +289,7 @@ final class PageResourceTest extends Test
             "children" => [],
             "childType" => "",
             "content" => "<h1>Hello {{custom_field}}! This is a test.</h1>",
-            "date" => 1565545434,
+            "date" => 1565642012,
             "eTag" => false,
             "expires" => 604800,
             "exists" => true,
@@ -326,7 +305,7 @@ final class PageResourceTest extends Test
                 "custom_field" => "WORLD"
             ],
             "home" => false,
-            "id" => "156554543472ebcd1270d0fccaa9958b7c3952fe87",
+            "id" => "156564201272ebcd1270d0fccaa9958b7c3952fe87",
             "isDir" => false,
             "isFirst" => false,
             "isLast" => false,
@@ -346,7 +325,7 @@ final class PageResourceTest extends Test
                     "name" => "description"
                 ]
             ],
-            "modified" => 1565545434,
+            "modified" => 1565642012,
             "modularTwig" => false,
             "modular" => false,
             "name" => "default.md",

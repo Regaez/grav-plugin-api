@@ -5,7 +5,6 @@ use Codeception\TestCase\Test;
 use Codeception\Util\Fixtures;
 use Grav\Common\Grav;
 use Grav\Common\Plugin;
-use GravApi\Api;
 use GravApi\Resources\PluginResource;
 use GravApi\Config\Constants;
 use GravApi\Config\Config;
@@ -20,9 +19,6 @@ final class PluginResourceTest extends Test
 
     /** @var PluginResource $resource */
     protected $resource;
-
-    /** @var Api $api */
-    protected $api;
 
     protected $id = 'api';
 

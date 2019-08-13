@@ -2,69 +2,101 @@
 namespace GravApi\Resources;
 
 use GravApi\Config\Config;
+use GravApi\Config\Constants;
+use GravApi\Resources\Resource;
+use Grav\Common\User\User;
 
 /**
  * Class UserResource
- * @package GravApi\UserResource
+ * @package GravApi\Resources
  */
-class UserResource
+class UserResource extends Resource
 {
-    protected $username;
-    protected $email;
-    protected $fullname;
-    protected $title;
-    protected $state;
-    protected $access;
+    /**
+     * @var User
+     */
+    protected $resource;
 
-    public function __construct($details)
+    public function __construct(User $userDetails)
     {
-        $this->username = $details['username'] ?: null;
-        $this->email = $details['email'] ?: null;
-        $this->fullname = $details['fullname'] ?: null;
-        $this->title = $details['title'] ?: null;
-        $this->state = $details['state'] ?: null;
-        $this->access = $details['access'] ?: null;
+        $this->resource = $userDetails;
+
+        // Set the attribute filter
+        $this->setFilter();
     }
 
-    public function toJson($fields = null, $attributes_only = false)
+    /**
+     * Returns the hypermedia array for this resource
+     *
+     * @return string
+     */
+    public function getHypermedia()
+    {
+        return [
+            'related' => $this->getRelatedHypermedia()
+        ];
+    }
+
+    /**
+     * Returns the identifier for this resource
+     *
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->resource->username;
+    }
+
+    /**
+     * Returns the attributes associated with this resource
+     *
+     * @param array|null $fields
+     * @return array
+     */
+    public function getResourceAttributes()
     {
         $attributes = [
-            'username' => $this->username,
-            'email' => $this->email,
-            'fullname' => $this->fullname,
-            'title' => $this->title,
-            'state' => $this->state,
-            'access' => $this->access
+            'username' => $this->resource->get('username'),
+            'email' => $this->resource->get('email'),
+            'fullname' => $this->resource->get('fullname'),
+            'title' => $this->resource->get('title'),
+            'state' => $this->resource->get('state'),
+            'access' => $this->resource->get('access')
         ];
 
-        // Filter for requested fields
-        if ($fields) {
+        if ($this->filter) {
             $attributes = [];
 
-            foreach ($fields as $field) {
-                if (property_exists($this, $field)) {
-                    $attributes[$field] = $this->{$field};
-                }
+            foreach ($this->filter as $field) {
+                $attributes[$field] = $this->resource->get($field);
             }
         }
 
-        if ($attributes_only) {
-            return $attributes;
+        return $attributes;
+    }
+
+    /**
+     * Returns the resource type
+     *
+     * @return string
+     */
+    public function getResourceType()
+    {
+        return Constants::TYPE_USER;
+    }
+
+    /**
+     * Sets a filter for the list of attributes based on the
+     * API plugin's config setting.
+
+     * @return void
+     */
+    private function setFilter()
+    {
+        $filter = Config::instance()->users->get['fields'];
+
+        if (!empty($filter)) {
+            $this->filter = $filter;
         }
-
-        $settings = Config::instance();
-        $apiUrl = $settings->api->permalink.'/users/'.$this->username;
-
-        // Return Resource object
-        return [
-            'type' => 'user',
-            'id' => $this->username,
-            'attributes' => $attributes,
-            'links' => [
-                'related' => [
-                    'self' => $apiUrl
-                ]
-            ]
-        ];
     }
 }

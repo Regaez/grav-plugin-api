@@ -24,7 +24,7 @@ class PluginCollectionResource extends CollectionResource
      * @param  Plugin $plugin
      * @return PluginResource
      */
-    protected function getResource($plugin)
+    public function getResource($plugin)
     {
         return new PluginResource($plugin);
     }
