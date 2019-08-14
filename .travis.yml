@@ -19,12 +19,10 @@ before_install:
 
 install:
     - composer install
-    - echo $UID
-    - id -u travis
-    - ls -la
-
 
 script:
+    - composer start
+    - docker-compose exec --workdir /var/www/html/user/plugins/api grav ls -la
     - composer test:bootstrap
     - composer test
 
