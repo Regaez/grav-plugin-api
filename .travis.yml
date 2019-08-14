@@ -6,11 +6,7 @@ services:
     - docker
 
 env:
-    global:
-        - IMAGE=grav-api-dev
-        - DOCKER_COMPOSE_VERSION=1.23.1
-        - CACHE_FOLDER=$HOME/docker-images
-        - CACHE_FILE=${CACHE_FOLDER}/${IMAGE}-${TRAVIS_COMMIT}.tgz
+    - DOCKER_COMPOSE_VERSION=1.23.1
 
 before_install:
     - sudo rm /usr/local/bin/docker-compose
