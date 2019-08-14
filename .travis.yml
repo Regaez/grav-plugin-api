@@ -24,6 +24,7 @@ install:
     - composer install
 
 script:
+    - composer test:bootstrap
     - composer test
 
 before_cache:

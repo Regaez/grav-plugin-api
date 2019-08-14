@@ -34,8 +34,11 @@
     "stop": "docker-compose -f docker-compose.yaml down",
     "test": [
       "composer start",
-      "docker-compose exec -T --workdir /var/www/html grav ./user/plugins/api/vendor/bin/codecept -c ./user/plugins/api/ build",
       "docker-compose exec -T --workdir /var/www/html grav ./user/plugins/api/vendor/bin/codecept -c ./user/plugins/api/ run unit"
+    ],
+    "test:bootstrap": [
+      "docker-compose exec -T --workdir /var/www/html grav ./user/plugins/api/vendor/bin/codecept -c ./user/plugins/api/ bootstrap",
+      "docker-compose exec -T --workdir /var/www/html grav ./user/plugins/api/vendor/bin/codecept -c ./user/plugins/api/ build"
     ]
   },
   "extra": {
