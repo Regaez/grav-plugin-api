@@ -15,9 +15,14 @@ before_install:
     - sudo mv docker-compose /usr/local/bin
     # Load cached docker images
     - if [[ -d $HOME/docker ]]; then ls $HOME/docker/*.tar.gz | xargs -I {file} sh -c "zcat {file} | docker load"; fi
+    - docker build --cache-from grav-api-dev -t grav-api-dev:latest .
 
 install:
     - composer install
+    - echo $UID
+    - id -u travis
+    - ls -la
+
 
 script:
     - composer test:bootstrap
