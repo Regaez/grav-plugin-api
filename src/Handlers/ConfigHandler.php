@@ -13,65 +13,58 @@ use GravApi\Resources\ConfigCollectionResource;
  */
 class ConfigHandler extends BaseHandler
 {
+    /**
+     * Returns a Config object that can be passed to the ConfigResource
+     *
+     * @param  string $id
+     * @param  array  $data
+     * @return object Contains properties: id, data
+     */
+    public function createConfig(string $id, array $data)
+    {
+        return (object) [
+            'id' => $id,
+            'data' => $data
+        ];
+    }
+
     public function getConfigs($request, $response, $args)
     {
-
         $configs = [];
 
         // Find all the root config files
-        $this->finder = new ConfigFileFinder;
         $location = $this->grav['locator']->findResources('config://');
-        $configFiles = $this->finder->listFiles($location, '|\.yaml$|', 0);
+        $configFiles = (new ConfigFileFinder)->listFiles($location);
 
         // Retrieve fields of each config file
-        foreach ($configFiles as $name => $files) {
-            $configs[$name] = $this->grav['config']->get($name);
+        foreach ($configFiles as $name => $value) {
+            $data = $this->grav['config']->get($name);
+            if ($data) {
+                $configs[] = $this->createConfig($name, $data);
+            }
         }
 
         $resource = new ConfigCollectionResource($configs);
 
-        $filter = [];
-
-        if (!empty($this->config->configs->ignore_files)) {
-            $filter = $this->config->configs->ignore_files;
-        }
-
-        $data = $resource->toJson($filter);
-
-        return $response->withJson($data);
+        return $response->withJson($resource->toJson());
     }
 
     public function getConfig($request, $response, $args)
     {
-
         $name = $args['config'];
 
-        // We first pass it through the ConfigCollection to check our ignore filter, e.g. can't access 'security'
-        $collection = new ConfigCollectionResource([
-            $name => $this->grav['config']->get($name)
-        ]);
+        $data = $this->grav['config']->get($name);
 
-        $collectionFilter = [];
-        if (!empty($this->config->configs->ignore_files)) {
-            $collectionFilter = $this->config->configs->ignore_files;
-        }
-        $config = $collection->toJson($collectionFilter, true);
-
-        if (!$config) {
+        // If the Config doesn't exist, OR it is present on the filter list
+        // (i.e. we don't want to allow user access to it)
+        if (!$data || in_array($name, ConfigCollectionResource::getFilter())) {
             return $response->withJson(Response::notFound(), 404);
         }
 
-        // Access to config file is allowed, now we can proceed
+        $config = $this->createConfig($name, $data);
+
         $resource = new ConfigResource($config);
 
-        $filter = null;
-
-        if (!empty($this->config->config->fields)) {
-            $filter = $this->config->config->fields;
-        }
-
-        $data = $resource->toJson($filter);
-
-        return $response->withJson($data);
+        return $response->withJson($resource->toJson());
     }
 }

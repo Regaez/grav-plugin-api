@@ -1,46 +1,51 @@
 <?php
 namespace GravApi\Resources;
 
+use GravApi\Config\Config;
+
 /**
  * Class BaseHandler
  * @package GravApi\Handlers
  */
-class ConfigCollectionResource
+class ConfigCollectionResource extends CollectionResource
 {
-    protected $configs;
-    protected $filter;
-
     public function __construct($configs)
     {
-        $this->configs = (object) $configs;
-
-        // We don't want to show anyone our security settings!
-        $this->filter = array('security');
+        $this->collection = $configs;
+        $this->filter = self::getFilter();
     }
 
-    public function toJson($filter = array(), $attributes_only = false)
+    /**
+     * Returns array of item IDs which should be filtered from this CollectionResource
+     *
+     * @return array
+     */
+    public static function getFilter()
     {
-        $data = [];
+        // We don't want to show anyone our security settings!
+        $filter = ['security'];
 
-        foreach ($this->configs as $name => $config) {
-            // Skip if file is in either resource's filter or user custom filter
-            if (in_array($name, $this->filter) || in_array($name, $filter)) {
-                continue;
-            }
+        // Check the config for any config files we should ignore in addition
+        // to the resource's filter list
+        $ignore_files = Config::instance()->configs->ignore_files;
 
-            $data[$name] = $config;
+        if (!empty($ignore_files) && is_array($ignore_files)) {
+            return array_merge($filter, $ignore_files);
         }
 
-        if ($attributes_only) {
-            return $data;
-        }
+        // Otherwise we just return our default resource filter
+        return $filter;
+    }
 
-        // Return Resource object
-        return [
-            'items' => $data,
-            'meta' => [
-                'count' => count($data)
-            ]
-        ];
+    /**
+     * Accepts an resource from the collection and
+     * returns a new ConfigResource instance
+     *
+     * @param  object $config
+     * @return ConfigResource
+     */
+    public function getResource($config)
+    {
+        return new ConfigResource($config);
     }
 }

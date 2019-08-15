@@ -1,52 +1,96 @@
 <?php
 namespace GravApi\Resources;
 
+use GravApi\Config\Config;
+use GravApi\Config\Constants;
+use GravApi\Resources\Resource;
+
 /**
  * Class ConfigResource
  * @package GravApi\Resources
  */
-class ConfigResource
+class ConfigResource extends Resource
 {
-    protected $config;
     protected $id;
 
-    public function __construct($config)
+    public function __construct(object $config)
     {
-        // we should only ever have a single item array
-        foreach ($config as $key => $value) {
-            $this->id = $key;
-        }
+        $this->id = $config->id;
+        $this->resource = $config->data;
 
-        $this->config = (object) $config[$this->id];
+        // Set the attribute filter
+        $this->setFilter();
     }
 
     /**
-     * Returns the plugin object as an array/json.
-     * Also accepts an array of fields by which to filter.
+     * Returns the hypermedia array for this resource
      *
-     * @param  [array] $fields optional
-     * @return [array]
+     * @return string
      */
-    public function toJson($fields = null)
+    public function getHypermedia()
     {
-        $attributes = (array) $this->config;
+        return [
+            'related' => $this->getRelatedHypermedia()
+        ];
+    }
+
+    /**
+     * Returns the identifier for this resource
+     *
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Returns the attributes associated with this resource
+     *
+     * @param array|null $fields
+     * @return array
+     */
+    public function getResourceAttributes()
+    {
+        $attributes = $this->resource;
 
         // Filter for requested fields
-        if ($fields) {
+        if ($this->filter) {
             $attributes = [];
 
-            foreach ($fields as $field) {
+            foreach ($this->filter as $field) {
                 if (property_exists($this->config, $field)) {
                     $attributes[$field] = $this->config->{$field};
                 }
             }
         }
 
-        // Return Resource object
-        return [
-            'type' => 'config',
-            'id' => $this->id,
-            'attributes' => $attributes
-        ];
+        return $attributes;
+    }
+
+    /**
+     * Returns the resource type
+     *
+     * @return string
+     */
+    public function getResourceType()
+    {
+        return Constants::TYPE_CONFIG;
+    }
+
+    /**
+     * Sets a filter for the list of attributes based on the
+     * API plugin's config setting.
+
+     * @return void
+     */
+    private function setFilter()
+    {
+        $filter = Config::instance()->configs->get['fields'];
+
+        // TODO: improve validation of filter input
+        if ($filter) {
+            $this->filter = $filter;
+        }
     }
 }
