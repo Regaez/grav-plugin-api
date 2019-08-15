@@ -141,9 +141,205 @@ final class PageResourceTest extends Test
             "visible" => false
         ];
 
+        $result = $this->resource->getResourceAttributes();
+
         $this->assertEquals(
-            $attributes,
-            $this->resource->getResourceAttributes()
+            $attributes['children'],
+            $result['children']
+        );
+        $this->assertEquals(
+            $attributes['childType'],
+            $result['childType']
+        );
+        $this->assertEquals(
+            $attributes['content'],
+            $result['content']
+        );
+        // We check if int because this field constantly changes as file is touched
+        $this->assertIsInt($result['date']);
+        $this->assertEquals(
+            $attributes['eTag'],
+            $result['eTag']
+        );
+        $this->assertEquals(
+            $attributes['expires'],
+            $result['expires']
+        );
+        $this->assertEquals(
+            $attributes['exists'],
+            $result['exists']
+        );
+        $this->assertEquals(
+            $attributes['extension'],
+            $result['extension']
+        );
+        $this->assertEquals(
+            $attributes['extra'],
+            $result['extra']
+        );
+        $this->assertEquals(
+            $attributes['filePathClean'],
+            $result['filePathClean']
+        );
+        $this->assertEquals(
+            $attributes['folder'],
+            $result['folder']
+        );
+        $this->assertEquals(
+            $attributes['header'],
+            $result['header']
+        );
+        $this->assertEquals(
+            $attributes['home'],
+            $result['home']
+        );
+        // We check if string because this field constantly changes as file is touched
+        $this->assertIsString($result['id']);
+        $this->assertEquals(
+            $attributes['isDir'],
+            $result['isDir']
+        );
+        $this->assertEquals(
+            $attributes['isFirst'],
+            $result['isFirst']
+        );
+        $this->assertEquals(
+            $attributes['isLast'],
+            $result['isLast']
+        );
+        $this->assertEquals(
+            $attributes['isPage'],
+            $result['isPage']
+        );
+        $this->assertEquals(
+            $attributes['language'],
+            $result['language']
+        );
+        $this->assertEquals(
+            $attributes['maxCount'],
+            $result['maxCount']
+        );
+        $this->assertEquals(
+            $attributes['media'],
+            $result['media']
+        );
+        $this->assertEquals(
+            $attributes['menu'],
+            $result['menu']
+        );
+        $this->assertEquals(
+            $attributes['metadata'],
+            $result['metadata']
+        );
+        // We check if int because this field constantly changes as file is touched
+        $this->assertIsInt($result['modified']);
+        $this->assertEquals(
+            $attributes['modularTwig'],
+            $result['modularTwig']
+        );
+        $this->assertEquals(
+            $attributes['modular'],
+            $result['modular']
+        );
+        $this->assertEquals(
+            $attributes['name'],
+            $result['name']
+        );
+        $this->assertEquals(
+            $attributes['order'],
+            $result['order']
+        );
+        $this->assertEquals(
+            $attributes['orderDir'],
+            $result['orderDir']
+        );
+        $this->assertEquals(
+            $attributes['orderBy'],
+            $result['orderBy']
+        );
+        $this->assertEquals(
+            $attributes['orderManual'],
+            $result['orderManual']
+        );
+        $this->assertEquals(
+            $attributes['parent'],
+            $result['parent']
+        );
+        $this->assertEquals(
+            $attributes['permalink'],
+            $result['permalink']
+        );
+        $this->assertEquals(
+            $attributes['publishDate'],
+            $result['publishDate']
+        );
+        $this->assertEquals(
+            $attributes['published'],
+            $result['published']
+        );
+        $this->assertEquals(
+            $attributes['raw'],
+            $result['raw']
+        );
+        $this->assertEquals(
+            $attributes['rawMarkdown'],
+            $result['rawMarkdown']
+        );
+        $this->assertEquals(
+            $attributes['rawRoute'],
+            $result['rawRoute']
+        );
+        $this->assertEquals(
+            $attributes['root'],
+            $result['root']
+        );
+        $this->assertEquals(
+            $attributes['routable'],
+            $result['routable']
+        );
+        $this->assertEquals(
+            $attributes['route'],
+            $result['route']
+        );
+        $this->assertEquals(
+            $attributes['routeCanonical'],
+            $result['routeCanonical']
+        );
+        $this->assertEquals(
+            $attributes['slug'],
+            $result['slug']
+        );
+        $this->assertEquals(
+            $attributes['summary'],
+            $result['summary']
+        );
+        $this->assertEquals(
+            $attributes['taxonomy'],
+            $result['taxonomy']
+        );
+        $this->assertEquals(
+            $attributes['template'],
+            $result['template']
+        );
+        $this->assertEquals(
+            $attributes['title'],
+            $result['title']
+        );
+        $this->assertEquals(
+            $attributes['translatedLanguages'],
+            $result['translatedLanguages']
+        );
+        $this->assertEquals(
+            $attributes['unpublishDate'],
+            $result['unpublishDate']
+        );
+        $this->assertEquals(
+            $attributes['untranslatedLanguages'],
+            $result['untranslatedLanguages']
+        );
+        $this->assertEquals(
+            $attributes['visible'],
+            $result['visible']
         );
     }
 
@@ -194,80 +390,10 @@ final class PageResourceTest extends Test
 
     public function testToJsonReturnsResourceObject(): void
     {
-        $attributes = [
-            "children" => [],
-            "childType" => "",
-            "content" => "<h1>Hello {{custom_field}}! This is a test.</h1>",
-            "date" => 1565642012,
-            "eTag" => false,
-            "expires" => 604800,
-            "exists" => true,
-            "extension" => ".md",
-            "extra" => [
-                "header.custom_field" => "WORLD"
-            ],
-            "filePathClean" => "user/pages/test/default.md",
-            "folder" => "test",
-            "frontmatter" => "title: 'Test page'\ncustom_field: WORLD",
-            "header" => [
-                "title" => "Test page",
-                "custom_field" => "WORLD"
-            ],
-            "home" => false,
-            "id" => "156564201272ebcd1270d0fccaa9958b7c3952fe87",
-            "isDir" => false,
-            "isFirst" => false,
-            "isLast" => false,
-            "isPage" => true,
-            "language" => null,
-            "lastModified" => false,
-            "maxCount" => 20,
-            "media" => [],
-            "menu" => "Test page",
-            "metadata" => [
-                "generator" => [
-                    "content" => "GravCMS",
-                    "name" => "generator"
-                ],
-                "description" => [
-                    "content" => "Grav is an easy to use, yet powerful, open source flat-file CMS",
-                    "name" => "description"
-                ]
-            ],
-            "modified" => 1565642012,
-            "modularTwig" => false,
-            "modular" => false,
-            "name" => "default.md",
-            "order" => false,
-            "orderDir" => "asc",
-            "orderBy" => "default",
-            "orderManual" => [],
-            "parent" => null,
-            "permalink" => "http://localhost/test",
-            "publishDate" => null,
-            "published" => true,
-            "raw" => "---\ntitle: 'Test page'\ncustom_field: WORLD\n---\n\n# Hello {{custom_field}}! This is a test.\n",
-            "rawMarkdown" => "# Hello {{custom_field}}! This is a test.\n",
-            "rawRoute" => "/test",
-            "root" => false,
-            "routable" => true,
-            "route" => "/test",
-            "routeCanonical" => "/test",
-            "slug" => "test",
-            "summary" => "<h1>Hello {{custom_field}}! This is a test.</h1>",
-            "taxonomy" => [],
-            "template" => "default",
-            "title" => "Test page",
-            "translatedLanguages" => [],
-            "unpublishDate" => null,
-            "untranslatedLanguages" => [],
-            "visible" => false
-        ];
-
         $expected = [
             'type' => Constants::TYPE_PAGE,
             'id' => 'test',
-            'attributes' => $attributes,
+            'attributes' => $this->resource->getResourceAttributes(),
             'links' => [
                 'self' => 'http://localhost/test',
                 'related' => [
@@ -285,78 +411,8 @@ final class PageResourceTest extends Test
 
     public function testToJsonReturnsAttributesOnly(): void
     {
-        $expected = [
-            "children" => [],
-            "childType" => "",
-            "content" => "<h1>Hello {{custom_field}}! This is a test.</h1>",
-            "date" => 1565642012,
-            "eTag" => false,
-            "expires" => 604800,
-            "exists" => true,
-            "extension" => ".md",
-            "extra" => [
-                "header.custom_field" => "WORLD"
-            ],
-            "filePathClean" => "user/pages/test/default.md",
-            "folder" => "test",
-            "frontmatter" => "title: 'Test page'\ncustom_field: WORLD",
-            "header" => [
-                "title" => "Test page",
-                "custom_field" => "WORLD"
-            ],
-            "home" => false,
-            "id" => "156564201272ebcd1270d0fccaa9958b7c3952fe87",
-            "isDir" => false,
-            "isFirst" => false,
-            "isLast" => false,
-            "isPage" => true,
-            "language" => null,
-            "lastModified" => false,
-            "maxCount" => 20,
-            "media" => [],
-            "menu" => "Test page",
-            "metadata" => [
-                "generator" => [
-                    "content" => "GravCMS",
-                    "name" => "generator"
-                ],
-                "description" => [
-                    "content" => "Grav is an easy to use, yet powerful, open source flat-file CMS",
-                    "name" => "description"
-                ]
-            ],
-            "modified" => 1565642012,
-            "modularTwig" => false,
-            "modular" => false,
-            "name" => "default.md",
-            "order" => false,
-            "orderDir" => "asc",
-            "orderBy" => "default",
-            "orderManual" => [],
-            "parent" => null,
-            "permalink" => "http://localhost/test",
-            "publishDate" => null,
-            "published" => true,
-            "raw" => "---\ntitle: 'Test page'\ncustom_field: WORLD\n---\n\n# Hello {{custom_field}}! This is a test.\n",
-            "rawMarkdown" => "# Hello {{custom_field}}! This is a test.\n",
-            "rawRoute" => "/test",
-            "root" => false,
-            "routable" => true,
-            "route" => "/test",
-            "routeCanonical" => "/test",
-            "slug" => "test",
-            "summary" => "<h1>Hello {{custom_field}}! This is a test.</h1>",
-            "taxonomy" => [],
-            "template" => "default",
-            "title" => "Test page",
-            "translatedLanguages" => [],
-            "unpublishDate" => null,
-            "untranslatedLanguages" => [],
-            "visible" => false
-        ];
-
         $this->assertEquals(
-            $expected,
+            $this->resource->getResourceAttributes(),
             $this->resource->toJson(true)
         );
     }
