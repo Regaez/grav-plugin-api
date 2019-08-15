@@ -21,9 +21,6 @@ install:
     - composer install
 
 script:
-    - composer start
-    - docker-compose exec grav chown -R www-data:www-data .
-    - docker-compose exec --workdir /var/www/html/user/plugins/api grav ls -la
     - composer test:bootstrap
     - composer test
 
