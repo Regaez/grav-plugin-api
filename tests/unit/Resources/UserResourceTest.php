@@ -50,96 +50,91 @@ final class UserResourceTest extends Test
         $this->resource = new UserResource($this->user);
     }
 
-    //
-    // TODO: Uncomment other tests once this issue is resolved:
-    // https://github.com/Regaez/grav-plugin-api/issues/38
-    //
+    public function testGetIdReturnsPluginName(): void
+    {
+        $this->assertEquals(
+            $this->id,
+            $this->resource->getId()
+        );
+    }
 
-    // public function testGetIdReturnsPluginName(): void
-    // {
-    //     $this->assertEquals(
-    //         $this->id,
-    //         $this->resource->getId()
-    //     );
-    // }
+    public function testGetResourceTypeReturnsUser(): void
+    {
+        $this->assertEquals(
+            Constants::TYPE_USER,
+            $this->resource->getResourceType()
+        );
+    }
 
-    // public function testGetResourceTypeReturnsUser(): void
-    // {
-    //     $this->assertEquals(
-    //         Constants::TYPE_USER,
-    //         $this->resource->getResourceType()
-    //     );
-    // }
+    public function testGetResourceAttributesReturnsUserData(): void
+    {
+        $attributes = [
+            'username' => 'development',
+            'email' => 'dummy@email.com',
+            'fullname' => 'Development',
+            'title' => 'Administrator',
+            'state' => 'enabled',
+            'access' => [
+                'admin' => [
+                    'login' => true,
+                    'super' => true
+                ],
+                'site' => [
+                    'login' => true
+                ]
+            ]
+        ];
 
-    // public function testGetResourceAttributesReturnsUserData(): void
-    // {
-    //     $attributes = [
-    //         'username' => 'development',
-    //         'email' => 'dummy@email.com',
-    //         'fullname' => 'Development',
-    //         'title' => 'Administrator',
-    //         'state' => 'enabled',
-    //         'access' => [
-    //             'admin' => [
-    //                 'login' => true,
-    //                 'super' => true
-    //             ],
-    //             'site' => [
-    //                 'login' => true
-    //             ]
-    //         ]
-    //     ];
-
-    //     $this->assertEquals(
-    //         $attributes,
-    //         $this->resource->getResourceAttributes()
-    //     );
-    // }
+        $this->assertEquals(
+            $attributes,
+            $this->resource->getResourceAttributes()
+        );
+    }
 
 
-    // public function testGetResourceEndpointReturnsExpectedUrl(): void
-    // {
-    //     $this->assertEquals(
-    //         'http://localhost/api/users/',
-    //         $this->resource->getResourceEndpoint()
-    //     );
-    // }
+    public function testGetResourceEndpointReturnsExpectedUrl(): void
+    {
+        $this->assertEquals(
+            'http://localhost/api/users/',
+            $this->resource->getResourceEndpoint()
+        );
+    }
 
-    // public function testGetRelatedSelfReturnsExpectedUrl(): void
-    // {
-    //     $this->assertEquals(
-    //         'http://localhost/api/users/development',
-    //         $this->resource->getRelatedSelf()
-    //     );
-    // }
+    public function testGetRelatedSelfReturnsExpectedUrl(): void
+    {
+        $this->assertEquals(
+            'http://localhost/api/users/development',
+            $this->resource->getRelatedSelf()
+        );
+    }
 
-    // public function testGetRelatedHypermediaReturnsSelfAndResourceUrls(): void
-    // {
-    //     $expected = [
-    //         'self' => 'http://localhost/api/users/development',
-    //         'resource' => 'http://localhost/api/users/'
-    //     ];
+    public function testGetRelatedHypermediaReturnsSelfAndResourceUrls(): void
+    {
+        $expected = [
+            'self' => 'http://localhost/api/users/development',
+            'resource' => 'http://localhost/api/users/'
+        ];
 
-    //     $this->assertEquals(
-    //         $expected,
-    //         $this->resource->getRelatedHypermedia()
-    //     );
-    // }
+        $this->assertEquals(
+            $expected,
+            $this->resource->getRelatedHypermedia()
+        );
+    }
 
-    // public function testGetHypermediaReturnsSelfAndRelatedHypermedia(): void
-    // {
-    //     $expected = [
-    //         'related' => [
-    //             'self' => 'http://localhost/api/users/development',
-    //             'resource' => 'http://localhost/api/users/'
-    //         ]
-    //     ];
+    public function testGetHypermediaReturnsSelfAndRelatedHypermedia(): void
+    {
+        $expected = [
+            'related' => [
+                'self' => 'http://localhost/api/users/development',
+                'resource' => 'http://localhost/api/users/'
+            ]
+        ];
 
-    //     $this->assertEquals(
-    //         $expected,
-    //         $this->resource->getHypermedia()
-    //     );
-    // }
+        $this->assertEquals(
+            $expected,
+            $this->resource->getHypermedia()
+        );
+    }
 
     public function testToJsonReturnsResourceObject(): void
     {
