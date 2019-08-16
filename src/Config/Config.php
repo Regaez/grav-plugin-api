@@ -15,9 +15,7 @@ class Config
     private $api;
     private $pages;
     private $users;
-    private $plugin;
     private $plugins;
-    private $config;
     private $configs;
 
     /**

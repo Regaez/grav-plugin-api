@@ -140,7 +140,7 @@ class Api
                             ->add(new AuthMiddleware($settings->plugins));
                     }
 
-                    if (!empty($settings->plugin->enabled)) {
+                    if (!empty($settings->plugins->enabled)) {
                         $this->get('/{plugin}', PluginsHandler::class . ':getPlugin')
                             ->add(new AuthMiddleware($settings->plugin));
                     }
@@ -156,7 +156,7 @@ class Api
                             ->add(new AuthMiddleware($settings->configs));
                     }
 
-                    if (!empty($settings->config->enabled)) {
+                    if (!empty($settings->configs->enabled)) {
                         $this->get('/{config}', ConfigHandler::class . ':getConfig')
                             ->add(new AuthMiddleware($settings->config));
                     }
