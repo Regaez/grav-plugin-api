@@ -41,36 +41,31 @@ final class UserCollectionResourceTest extends Test
         $this->resource = new UserCollectionResource([ $this->user ]);
     }
 
-    //
-    // TODO: Uncomment once the following issue is resolved:
-    // https://github.com/Regaez/grav-plugin-api/issues/38
-    //
+    public function testGetResourceReturnsUserResource(): void
+    {
+        $this->assertInstanceOf(
+            UserResource::class,
+            $this->resource->getResource($this->user)
+        );
+    }
 
-    // public function testGetResourceReturnsUserResource(): void
-    // {
-    //     $this->assertInstanceOf(
-    //         UserResource::class,
-    //         $this->resource->getResource($this->user)
-    //     );
-    // }
+    public function testToJsonReturnsItemsArray(): void
+    {
+        $this->assertIsArray(
+            $this->resource->toJson()['items']
+        );
+    }
 
-    // public function testToJsonReturnsItemsArray(): void
-    // {
-    //     $this->assertIsArray(
-    //         $this->resource->toJson()['items']
-    //     );
-    // }
+    public function testToJsonReturnsMeta(): void
+    {
+        $this->assertIsArray(
+            $this->resource->toJson()['meta']
+        );
+    }
 
-    // public function testToJsonReturnsMeta(): void
-    // {
-    //     $this->assertIsArray(
-    //         $this->resource->toJson()['meta']
-    //     );
-    // }
-
-    // public function testToJsonReturnsMetaCount(): void
-    // {
-    //     $result = $this->resource->toJson()['meta']['count'];
-    //     $this->assertEquals(1, $result);
-    // }
+    public function testToJsonReturnsMetaCount(): void
+    {
+        $result = $this->resource->toJson()['meta']['count'];
+        $this->assertEquals(1, $result);
+    }
 }
