@@ -1,20 +1,20 @@
 <?php
-
 declare(strict_types=1);
 
 use Codeception\TestCase\Test;
 use Codeception\Util\Fixtures;
 use Grav\Common\Grav;
-use GravApi\Resources\PluginResource;
-use GravApi\Resources\PluginCollectionResource;
 use GravApi\Config\Config;
+use GravApi\Helpers\ConfigHelper;
+use GravApi\Resources\ConfigResource;
+use GravApi\Resources\ConfigCollectionResource;
 
-final class PluginCollectionResourceTest extends Test
+final class ConfigCollectionResourceTest extends Test
 {
     /** @var Grav $grav */
     protected $grav;
 
-    /** @var PluginCollectionResource $resource */
+    /** @var ConfigCollectionResource $resource */
     protected $resource;
 
     protected function _before()
@@ -29,16 +29,16 @@ final class PluginCollectionResourceTest extends Test
             ]
         ]);
 
-        $plugins = $this->grav['plugins'];
-        $this->resource = new PluginCollectionResource($plugins);
+        $configs = ConfigHelper::loadConfigs();
+        $this->resource = new ConfigCollectionResource($configs);
     }
 
-    public function testGetResourceReturnsPluginResource(): void
+    public function testGetResourceReturnsConfigResource(): void
     {
-        $plugin = $this->grav['plugins']->current();
+        $config = ConfigHelper::loadConfig('site');
         $this->assertInstanceOf(
-            PluginResource::class,
-            $this->resource->getResource($plugin)
+            ConfigResource::class,
+            $this->resource->getResource($config)
         );
     }
 
@@ -47,6 +47,15 @@ final class PluginCollectionResourceTest extends Test
         $this->assertIsArray(
             $this->resource->toJson()['items']
         );
+    }
+
+    public function testToJsonDoesNotReturnSecurityConfig(): void
+    {
+        $configs = $this->resource->toJson()['items'];
+
+        foreach ($configs as $config) {
+            $this->assertNotEquals($config['id'], 'security');
+        }
     }
 
     public function testToJsonReturnsMeta(): void
@@ -59,6 +68,6 @@ final class PluginCollectionResourceTest extends Test
     public function testToJsonReturnsMetaCount(): void
     {
         $result = $this->resource->toJson()['meta']['count'];
-        $this->assertEquals(8, $result);
+        $this->assertEquals(5, $result);
     }
 }
