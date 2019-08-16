@@ -245,7 +245,11 @@ class PageResource extends Resource
      */
     private function setFilter()
     {
-        $filter = Config::instance()->pages->get['fields'];
+        $filter = null;
+
+        if (Config::instance()->pages) {
+            $filter = Config::instance()->pages->get['fields'];
+        }
 
         // TODO: improve validation of filter input
         if ($filter) {
