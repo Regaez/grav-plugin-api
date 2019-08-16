@@ -1,7 +1,6 @@
 <?php
 namespace GravApi\Resources;
 
-use GravApi\Config\Config;
 use GravApi\Config\Constants;
 use GravApi\Models\ConfigModel;
 use GravApi\Resources\Resource;
@@ -49,25 +48,11 @@ class ConfigResource extends Resource
     /**
      * Returns the attributes associated with this resource
      *
-     * @param array|null $fields
      * @return array
      */
     public function getResourceAttributes()
     {
-        $attributes = $this->resource;
-
-        // Filter for requested fields
-        if ($this->filter) {
-            $attributes = [];
-
-            foreach ($this->filter as $field) {
-                if (property_exists($this->config, $field)) {
-                    $attributes[$field] = $this->config->{$field};
-                }
-            }
-        }
-
-        return $attributes;
+        return $this->resource;
     }
 
     /**
