@@ -22,6 +22,18 @@ class PluginResource extends Resource
     }
 
     /**
+     * Returns the hypermedia array for this resource
+     *
+     * @return string
+     */
+    public function getHypermedia()
+    {
+        return [
+            'related' => $this->getRelatedHypermedia()
+        ];
+    }
+
+    /**
      * Returns the identifier for this resource
      *
      * @return string
@@ -29,16 +41,6 @@ class PluginResource extends Resource
     public function getId()
     {
         return $this->resource->name;
-    }
-
-    /**
-     * Returns the resource type
-     *
-     * @return string
-     */
-    public function getResourceType()
-    {
-        return Constants::TYPE_PLUGIN;
     }
 
     /**
@@ -53,14 +55,12 @@ class PluginResource extends Resource
     }
 
     /**
-     * Returns the hypermedia array for this resource
+     * Returns the resource type
      *
      * @return string
      */
-    public function getHypermedia()
+    public function getResourceType()
     {
-        return [
-            'related' => $this->getRelatedHypermedia()
-        ];
+        return Constants::TYPE_PLUGIN;
     }
 }
