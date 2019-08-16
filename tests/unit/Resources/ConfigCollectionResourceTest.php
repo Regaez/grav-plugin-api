@@ -17,7 +17,7 @@ final class ConfigCollectionResourceTest extends Test
     /** @var ConfigCollectionResource $resource */
     protected $resource;
 
-    protected function _before()
+    protected function _before($ignore_files = array())
     {
         $grav = Fixtures::get('grav');
         $this->grav = $grav();
@@ -26,6 +26,9 @@ final class ConfigCollectionResourceTest extends Test
             'api' => [
                 'route' => 'api',
                 'permalink' => 'http://localhost/api'
+            ],
+            'configs' => [
+                'ignore_files' => $ignore_files
             ]
         ]);
 
@@ -55,6 +58,16 @@ final class ConfigCollectionResourceTest extends Test
 
         foreach ($configs as $config) {
             $this->assertNotEquals($config['id'], 'security');
+        }
+    }
+
+    public function testToJsonDoesNotReturnIgnoredFiles(): void
+    {
+        $this->_before(['streams']);
+        $configs = $this->resource->toJson()['items'];
+
+        foreach ($configs as $config) {
+            $this->assertNotEquals($config['id'], 'streams');
         }
     }
 
