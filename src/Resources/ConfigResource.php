@@ -3,6 +3,7 @@ namespace GravApi\Resources;
 
 use GravApi\Config\Config;
 use GravApi\Config\Constants;
+use GravApi\Models\ConfigModel;
 use GravApi\Resources\Resource;
 
 /**
@@ -13,13 +14,14 @@ class ConfigResource extends Resource
 {
     protected $id;
 
-    public function __construct(object $config)
+    /**
+     * @param ConfigModel $config
+     * @return ConfigResource
+     */
+    public function __construct(ConfigModel $config)
     {
         $this->id = $config->id;
         $this->resource = $config->data;
-
-        // Set the attribute filter
-        $this->setFilter();
     }
 
     /**
@@ -76,21 +78,5 @@ class ConfigResource extends Resource
     public function getResourceType()
     {
         return Constants::TYPE_CONFIG;
-    }
-
-    /**
-     * Sets a filter for the list of attributes based on the
-     * API plugin's config setting.
-
-     * @return void
-     */
-    private function setFilter()
-    {
-        $filter = Config::instance()->configs->get['fields'];
-
-        // TODO: improve validation of filter input
-        if ($filter) {
-            $this->filter = $filter;
-        }
     }
 }
