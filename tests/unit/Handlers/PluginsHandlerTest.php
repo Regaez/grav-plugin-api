@@ -13,6 +13,9 @@ final class PluginsHandlerTest extends Test
     {
         $this->client = new Client([
             'base_uri' => 'http://localhost/api/',
+            'headers' => [
+                'Content-Type' => 'application/json'
+            ],
             'http_errors' => false
         ]);
     }
@@ -26,6 +29,13 @@ final class PluginsHandlerTest extends Test
         $this->assertEquals(200, $response->getStatusCode());
     }
 
+    public function testGetPluginsShouldReturnStatus401(): void
+    {
+        $response = $this->client->get('plugins');
+
+        $this->assertEquals(401, $response->getStatusCode());
+    }
+
     public function testGetPluginShouldReturnStatus200(): void
     {
         $response = $this->client->get('plugins/api', [
@@ -33,6 +43,13 @@ final class PluginsHandlerTest extends Test
         ]);
 
         $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    public function testGetPluginShouldReturnStatus401(): void
+    {
+        $response = $this->client->get('plugins/api');
+
+        $this->assertEquals(401, $response->getStatusCode());
     }
 
     public function testGetPluginShouldReturnStatus404(): void

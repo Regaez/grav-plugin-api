@@ -13,6 +13,9 @@ final class ConfigHandlerTest extends Test
     {
         $this->client = new Client([
             'base_uri' => 'http://localhost/api/',
+            'headers' => [
+                'Content-Type' => 'application/json'
+            ],
             'http_errors' => false
         ]);
     }
@@ -26,6 +29,13 @@ final class ConfigHandlerTest extends Test
         $this->assertEquals(200, $response->getStatusCode());
     }
 
+    public function testGetConfigsShouldReturnStatus401(): void
+    {
+        $response = $this->client->get('configs');
+
+        $this->assertEquals(401, $response->getStatusCode());
+    }
+
     public function testGetConfigShouldReturnStatus200(): void
     {
         $response = $this->client->get('configs/site', [
@@ -33,6 +43,13 @@ final class ConfigHandlerTest extends Test
         ]);
 
         $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    public function testGetConfigShouldReturnStatus401(): void
+    {
+        $response = $this->client->get('configs/site');
+
+        $this->assertEquals(401, $response->getStatusCode());
     }
 
     public function testGetConfigShouldReturnStatus404(): void
