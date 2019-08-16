@@ -17,8 +17,6 @@ final class PluginCollectionResourceTest extends Test
     /** @var PluginCollectionResource $resource */
     protected $resource;
 
-    protected $id = 'api';
-
     protected function _before()
     {
         $grav = Fixtures::get('grav');

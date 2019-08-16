@@ -51,16 +51,9 @@ endpoints:
     delete:
       enabled: true
       auth: true
-  plugin:
-    enabled: true
-    auth: true
   plugins:
     enabled: true
     auth: true
-  config:
-    enabled: true
-    auth: true
-    fields: []
   configs:
     enabled: true
     auth: true

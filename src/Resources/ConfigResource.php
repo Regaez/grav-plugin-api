@@ -1,52 +1,67 @@
 <?php
 namespace GravApi\Resources;
 
+use GravApi\Config\Constants;
+use GravApi\Models\ConfigModel;
+use GravApi\Resources\Resource;
+
 /**
  * Class ConfigResource
  * @package GravApi\Resources
  */
-class ConfigResource
+class ConfigResource extends Resource
 {
-    protected $config;
     protected $id;
 
-    public function __construct($config)
+    /**
+     * @param ConfigModel $config
+     * @return ConfigResource
+     */
+    public function __construct(ConfigModel $config)
     {
-        // we should only ever have a single item array
-        foreach ($config as $key => $value) {
-            $this->id = $key;
-        }
-
-        $this->config = (object) $config[$this->id];
+        $this->id = $config->id;
+        $this->resource = $config->data;
     }
 
     /**
-     * Returns the plugin object as an array/json.
-     * Also accepts an array of fields by which to filter.
+     * Returns the hypermedia array for this resource
      *
-     * @param  [array] $fields optional
-     * @return [array]
+     * @return string
      */
-    public function toJson($fields = null)
+    public function getHypermedia()
     {
-        $attributes = (array) $this->config;
-
-        // Filter for requested fields
-        if ($fields) {
-            $attributes = [];
-
-            foreach ($fields as $field) {
-                if (property_exists($this->config, $field)) {
-                    $attributes[$field] = $this->config->{$field};
-                }
-            }
-        }
-
-        // Return Resource object
         return [
-            'type' => 'config',
-            'id' => $this->id,
-            'attributes' => $attributes
+            'related' => $this->getRelatedHypermedia()
         ];
+    }
+
+    /**
+     * Returns the identifier for this resource
+     *
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Returns the attributes associated with this resource
+     *
+     * @return array
+     */
+    public function getResourceAttributes()
+    {
+        return $this->resource;
+    }
+
+    /**
+     * Returns the resource type
+     *
+     * @return string
+     */
+    public function getResourceType()
+    {
+        return Constants::TYPE_CONFIG;
     }
 }

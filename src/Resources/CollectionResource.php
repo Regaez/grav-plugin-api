@@ -4,28 +4,28 @@ namespace GravApi\Resources;
 abstract class CollectionResource
 {
     protected $collection;
+    protected $filter = array();
 
     abstract protected function getResource($resource);
 
     /**
      * Returns the resource object as an array/json.
-     * Also accepts an array of fields by which to filter.
      *
-     * @param  array $filter optional
-     * @param  bool  $attributes_only optional
      * @return array
      */
-    public function toJson($filter = array(), $attributes_only = false)
+    public function toJson()
     {
         $data = [];
 
         foreach ($this->collection as $item) {
             $resource = $this->getResource($item);
-            $data[] = $resource->toJson();
-        }
 
-        if ($attributes_only) {
-            return $data;
+            // If the item exists in the Resource filter, then we skip it
+            if (in_array($resource->getId(), $this->filter)) {
+                continue;
+            }
+
+            $data[] = $resource->toJson();
         }
 
         // Return Resource object
