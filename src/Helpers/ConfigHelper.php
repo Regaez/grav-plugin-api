@@ -29,7 +29,7 @@ class ConfigHelper
         foreach ($configFiles as $name => $value) {
             $data = Grav::instance()['config']->get($name);
             if ($data) {
-                $configs[] = ConfigHelper::getConfigObject($name, $data);
+                $configs[] = new ConfigModel($name, $data);
             }
         }
 
@@ -52,18 +52,6 @@ class ConfigHelper
             return null;
         }
 
-        return ConfigHelper::getConfigObject($name, $data);
-    }
-
-    /**
-     * Returns a Config object that can be passed to the ConfigResource
-     *
-     * @param string $id
-     * @param array $data
-     * @return ConfigModel
-     */
-    public static function getConfigObject(string $id, array $data)
-    {
-        return new ConfigModel($id, $data);
+        return new ConfigModel($name, $data);
     }
 }
