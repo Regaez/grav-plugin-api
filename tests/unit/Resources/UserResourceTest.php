@@ -33,18 +33,15 @@ final class UserResourceTest extends Test
         $this->grav = $grav();
 
         Config::instance([
-            'api' => [
-                'route' => 'api',
-                    'permalink' => 'http://localhost/api',
-                ],
-                'users' => [
-                    'get' => [
+            'endpoints' => [
+                Constants::ENDPOINT_USER => [
+                    Constants::METHOD_GET => [
                         'enabled' => true,
                         'fields' => $attributeFields
                     ]
                 ]
             ]
-        );
+        ]);
 
         $this->user = $this->grav['accounts']->load($this->id);
         $this->resource = new UserResource($this->user);

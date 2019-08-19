@@ -5,6 +5,7 @@ use Codeception\TestCase\Test;
 use Codeception\Util\Fixtures;
 use Grav\Common\Grav;
 use GravApi\Config\Config;
+use GravApi\Config\Constants;
 use GravApi\Helpers\ConfigHelper;
 use GravApi\Resources\ConfigResource;
 use GravApi\Resources\ConfigCollectionResource;
@@ -23,12 +24,12 @@ final class ConfigCollectionResourceTest extends Test
         $this->grav = $grav();
 
         Config::instance([
-            'api' => [
-                'route' => 'api',
-                'permalink' => 'http://localhost/api'
-            ],
-            'configs' => [
-                'ignore_files' => $ignore_files
+            'endpoints' => [
+                Constants::ENDPOINT_CONFIG => [
+                    Constants::METHOD_GET => [
+                        'ignore_files' => $ignore_files
+                    ]
+                ]
             ]
         ]);
 

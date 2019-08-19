@@ -33,14 +33,12 @@ final class PageResourceTest extends Test
         $this->grav = $grav();
 
         Config::instance([
-            'api' => [
-                'route' => 'api',
-                'permalink' => 'http://localhost/api',
-            ],
-            'pages' => [
-                'get' => [
-                    'enabled' => true,
-                    'fields' => $attributeFields
+            'endpoints' => [
+                Constants::ENDPOINT_PAGE => [
+                    Constants::METHOD_GET => [
+                        'enabled' => true,
+                        'fields' => $attributeFields
+                    ]
                 ]
             ]
         ]);

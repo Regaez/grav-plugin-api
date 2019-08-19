@@ -24,18 +24,7 @@ final class UserCollectionResourceTest extends Test
         $grav = Fixtures::get('grav');
         $this->grav = $grav();
 
-        Config::instance([
-            'api' => [
-                'route' => 'api',
-                'permalink' => 'http://localhost/api',
-            ],
-            'users' => [
-                'get' => [
-                    'enabled' => true,
-                    'fields' => []
-                ]
-            ]
-        ]);
+        Config::instance();
 
         $this->user = $this->grav['accounts']->load($this->username);
         $this->resource = new UserCollectionResource([ $this->user ]);

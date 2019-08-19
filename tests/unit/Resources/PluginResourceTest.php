@@ -27,12 +27,7 @@ final class PluginResourceTest extends Test
         $grav = Fixtures::get('grav');
         $this->grav = $grav();
 
-        Config::instance([
-            'api' => [
-                'route' => 'api',
-                'permalink' => 'http://localhost/api'
-            ]
-        ]);
+        Config::instance();
 
         foreach ($this->grav['plugins'] as $plugin) {
             if ($plugin->name === $this->id) {

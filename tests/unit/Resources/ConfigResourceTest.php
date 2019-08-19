@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 use Codeception\TestCase\Test;
@@ -27,12 +26,7 @@ final class ConfigResourceTest extends Test
         $grav = Fixtures::get('grav');
         $this->grav = $grav();
 
-        Config::instance([
-            'api' => [
-                'route' => 'api',
-                'permalink' => 'http://localhost/api'
-            ]
-        ]);
+        Config::instance();
 
         $this->config = ConfigHelper::loadConfig('site');
         $this->resource = new ConfigResource($this->config);

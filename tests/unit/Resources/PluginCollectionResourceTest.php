@@ -22,12 +22,7 @@ final class PluginCollectionResourceTest extends Test
         $grav = Fixtures::get('grav');
         $this->grav = $grav();
 
-        Config::instance([
-            'api' => [
-                'route' => 'api',
-                'permalink' => 'http://localhost/api'
-            ]
-        ]);
+        Config::instance();
 
         $plugins = $this->grav['plugins'];
         $this->resource = new PluginCollectionResource($plugins);
