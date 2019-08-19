@@ -47,4 +47,21 @@ final class ArrayHelperTest extends Test
             ArrayHelper::merge($mockCurrent, $mockNew)
         );
     }
+
+    public function testAsStringArrayWillIgnoreNonStringChildren(): void
+    {
+        $mockArray = [
+            "foo",
+            array('ignored'),
+            true,
+            0
+        ];
+
+        $expectedResult = array('foo');
+
+        $this->assertEquals(
+            $expectedResult,
+            ArrayHelper::asStringArray($mockArray)
+        );
+    }
 }
