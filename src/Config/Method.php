@@ -35,12 +35,20 @@ class Method
             $config = array();
         }
 
-        if (isset($config['enabled'])) {
-            $this->enabled = $config['enabled'];
+        $enabled = isset($config['enabled'])
+            ? $config['enabled']
+            : null;
+
+        if (is_bool($enabled)) {
+            $this->enabled = $enabled;
         }
 
-        if (isset($config['auth'])) {
-            $this->useAuth = $config['auth'];
+        $auth = isset($config['auth'])
+            ? $config['auth']
+            : null;
+
+        if (is_bool($auth)) {
+            $this->useAuth = $auth;
         }
 
         $fields = isset($config['fields'])
