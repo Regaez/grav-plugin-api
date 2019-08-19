@@ -76,33 +76,6 @@ class ApiPlugin extends Plugin
         require_once __DIR__ . '/vendor/autoload.php';
         require_once __DIR__ . '/src/Api.php';
 
-        return new \GravApi\Api(
-            array_merge(
-                array(
-                    'api' => $this->getBaseRoute()
-                ),
-                $this->config->get('plugins.api.endpoints')
-            )
-        );
-    }
-
-    /**
-     * Gets base API route from config, or falls back to default
-     * @return string base API route
-     */
-    protected function getBaseRoute()
-    {
-
-        $baseRoute = $this->config->get('plugins.api.route');
-
-        // Return default route if config not set
-        if (!$baseRoute) {
-            $baseRoute = $this->defaultBaseRoute;
-        }
-
-        return [
-            'route' => trim($baseRoute, '/'),
-            'permalink' => $this->grav['uri']->rootUrl(true).'/'.trim($baseRoute, '/')
-        ];
+        return new \GravApi\Api();
     }
 }
