@@ -30,15 +30,11 @@ class ConfigCollectionResource extends CollectionResource
     {
         // We don't want to show anyone our security settings!
         $filter = ['security'];
-        $ignore_files = [];
+        $ignore_files = Config::instance()->configs->get->ignore_files;
 
-        // Check the config for any config files we should ignore in addition
-        // to the resource's filter list
-        if (Config::instance()->configs) {
-            $ignore_files = Config::instance()->configs->ignore_files;
-        }
-
-        if (!empty($ignore_files) && is_array($ignore_files)) {
+        // Check the config for any config files we should ignore in
+        // addition to the resource's filter list
+        if (!empty($ignore_files)) {
             return array_merge($filter, $ignore_files);
         }
 
