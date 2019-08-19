@@ -1,6 +1,8 @@
 <?php
 namespace GravApi\Config;
 
+use GravApi\Helpers\ArrayHelper;
+
 /**
  * Class Method
  * @package GravApi\Config
@@ -15,7 +17,7 @@ class Method
     /**
      * @var boolean
      */
-    protected $useAuth = false;
+    protected $useAuth = true;
 
     /**
      * @var array
@@ -27,64 +29,51 @@ class Method
      */
     protected $ignore_files = array();
 
-    public function __construct(array $config = array())
+    public function __construct($config = null)
     {
+        if (!isset($config) || !is_array($config)) {
+            $config = array();
+        }
+
         if (isset($config['enabled'])) {
             $this->enabled = $config['enabled'];
         }
 
         if (isset($config['auth'])) {
-            $this->auth = $config['auth'];
+            $this->useAuth = $config['auth'];
         }
 
-        if (isset($config['fields'])) {
-            // TODO: field string array validation
-            $this->fields = $config['fields'];
+        $fields = isset($config['fields'])
+            ? $config['fields']
+            : null;
+
+        if (is_array($fields)) {
+            $this->fields = ArrayHelper::asStringArray($fields);
         }
 
-        if (isset($config['ignore_files'])) {
-            // TODO: ignore_files string array validation
-            $this->ignore_files = $config['ignore_files'];
+        $files = isset($config['ignore_files'])
+            ? $config['ignore_files']
+            : null;
+
+        if (is_array($files)) {
+            $this->ignore_files = ArrayHelper::asStringArray($files);
         }
     }
 
-    /**
-     * Returns whether or not this endpoint/method is enabled
-     *
-     * @return boolean
-     */
-    public function isEnabled()
+    public function __get($name)
     {
-        return $this->enabled;
-    }
+        $exposedProperties = [
+            'enabled',
+            'useAuth',
+            'fields',
+            'ignore_files'
+        ];
 
-    /**
-     * Returns whether or not this endpoint/method is enabled
-     *
-     * @return boolean
-     */
-    public function useAuth()
-    {
-        return $this->useAuth;
-    }
+        // We only allow access to specific properties
+        if (in_array($name, $exposedProperties)) {
+            return $this->{$name};
+        }
 
-    /**
-     * Returns whether or not this field should be filtered
-     *
-     * @return boolean
-     */
-    public function shouldFilterField(string $field)
-    {
-        return in_array($field, $this->fields);
-    }
-
-    /**
-     * Returns whether or not this files should be ignored
-     *
-     * @return boolean
-     */
-    public function shouldIgnoreFile(string $file)
-    {
-        return in_array($file, $this->ignore_files);
+        return null;
     }
 }
