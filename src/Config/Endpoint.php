@@ -11,11 +11,6 @@ use GravApi\Config\Method;
 class Endpoint
 {
     /**
-     * @var boolean
-     */
-    protected $isGeneric = true;
-
-    /**
      * @var Method
      */
     protected $get;
@@ -35,24 +30,26 @@ class Endpoint
      */
     protected $delete;
 
-    public function __construct(array $config = array())
+    public function __construct($config = null)
     {
-        // If the config contains any keys which match methods
-        if (count(array_intersect_key(Constants::METHODS, $config)) > 0) {
-            $this->configureMethods($config);
-            $this->isGeneric = false;
-        } else {
-            // otherwise we create a generic endpoint handler and store it in the get object
-            $this->get = new Method($config);
+        if (!isset($config) || !is_array($config)) {
+            $config = array();
         }
+
+        $this->configureMethods($config);
     }
 
     protected function configureMethods(array $config)
     {
-        $this->get = new Method($config[Constants::METHOD_GET]);
-        $this->patch = new Method($config[Constants::METHOD_PATCH]);
-        $this->post = new Method($config[Constants::METHOD_POST]);
-        $this->delete = new Method($config[Constants::METHOD_DELETE]);
+        foreach (Constants::METHODS as $method) {
+            $params = isset($config[$method])
+                ? $config[$method]
+                : null;
+
+            $property = $method;
+
+            $this->{$property} = new Method($params);
+        }
     }
 
     /**
@@ -60,14 +57,8 @@ class Endpoint
      */
     public function __get(string $method)
     {
-        // If our Endpoint is generic, i.e. doesn't specify config per method
-        // then we return the generic Method config
-        if ($this->isGeneric) {
-            return $this->get;
-        }
-
         // Check if the desired method matches the available methods
-        if (array_key_exists($method, Constants::METHODS)) {
+        if (in_array($method, Constants::METHODS)) {
             return $this->{$method};
         }
 
