@@ -80,6 +80,13 @@ class Config
         return self::$instance;
     }
 
+    public static function resetInstance()
+    {
+        self::$instance = new Config();
+
+        return self::$instance;
+    }
+
     public function __get($name)
     {
         $exposedProperties = [
