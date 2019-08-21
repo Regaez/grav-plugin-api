@@ -49,7 +49,7 @@ final class ConfigHandlerTest extends Test
     {
         $response = $this->client->get('configs/site');
 
-        $this->assertEquals('blah', $response->getBody()->getContents());
+        $this->assertEquals(401, $response->getStatusCode());
     }
 
     public function testGetConfigShouldReturnStatus404(): void
