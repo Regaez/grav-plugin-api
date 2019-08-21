@@ -57,8 +57,7 @@ class Endpoint
      */
     public function __get(string $method)
     {
-        // Check if the desired method matches the available methods
-        if (in_array($method, Constants::METHODS)) {
+        if (property_exists($this, $method)) {
             return $this->{$method};
         }
 

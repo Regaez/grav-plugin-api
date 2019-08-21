@@ -87,20 +87,11 @@ class Config
         return self::$instance;
     }
 
-    public function __get($name)
+    public function __get(string $property)
     {
-        $exposedProperties = [
-            'pages',
-            'users',
-            'plugins',
-            'configs',
-            'route',
-            'permalink'
-        ];
-
         // We only allow access to specific properties
-        if (in_array($name, $exposedProperties)) {
-            return $this->{$name};
+        if (property_exists($this, $property)) {
+            return $this->{$property};
         }
 
         return null;

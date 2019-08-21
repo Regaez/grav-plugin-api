@@ -68,18 +68,11 @@ class Method
         }
     }
 
-    public function __get($name)
+    public function __get(string $property)
     {
-        $exposedProperties = [
-            'enabled',
-            'useAuth',
-            'fields',
-            'ignore_files'
-        ];
-
         // We only allow access to specific properties
-        if (in_array($name, $exposedProperties)) {
-            return $this->{$name};
+        if (property_exists($this, $property)) {
+            return $this->{$property};
         }
 
         return null;
