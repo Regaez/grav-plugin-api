@@ -170,6 +170,14 @@ class PagesHandler extends BaseHandler
 
         // update the page header
         if (!empty($parsedBody['header'])) {
+            if (!is_array($parsedBody['header'])) {
+                $message = "Field `header` must be valid JSON.";
+                return $response->withJson(
+                    Response::badRequest($message),
+                    400
+                );
+            }
+
             $updatedHeader = ArrayHelper::merge(
                 $page->header(),
                 $parsedBody['header']
