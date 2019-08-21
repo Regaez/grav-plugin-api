@@ -22,24 +22,24 @@ class Api
     /**
      * @var Config
      */
-    protected $settings;
+    protected $config;
 
     public function __construct()
     {
-        $this->settings = Config::instance();
+        $this->config = Config::instance();
 
         // Initialise Slim
-        $config = [
+        $slimConfig = [
             'settings' => [
                 'displayErrorDetails' => true,
                 'logger' => [
-                    'name' => 'slim-app',
+                    'name' => 'grav-api',
                     'level' => Logger::DEBUG,
                     'path' => __DIR__ . '/../logs/app.log',
                 ],
             ]
         ];
-        $this->app = new \Slim\App($config);
+        $this->app = new \Slim\App($slimConfig);
 
         $this->attachHandlers();
     }
@@ -47,22 +47,22 @@ class Api
     protected function attachHandlers()
     {
         // We must serve from the base route
-        $this->app->group("/{$this->settings->route}", function () {
+        $this->app->group("/{$this->config->route}", function () {
 
             $this->get('', function ($request, $response, $args) {
-                $settings = Config::instance();
+                $config = Config::instance();
 
                 $urls = [
-                    Constants::TYPE_PAGE => $settings->getEndpoint(
+                    Constants::TYPE_PAGE => $config->getEndpoint(
                         Constants::TYPE_PAGE
                     ),
-                    Constants::TYPE_USER => $settings->getEndpoint(
+                    Constants::TYPE_USER => $config->getEndpoint(
                         Constants::TYPE_USER
                     ),
-                    Constants::TYPE_PLUGIN => $settings->getEndpoint(
+                    Constants::TYPE_PLUGIN => $config->getEndpoint(
                         Constants::TYPE_PLUGIN
                     ),
-                    Constants::TYPE_CONFIG => $settings->getEndpoint(
+                    Constants::TYPE_CONFIG => $config->getEndpoint(
                         Constants::TYPE_CONFIG
                     )
                 ];
@@ -70,93 +70,93 @@ class Api
                 return $response->withJson($urls);
             });
 
-            $settings = Config::instance();
+            $config = Config::instance();
 
             $this->group(
                 Constants::ENDPOINT_PAGE,
-                function () use ($settings) {
+                function () use ($config) {
 
-                    if ($settings->pages->get->enabled) {
+                    if ($config->pages->get->enabled) {
                         $this->get('', PagesHandler::class . ':getPages')
-                            ->add(new AuthMiddleware($settings->pages->get));
+                            ->add(new AuthMiddleware($config->pages->get));
 
                         $this->get('/{page:.*}', PagesHandler::class . ':getPage')
-                            ->add(new AuthMiddleware($settings->pages->get));
+                            ->add(new AuthMiddleware($config->pages->get));
                     }
 
-                    if ($settings->pages->post->enabled) {
+                    if ($config->pages->post->enabled) {
                         $this->post('', PagesHandler::class . ':newPage')
-                            ->add(new AuthMiddleware($settings->pages->post));
+                            ->add(new AuthMiddleware($config->pages->post));
                     }
 
-                    if ($settings->pages->delete->enabled) {
+                    if ($config->pages->delete->enabled) {
                         $this->delete('/{page:.*}', PagesHandler::class . ':deletePage')
-                            ->add(new AuthMiddleware($settings->pages->delete));
+                            ->add(new AuthMiddleware($config->pages->delete));
                     }
 
-                    if ($settings->pages->patch->enabled) {
+                    if ($config->pages->patch->enabled) {
                         $this->patch('/{page:.*}', PagesHandler::class . ':updatePage')
-                            ->add(new AuthMiddleware($settings->pages->patch));
+                            ->add(new AuthMiddleware($config->pages->patch));
                     }
                 }
             );
 
             $this->group(
                 Constants::ENDPOINT_USER,
-                function () use ($settings) {
+                function () use ($config) {
 
-                    if ($settings->users->get->enabled) {
+                    if ($config->users->get->enabled) {
                         $this->get('', UsersHandler::class . ':getUsers')
-                            ->add(new AuthMiddleware($settings->users->get));
+                            ->add(new AuthMiddleware($config->users->get));
 
                         $this->get('/{user}', UsersHandler::class . ':getUser')
-                            ->add(new AuthMiddleware($settings->users->get));
+                            ->add(new AuthMiddleware($config->users->get));
                     }
 
-                    if ($settings->users->post->enabled) {
+                    if ($config->users->post->enabled) {
                         $this->post('', UsersHandler::class . ':newUser')
-                            ->add(new AuthMiddleware($settings->users->post));
+                            ->add(new AuthMiddleware($config->users->post));
                     }
 
-                    if ($settings->users->delete->enabled) {
+                    if ($config->users->delete->enabled) {
                         $this->delete('/{user}', UsersHandler::class . ':deleteUser')
-                        ->add(new AuthMiddleware($settings->users->delete));
+                        ->add(new AuthMiddleware($config->users->delete));
                     }
 
-                    if ($settings->users->patch->enabled) {
+                    if ($config->users->patch->enabled) {
                         $this->patch('/{user}', UsersHandler::class . ':updateUser')
-                            ->add(new AuthMiddleware($settings->users->patch));
+                            ->add(new AuthMiddleware($config->users->patch));
                     }
                 }
             );
 
             $this->group(
                 Constants::ENDPOINT_PLUGIN,
-                function () use ($settings) {
-                    if ($settings->plugins->get->enabled) {
+                function () use ($config) {
+                    if ($config->plugins->get->enabled) {
                         $this->get('', PluginsHandler::class . ':getPlugins')
-                            ->add(new AuthMiddleware($settings->plugins->get));
+                            ->add(new AuthMiddleware($config->plugins->get));
                     }
 
-                    if ($settings->plugins->get->enabled) {
+                    if ($config->plugins->get->enabled) {
                         $this->get('/{plugin}', PluginsHandler::class . ':getPlugin')
-                            ->add(new AuthMiddleware($settings->plugins->get));
+                            ->add(new AuthMiddleware($config->plugins->get));
                     }
                 }
             );
 
             $this->group(
                 Constants::ENDPOINT_CONFIG,
-                function () use ($settings) {
+                function () use ($config) {
 
-                    if ($settings->configs->get->enabled) {
+                    if ($config->configs->get->enabled) {
                         $this->get('', ConfigHandler::class . ':getConfigs')
-                            ->add(new AuthMiddleware($settings->configs->get));
+                            ->add(new AuthMiddleware($config->configs->get));
                     }
 
-                    if ($settings->configs->get->enabled) {
+                    if ($config->configs->get->enabled) {
                         $this->get('/{config}', ConfigHandler::class . ':getConfig')
-                            ->add(new AuthMiddleware($settings->configs->get));
+                            ->add(new AuthMiddleware($config->configs->get));
                     }
                 }
             );
