@@ -12,7 +12,7 @@ final class UsersHandlerTest extends Test
     protected function _before()
     {
         $this->client = new Client([
-            'base_uri' => 'localhost/api/',
+            'base_uri' => 'http://localhost/api/',
             'headers' => [
                 'Content-Type' => 'application/json'
             ],
