@@ -12,7 +12,7 @@ final class ConfigHandlerTest extends Test
     protected function _before()
     {
         $this->client = new Client([
-            'base_uri' => 'http://localhost/api/',
+            'base_uri' => 'localhost/api/',
             'headers' => [
                 'Content-Type' => 'application/json'
             ],
@@ -49,7 +49,7 @@ final class ConfigHandlerTest extends Test
     {
         $response = $this->client->get('configs/site');
 
-        $this->assertEquals(401, $response->getStatusCode());
+        $this->assertEquals('blah', $response->getBody()->getContents());
     }
 
     public function testGetConfigShouldReturnStatus404(): void

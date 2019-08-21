@@ -12,7 +12,7 @@ final class PagesHandlerTest extends Test
     protected function _before()
     {
         $this->client = new Client([
-            'base_uri' => 'http://localhost/api/',
+            'base_uri' => 'localhost/api/',
             'headers' => [
                 'Content-Type' => 'application/json'
             ],
