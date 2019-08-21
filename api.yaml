@@ -1,7 +1,7 @@
 enabled: true
 route: /api
 endpoints:
-  pages:
+  /pages:
     get:
       enabled: true
       auth: false
@@ -30,7 +30,7 @@ endpoints:
     delete:
       enabled: true
       auth: true
-  users:
+  /users:
     get:
       enabled: true
       auth: true
@@ -51,12 +51,14 @@ endpoints:
     delete:
       enabled: true
       auth: true
-  plugins:
-    enabled: true
-    auth: true
-  configs:
-    enabled: true
-    auth: true
-    # Prevents API from accessing these config files
-    ignore_files:
-      - streams
+  /plugins:
+    get:
+      enabled: true
+      auth: true
+  /configs:
+    get:
+      enabled: true
+      auth: true
+      # Prevents API from accessing these config files
+      ignore_files:
+        - streams

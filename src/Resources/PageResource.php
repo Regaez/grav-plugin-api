@@ -1,6 +1,7 @@
 <?php
 namespace GravApi\Resources;
 
+use Grav\Common\Grav;
 use Grav\Common\Page\Page;
 use GravApi\Config\Config;
 use GravApi\Config\Constants;
@@ -248,7 +249,7 @@ class PageResource extends Resource
         $filter = null;
 
         if (Config::instance()->pages) {
-            $filter = Config::instance()->pages->get['fields'];
+            $filter = Config::instance()->pages->get->fields;
         }
 
         // TODO: improve validation of filter input

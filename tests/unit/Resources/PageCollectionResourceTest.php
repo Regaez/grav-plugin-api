@@ -24,18 +24,7 @@ final class PageCollectionResourceTest extends Test
         $grav = Fixtures::get('grav');
         $this->grav = $grav();
 
-        Config::instance([
-            'api' => [
-                'route' => 'api',
-                'permalink' => 'http://localhost/api',
-            ],
-            'pages' => [
-                'get' => [
-                    'enabled' => true,
-                    'fields' => []
-                ]
-            ]
-        ]);
+        Config::instance();
 
         $pages = $this->grav['pages']->all();
         $this->resource = new PageCollectionResource($pages);

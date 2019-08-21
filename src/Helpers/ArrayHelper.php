@@ -33,4 +33,17 @@ class ArrayHelper
 
         return $current;
     }
+
+    public static function asStringArray(array $array)
+    {
+        $filteredArray = [];
+
+        foreach ($array as $item) {
+            if (is_string($item)) {
+                $filteredArray[] = $item;
+            }
+        }
+
+        return $filteredArray;
+    }
 }

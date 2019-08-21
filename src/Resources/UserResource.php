@@ -93,7 +93,7 @@ class UserResource extends Resource
      */
     private function setFilter()
     {
-        $filter = Config::instance()->users->get['fields'];
+        $filter = Config::instance()->users->get->fields;
 
         if (!empty($filter)) {
             $this->filter = $filter;

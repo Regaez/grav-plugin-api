@@ -47,6 +47,8 @@ paths:
       tags:
         - pages
       summary: Add a new page to the site
+      security:
+        - basic: ['admin.api', 'admin.super']
       description: >-
         In order to create a new page, one must **not** already exist at the specified route.
 
@@ -141,6 +143,8 @@ paths:
       tags:
         - pages
       summary: Update a specific page
+      security:
+        - basic: ['admin.api', 'admin.super']
       description: >-
         When passing new content via a `PATCH` request, the existing page content will be _entirely overridden_.
 
@@ -200,6 +204,8 @@ paths:
       tags:
         - pages
       summary: Delete a specific page
+      security:
+        - basic: ['admin.api', 'admin.super']
       description: >-
         If the deletion is successful, the API will respond with a `204` no-content status code.
 
