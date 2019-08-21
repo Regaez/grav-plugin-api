@@ -25,12 +25,30 @@ final class ConfigTest extends Test
         $this->assertInstanceOf(Config::class, $config);
     }
 
+    public function testInstanceReturnsSameInstance(): void
+    {
+        $firstConfig = Config::instance();
+        $secondConfig = Config::instance();
+        $this->assertEquals($firstConfig, $secondConfig);
+    }
+
     public function testPassingConfigReturnsNewClassInstance(): void
     {
         $firstConfig = Config::instance();
         $secondConfig = Config::instance(['route' => 'blah']);
-        $this->assertNotEquals($firstConfig->route, $secondConfig->route);
+        $this->assertNotEquals($firstConfig, $secondConfig);
         Config::resetInstance();
+    }
+
+    public function testCanResetToDefaultConfigInstance(): void
+    {
+        $firstConfig = Config::instance();
+        $secondConfig = Config::instance(['route' => 'blah']);
+
+        $this->assertNotEquals($firstConfig, $secondConfig);
+
+        $resetConfig = Config::resetInstance();
+        $this->assertEquals($firstConfig, $resetConfig);
     }
 
     public function testHasDefaultRoute(): void
@@ -52,5 +70,42 @@ final class ConfigTest extends Test
         $this->assertInstanceOf(Endpoint::class, $config->users);
         $this->assertInstanceOf(Endpoint::class, $config->plugins);
         $this->assertInstanceOf(Endpoint::class, $config->configs);
+    }
+
+    public function testGetEndpointReturnsCorrectEndpoint(): void
+    {
+        $config = Config::instance();
+        $this->assertEquals(
+            'http://localhost/api/pages/',
+            $config->getEndpoint('page')
+        );
+        $this->assertEquals(
+            'http://localhost/api/users/',
+            $config->getEndpoint('user')
+        );
+        $this->assertEquals(
+            'http://localhost/api/plugins/',
+            $config->getEndpoint('plugin')
+        );
+        $this->assertEquals(
+            'http://localhost/api/configs/',
+            $config->getEndpoint('config')
+        );
+    }
+
+    public function testGetEndpointReturnsApiEndpointWhenInvalidParam(): void
+    {
+        $config = Config::instance();
+        $this->assertEquals(
+            'http://localhost/api/',
+            $config->getEndpoint('blah')
+        );
+    }
+
+    public function testConfigureRouteAcceptsCustomRoute(): void
+    {
+        $config = Config::instance(['route' => 'blah']);
+        $this->assertEquals('blah', $config->route);
+        Config::resetInstance();
     }
 }
