@@ -2,7 +2,7 @@
 namespace GravApi\Middlewares;
 
 use Grav\Common\User\User;
-use GravApi\Config\Config;
+use GravApi\Config\Method;
 use GravApi\Responses\Response;
 
 /**
@@ -11,12 +11,14 @@ use GravApi\Responses\Response;
  */
 class AuthMiddleware
 {
-    // Our endpoint config
+    /**
+     * @var Method
+     */
     protected $config;
 
     protected $roles;
 
-    public function __construct($config)
+    public function __construct(Method $config)
     {
         $this->config = $config;
 
