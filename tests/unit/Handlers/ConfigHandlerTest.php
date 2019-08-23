@@ -2,61 +2,120 @@
 declare(strict_types=1);
 
 use Codeception\TestCase\Test;
-use GuzzleHttp\Client;
+use Codeception\Util\Fixtures;
+use Slim\Http\Request;
+use Slim\Http\Response;
+use Slim\Http\Environment;
+use Grav\Common\Grav;
+use GravApi\Config\Config;
+use GravApi\Config\Constants;
+use GravApi\Handlers\ConfigHandler;
 
 final class ConfigHandlerTest extends Test
 {
-    /** @var Client $client */
-    protected $client;
+    /** @var Grav $client */
+    protected $grav;
 
-    protected function _before()
+    /** @var Response $response */
+    protected $response;
+
+    /** @var ConfigHandler $handler */
+    protected $handler;
+
+    protected function _before($ignore_files = array())
     {
-        $this->client = new Client([
-            'base_uri' => 'http://localhost/api/',
-            'headers' => [
-                'Content-Type' => 'application/json'
-            ],
-            'http_errors' => false
+        $grav = Fixtures::get('grav');
+        $this->grav = $grav();
+
+        Config::instance([
+            'endpoints' => [
+                Constants::ENDPOINT_CONFIG => [
+                    Constants::METHOD_GET => [
+                        'ignore_files' => $ignore_files
+                    ]
+                ]
+            ]
         ]);
+
+        $this->handler = new ConfigHandler();
+        $this->response = new Response();
+    }
+
+    protected function _after()
+    {
+        Config::resetInstance();
     }
 
     public function testGetConfigsShouldReturnStatus200(): void
     {
-        $response = $this->client->get('configs', [
-            'auth' => ['development', 'D3velopment']
-        ]);
+        $request = Request::createFromEnvironment(
+            Environment::mock([
+                'REQUEST_METHOD' => 'GET',
+                'REQUEST_URI' => '/api/configs'
+            ])
+        );
+
+        $response = $this->handler->getConfigs(
+            $request,
+            $this->response,
+            []
+        );
 
         $this->assertEquals(200, $response->getStatusCode());
-    }
-
-    public function testGetConfigsShouldReturnStatus401(): void
-    {
-        $response = $this->client->get('configs');
-
-        $this->assertEquals(401, $response->getStatusCode());
     }
 
     public function testGetConfigShouldReturnStatus200(): void
     {
-        $response = $this->client->get('configs/site', [
-            'auth' => ['development', 'D3velopment']
-        ]);
+        $request = Request::createFromEnvironment(
+            Environment::mock([
+                'REQUEST_METHOD' => 'GET',
+                'REQUEST_URI' => '/api/configs/site'
+            ])
+        );
+
+        $response = $this->handler->getConfigs(
+            $request,
+            $this->response,
+            []
+        );
 
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    public function testGetConfigShouldReturnStatus401(): void
+    public function testGetConfigShouldReturnStatus400IfNoIdProvided(): void
     {
-        $response = $this->client->get('configs/site');
+        $request = Request::createFromEnvironment(
+            Environment::mock([
+                'REQUEST_METHOD' => 'GET',
+                'REQUEST_URI' => '/api/configs'
+            ])
+        );
 
-        $this->assertEquals(401, $response->getStatusCode());
+        $response = $this->handler->getConfig(
+            $request,
+            $this->response,
+            []
+        );
+
+        $this->assertEquals(400, $response->getStatusCode());
     }
 
     public function testGetConfigShouldReturnStatus404(): void
     {
-        $response = $this->client->get('configs/blarg', [
-            'auth' => ['development', 'D3velopment']
-        ]);
+        $request = Request::createFromEnvironment(
+            Environment::mock([
+                'REQUEST_METHOD' => 'GET',
+                'REQUEST_URI' => '/api/configs/blarg'
+            ])
+        );
+
+        $response = $this->handler->getConfig(
+            $request,
+            $this->response,
+            [
+                'config' => 'blarg'
+            ]
+        );
 
         $this->assertEquals(404, $response->getStatusCode());
     }

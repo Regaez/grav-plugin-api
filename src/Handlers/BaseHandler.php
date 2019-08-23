@@ -2,9 +2,6 @@
 namespace GravApi\Handlers;
 
 use Grav\Common\Grav;
-use Interop\Container\ContainerInterface;
-use Psr\Http\Message\ServerRequestInterface as Request;
-use Psr\Http\Message\ResponseInterface as Response;
 use GravApi\Config\Config;
 
 /**
@@ -13,9 +10,6 @@ use GravApi\Config\Config;
  */
 class BaseHandler
 {
-    // Our Slim container
-    protected $container;
-
     // Our grav instance
     protected $grav;
 
@@ -23,9 +17,8 @@ class BaseHandler
     protected $config;
 
     // constructor receives container instance
-    public function __construct(ContainerInterface $container)
+    public function __construct()
     {
-        $this->container = $container;
         $this->grav = Grav::instance();
         $this->config = Config::instance();
     }

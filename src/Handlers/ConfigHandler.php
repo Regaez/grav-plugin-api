@@ -23,6 +23,10 @@ class ConfigHandler extends BaseHandler
 
     public function getConfig($request, $response, $args)
     {
+        if (!isset($args['config'])) {
+            return $response->withJson(Response::badRequest('No config `id   given!'), 400);
+        }
+
         $config = ConfigHelper::loadConfig($args['config']);
 
         // If the config doesn't exist, OR it is present on the filter list
