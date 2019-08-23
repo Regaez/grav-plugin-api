@@ -19,7 +19,7 @@ final class PagesHandlerTest extends Test
     /** @var Response $response */
     protected $response;
 
-    /** @var ConfigHandler $handler */
+    /** @var PagesHandler $handler */
     protected $handler;
 
     protected function _before()
