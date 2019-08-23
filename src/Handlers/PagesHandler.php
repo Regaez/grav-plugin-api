@@ -25,7 +25,11 @@ class PagesHandler extends BaseHandler
 
     public function getPage($request, $response, $args)
     {
-        $route = "/{$request->getAttribute('page')}";
+        if (!isset($args['page'])) {
+            return $response->withJson(Response::badRequest('You must provide an `id` for the page!'), 400);
+        }
+
+        $route = "/{$args['page']}";
         $page = $this->grav['pages']->find($route);
 
         if (!$page) {
@@ -98,7 +102,11 @@ class PagesHandler extends BaseHandler
 
     public function deletePage($request, $response, $args)
     {
-        $route = "/{$request->getAttribute('page')}";
+        if (!isset($args['page'])) {
+            return $response->withJson(Response::badRequest('You must provide an `id` for the page!'), 400);
+        }
+
+        $route = "/{$args['page']}";
         $page = $this->grav['pages']->find($route);
 
         if (!$page || !$page->exists()) {
@@ -146,7 +154,11 @@ class PagesHandler extends BaseHandler
 
     public function updatePage($request, $response, $args)
     {
-        $route = "/{$request->getAttribute('page')}";
+        if (!isset($args['page'])) {
+            return $response->withJson(Response::badRequest('You must provide an `id` for the page!'), 400);
+        }
+
+        $route = "/{$args['page']}";
         $page = $this->grav['pages']->find($route);
 
         if (!$page || !$page->exists()) {
@@ -154,7 +166,10 @@ class PagesHandler extends BaseHandler
         }
 
         $parsedBody = $request->getParsedBody();
-        $template = $parsedBody['template'] ?: '';
+
+        $template = isset($parsedBody['template'])
+            ? $parsedBody['template']
+            : '';
 
         if (empty($parsedBody['route'])) {
             return $response->withJson(Response::badRequest('You must provide a `route` field!'), 400);

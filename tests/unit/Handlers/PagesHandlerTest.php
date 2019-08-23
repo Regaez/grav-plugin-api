@@ -2,139 +2,171 @@
 declare(strict_types=1);
 
 use Codeception\TestCase\Test;
-use GuzzleHttp\Client;
+use Codeception\Util\Fixtures;
+use Slim\Http\Request;
+use Slim\Http\RequestBody;
+use Slim\Http\Response;
+use Slim\Http\Environment;
+use Grav\Common\Grav;
+use GravApi\Config\Config;
+use GravApi\Handlers\PagesHandler;
 
 final class PagesHandlerTest extends Test
 {
-    /** @var Client $client */
-    protected $client;
+    /** @var Grav $client */
+    protected $grav;
+
+    /** @var Response $response */
+    protected $response;
+
+    /** @var ConfigHandler $handler */
+    protected $handler;
 
     protected function _before()
     {
-        $this->client = new Client([
-            'base_uri' => 'http://localhost/api/',
-            'headers' => [
-                'Content-Type' => 'application/json'
-            ],
-            'http_errors' => false
-        ]);
+        $grav = Fixtures::get('grav');
+        $this->grav = $grav();
+
+        Config::instance();
+
+        $this->handler = new PagesHandler();
+        $this->response = new Response();
     }
 
     public function testGetPagesShouldReturnStatus200(): void
     {
-        $response = $this->client->get('pages');
+        $request = Request::createFromEnvironment(
+            Environment::mock([
+                'REQUEST_METHOD' => 'GET',
+                'REQUEST_URI' => '/api/pages'
+            ])
+        );
+
+        $response = $this->handler->getPages($request, $this->response, []);
 
         $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function testGetPageShouldReturnStatus200(): void
     {
-        $response = $this->client->get('pages/test');
+        $request = Request::createFromEnvironment(
+            Environment::mock([
+                'REQUEST_METHOD' => 'GET',
+                'REQUEST_URI' => '/api/pages/test'
+            ])
+        );
+
+        $response = $this->handler->getPage($request, $this->response, [
+            'page' => 'test'
+        ]);
 
         $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function testGetPageShouldReturnStatus404(): void
     {
-        $response = $this->client->get('pages/blarg');
+        $request = Request::createFromEnvironment(
+            Environment::mock([
+                'REQUEST_METHOD' => 'GET',
+                'REQUEST_URI' => '/api/pages/blarg'
+            ])
+        );
+
+        $response = $this->handler->getPage($request, $this->response, [
+            'page' => 'blarg'
+        ]);
 
         $this->assertEquals(404, $response->getStatusCode());
     }
 
-    public function testNewPageShouldReturnStatus401IfNoAuth(): void
-    {
-        $response = $this->client->post('pages', [
-            'body' => json_encode([
-                'route' => '/test-page',
-                'header' => [
-                    'title' => 'Test page'
-                ]
-            ])
-        ]);
-
-        $this->assertEquals(401, $response->getStatusCode());
-    }
-
     public function testNewPageShouldReturnStatus400IfNoRouteGiven(): void
     {
-        $response = $this->client->post('pages', [
-            'body' => json_encode([
-                'header' => [
-                    'title' => 'Test page'
-                ]
-            ]),
-            'auth' => ['development', 'D3velopment']
+        $request = Request::createFromEnvironment(
+            Environment::mock([
+                'REQUEST_METHOD' => 'POST',
+                'REQUEST_URI' => '/api/pages'
+            ])
+        )->withParsedBody([
+            'header' => [
+                'title' => 'Test page'
+            ]
         ]);
+
+        $response = $this->handler->newPage($request, $this->response, []);
 
         $this->assertEquals(400, $response->getStatusCode());
     }
 
     public function testNewPageShouldReturnStatus400IfHeaderNotJson(): void
     {
-        $response = $this->client->post('pages', [
-            'body' => json_encode([
-                'route' => '/test-page',
-                'header' => 'invalid!'
-            ]),
-            'auth' => ['development', 'D3velopment']
+        $request = Request::createFromEnvironment(
+            Environment::mock([
+                'REQUEST_METHOD' => 'POST',
+                'REQUEST_URI' => '/api/pages'
+            ])
+        )->withParsedBody([
+            'route' => '/test-page',
+            'header' => 'invalid!'
         ]);
+
+        $response = $this->handler->newPage($request, $this->response, []);
 
         $this->assertEquals(400, $response->getStatusCode());
     }
 
     public function testNewPageShouldReturnStatus403IfPageExists(): void
     {
-        $response = $this->client->post('pages', [
-            'body' => json_encode([
-                'route' => '/test',
-                'header' => [
-                    'title' => 'Test page'
-                ]
-            ]),
-            'auth' => ['development', 'D3velopment']
+        $request = Request::createFromEnvironment(
+            Environment::mock([
+                'REQUEST_METHOD' => 'POST',
+                'REQUEST_URI' => '/api/pages'
+            ])
+        )->withParsedBody([
+            'route' => '/test',
+            'header' => [
+                'title' => 'Test page'
+            ]
         ]);
+
+        $response = $this->handler->newPage($request, $this->response, []);
 
         $this->assertEquals(403, $response->getStatusCode());
     }
 
     public function testNewPageShouldReturnStatus200(): void
     {
-        $response = $this->client->post('pages', [
-            'body' => json_encode([
-                'route' => '/test-page',
-                'header' => [
-                    'title' => 'Test page'
-                ]
-            ]),
-            'auth' => ['development', 'D3velopment']
+        $request = Request::createFromEnvironment(
+            Environment::mock([
+                'REQUEST_METHOD' => 'POST',
+                'REQUEST_URI' => '/api/pages'
+            ])
+        )->withParsedBody([
+            'route' => '/test-page',
+            'header' => [
+                'title' => 'Test page'
+            ]
         ]);
+
+        $response = $this->handler->newPage($request, $this->response, []);
 
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    public function testUpdatePageShouldReturnStatus401IfNoAuth(): void
-    {
-        $response = $this->client->patch('pages/test-page', [
-            'body' => json_encode([
-                'route' => '/test-page',
-                'header' => [
-                    'title' => 'Test page'
-                ]
-            ])
-        ]);
-
-        $this->assertEquals(401, $response->getStatusCode());
-    }
-
     public function testUpdatePageShouldReturnStatus400IfNoRouteGiven(): void
     {
-        $response = $this->client->patch('pages/test-page', [
-            'body' => json_encode([
-                'header' => [
-                    'title' => 'Test page'
-                ]
-            ]),
-            'auth' => ['development', 'D3velopment']
+        $request = Request::createFromEnvironment(
+            Environment::mock([
+                'REQUEST_METHOD' => 'PATCH',
+                'REQUEST_URI' => '/api/pages/test-page'
+            ])
+        )->withParsedBody([
+            'header' => [
+                'title' => 'Test page'
+            ]
+        ]);
+
+        $response = $this->handler->updatePage($request, $this->response, [
+            'page' => 'test-page'
         ]);
 
         $this->assertEquals(400, $response->getStatusCode());
@@ -142,12 +174,18 @@ final class PagesHandlerTest extends Test
 
     public function testUpdatePageShouldReturnStatus400IfHeaderNotJson(): void
     {
-        $response = $this->client->patch('pages/test-page', [
-            'body' => json_encode([
-                'route' => '/test-page',
-                'header' => 'invalid!'
-            ]),
-            'auth' => ['development', 'D3velopment']
+        $request = Request::createFromEnvironment(
+            Environment::mock([
+                'REQUEST_METHOD' => 'PATCH',
+                'REQUEST_URI' => '/api/pages/test-page'
+            ])
+        )->withParsedBody([
+            'route' => '/test-page',
+            'header' => 'invalid!'
+        ]);
+
+        $response = $this->handler->updatePage($request, $this->response, [
+            'page' => 'test-page'
         ]);
 
         $this->assertEquals(400, $response->getStatusCode());
@@ -155,14 +193,18 @@ final class PagesHandlerTest extends Test
 
     public function testUpdatePageShouldReturnStatus404IfPageIsNotFound(): void
     {
-        $response = $this->client->patch('pages/non-existent-page', [
-            'body' => json_encode([
-                'route' => '/non-existent-page',
-                'header' => [
-                    'title' => 'Test page'
-                ]
-            ]),
-            'auth' => ['development', 'D3velopment']
+        $request = Request::createFromEnvironment(
+            Environment::mock([
+                'REQUEST_METHOD' => 'PATCH',
+                'REQUEST_URI' => '/api/pages/non-existent-page'
+            ])
+        )->withParsedBody([
+            'route' => '/non-existent-page',
+            'header' => 'invalid!'
+        ]);
+
+        $response = $this->handler->updatePage($request, $this->response, [
+            'page' => 'non-existent-page'
         ]);
 
         $this->assertEquals(404, $response->getStatusCode());
@@ -170,31 +212,37 @@ final class PagesHandlerTest extends Test
 
     public function testUpdatePageShouldReturnStatus200(): void
     {
-        $response = $this->client->patch('pages/test-page', [
-            'body' => json_encode([
-                'route' => '/test-page',
-                'header' => [
-                    'title' => 'Test page'
-                ],
-                'content' => 'This is some new content'
-            ]),
-            'auth' => ['development', 'D3velopment']
+        $request = Request::createFromEnvironment(
+            Environment::mock([
+                'REQUEST_METHOD' => 'PATCH',
+                'REQUEST_URI' => '/api/pages/test-page'
+            ])
+        )->withParsedBody([
+            'route' => '/test-page',
+            'header' => [
+                'title' => 'Test page'
+            ],
+            'content' => 'This is some new content'
+        ]);
+
+        $response = $this->handler->updatePage($request, $this->response, [
+            'page' => 'test-page'
         ]);
 
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    public function testDeletePageShouldReturnStatus401(): void
-    {
-        $response = $this->client->delete('pages/test-page');
-
-        $this->assertEquals(401, $response->getStatusCode());
-    }
-
     public function testDeletePageShouldReturnStatus404(): void
     {
-        $response = $this->client->delete('pages/blarg', [
-            'auth' => ['development', 'D3velopment']
+        $request = Request::createFromEnvironment(
+            Environment::mock([
+                'REQUEST_METHOD' => 'DELETE',
+                'REQUEST_URI' => '/api/pages/blarg'
+            ])
+        );
+
+        $response = $this->handler->deletePage($request, $this->response, [
+            'page' => 'blarg'
         ]);
 
         $this->assertEquals(404, $response->getStatusCode());
@@ -202,8 +250,15 @@ final class PagesHandlerTest extends Test
 
     public function testDeletePageShouldReturnStatus204(): void
     {
-        $response = $this->client->delete('pages/test-page', [
-            'auth' => ['development', 'D3velopment']
+        $request = Request::createFromEnvironment(
+            Environment::mock([
+                'REQUEST_METHOD' => 'DELETE',
+                'REQUEST_URI' => '/api/pages/test-page'
+            ])
+        );
+
+        $response = $this->handler->deletePage($request, $this->response, [
+            'page' => 'test-page'
         ]);
 
         $this->assertEquals(204, $response->getStatusCode());
