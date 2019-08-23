@@ -8,7 +8,6 @@ use Slim\Http\Response;
 use Slim\Http\Environment;
 use Grav\Common\Grav;
 use GravApi\Config\Config;
-use GravApi\Config\Constants;
 use GravApi\Handlers\ConfigHandler;
 
 final class ConfigHandlerTest extends Test
@@ -22,20 +21,12 @@ final class ConfigHandlerTest extends Test
     /** @var ConfigHandler $handler */
     protected $handler;
 
-    protected function _before($ignore_files = array())
+    protected function _before()
     {
         $grav = Fixtures::get('grav');
         $this->grav = $grav();
 
-        Config::instance([
-            'endpoints' => [
-                Constants::ENDPOINT_CONFIG => [
-                    Constants::METHOD_GET => [
-                        'ignore_files' => $ignore_files
-                    ]
-                ]
-            ]
-        ]);
+        Config::instance();
 
         $this->handler = new ConfigHandler();
         $this->response = new Response();
