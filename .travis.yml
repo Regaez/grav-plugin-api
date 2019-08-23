@@ -21,6 +21,8 @@ install:
     - composer install
 
 script:
+    - composer start
+    - docker-compose exec grav chown -R www-data:www-data .
     - composer test:bootstrap
     - composer test
 
