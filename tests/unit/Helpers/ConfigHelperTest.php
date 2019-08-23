@@ -5,6 +5,7 @@ use Codeception\TestCase\Test;
 use Codeception\Util\Fixtures;
 use Grav\Common\Grav;
 use GravApi\Config\Config;
+use GravApi\Config\Constants;
 use GravApi\Models\ConfigModel;
 use GravApi\Helpers\ConfigHelper;
 
@@ -17,16 +18,7 @@ final class ConfigHelperTest extends Test
     {
         $grav = Fixtures::get('grav');
         $this->grav = $grav();
-
-        Config::instance([
-            'api' => [
-                'route' => 'api',
-                'permalink' => 'http://localhost/api'
-            ],
-            'configs' => [
-                'ignore_files' => $ignore_files
-            ]
-        ]);
+        Config::instance();
     }
 
     public function testLoadConfigsReturnsArrayOfConfigModels(): void
