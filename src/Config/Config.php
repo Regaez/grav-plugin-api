@@ -47,6 +47,11 @@ class Config
     protected $configs;
 
     /**
+     * @var Endpoint
+     */
+    protected $taxonomies;
+
+    /**
      * We map all settings to existing class properties
      * @param [array] $settings
      */
@@ -165,6 +170,9 @@ class Config
                 break;
             case Constants::TYPE_CONFIG:
                 $endpoint = Constants::ENDPOINT_CONFIG;
+                break;
+            case Constants::TYPE_TAXONOMY:
+                $endpoint = Constants::ENDPOINT_TAXONOMY;
                 break;
         }
 

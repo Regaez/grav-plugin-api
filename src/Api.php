@@ -7,6 +7,7 @@ use GravApi\Middlewares\AuthMiddleware;
 use GravApi\Handlers\ConfigHandler;
 use GravApi\Handlers\PagesHandler;
 use GravApi\Handlers\PluginsHandler;
+use GravApi\Handlers\TaxonomiesHandler;
 use GravApi\Handlers\UsersHandler;
 use GravApi\Config\Constants;
 
@@ -64,6 +65,9 @@ class Api
                     ),
                     Constants::TYPE_CONFIG => $config->getEndpoint(
                         Constants::TYPE_CONFIG
+                    ),
+                    Constants::TYPE_TAXONOMY => $config->getEndpoint(
+                        Constants::TYPE_TAXONOMY
                     )
                 ];
 
@@ -157,6 +161,17 @@ class Api
                     if ($config->configs->get->enabled) {
                         $this->get('/{config}', ConfigHandler::class . ':getConfig')
                             ->add(new AuthMiddleware($config->configs->get));
+                    }
+                }
+            );
+
+            $this->group(
+                Constants::ENDPOINT_TAXONOMY,
+                function () use ($config) {
+
+                    if ($config->taxonomies->post->enabled) {
+                        $this->post('/searches', TaxonomiesHandler::class . ':getTaxonomies')
+                            ->add(new AuthMiddleware($config->taxonomies->post));
                     }
                 }
             );
