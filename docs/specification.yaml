@@ -774,6 +774,18 @@ components:
           type: string
           description: A link to this resource on the site
           example: "https://www.mysite.com/blog/my-first-post"
+        children:
+          type: array
+          description: An array of links to this resource's children on the site
+          items:
+            type: string
+          example:
+            - "https://www.mysite.com/blog/my-first-post/child-1"
+            - "https://www.mysite.com/blog/my-first-post/child-2"
+        parent:
+          type: string
+          description: A link to this resource's parent page on the site
+          example: "https://www.mysite.com/blog"
         related:
           type: object
           properties:
@@ -781,6 +793,18 @@ components:
               type: string
               description: A link to this resource through the API
               example: "https://www.mysite.com/api/pages/blog/my-first-post"
+            children:
+              type: array
+              description: An array of links to this resource's children through the API
+              items:
+                type: string
+              example:
+                - "https://www.mysite.com/api/pages/blog/my-first-post/child-1"
+                - "https://www.mysite.com/api/pages/blog/my-first-post/child-2"
+            parent:
+              type: string
+              description: A link to this resource's parent page through the API
+              example: "https://www.mysite.com/api/pages/blog"
     PluginHypermedia:
       type: object
       properties:

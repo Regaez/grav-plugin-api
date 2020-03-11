@@ -24,6 +24,11 @@ class Config
     /**
      * @var string
      */
+    protected $rootUrl;
+
+    /**
+     * @var string
+     */
     protected $permalink;
 
     /**
@@ -217,7 +222,7 @@ class Config
 
     protected function setPermalink()
     {
-        $rootUrl = Grav::instance()['uri']->rootUrl(true);
-        $this->permalink = $rootUrl . '/' . $this->route;
+        $this->rootUrl = Grav::instance()['uri']->rootUrl(true) . '/';
+        $this->permalink = $this->rootUrl . $this->route;
     }
 }
