@@ -58,23 +58,9 @@ class Api
 
             $this->get('', function ($request, $response, $args) {
                 $config = Config::instance();
+                $endpoints = $config->getEnabledResourceEndpoints();
 
-                $urls = [
-                    Constants::TYPE_PAGE => $config->getEndpoint(
-                        Constants::TYPE_PAGE
-                    ),
-                    Constants::TYPE_USER => $config->getEndpoint(
-                        Constants::TYPE_USER
-                    ),
-                    Constants::TYPE_PLUGIN => $config->getEndpoint(
-                        Constants::TYPE_PLUGIN
-                    ),
-                    Constants::TYPE_CONFIG => $config->getEndpoint(
-                        Constants::TYPE_CONFIG
-                    )
-                ];
-
-                return $response->withJson($urls);
+                return $response->withJson($endpoints);
             });
 
             $config = Config::instance();

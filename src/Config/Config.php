@@ -48,7 +48,7 @@ class Config
 
     /**
      * We map all settings to existing class properties
-     * @param [array] $settings
+     * @param array $settings
      */
     private function __construct($config = null)
     {
@@ -146,8 +146,8 @@ class Config
      * and returns the matching, fully-qualified endpoint
      * for the given Resource Type.
      *
-     * @param  [string] $resourceType e.g. Constants::TYPE_PAGE
-     * @return [string] e.g. https://www.example.com/api/pages/
+     * @param  string $resourceType e.g. Constants::TYPE_PAGE
+     * @return string e.g. https://www.example.com/api/pages/
      */
     public function getEndpoint(string $resourceType)
     {
@@ -169,6 +169,50 @@ class Config
         }
 
         return $this->permalink . $endpoint . '/';
+    }
+
+    /**
+     * Accepts one of the Constants::TYPE_* as a parameter,
+     * and returns the matching endpoint config class
+     * for the given Resource Type.
+     *
+     * @param  string $resourceType e.g. Constants::TYPE_PAGE
+     * @return Endpoint
+     */
+    public function getEndpointConfigByType(string $resourceType)
+    {
+        switch ($resourceType) {
+            case Constants::TYPE_PAGE:
+                return $this->pages;
+            case Constants::TYPE_USER:
+                return $this->users;
+            case Constants::TYPE_PLUGIN:
+                return $this->plugins;
+            case Constants::TYPE_CONFIG:
+                return $this->configs;
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns associative array of available resource types
+     * with API endpoint to access resource
+     *
+     * @return array
+     */
+    public function getEnabledResourceEndpoints()
+    {
+        $endpoints = [];
+
+        foreach (Constants::TYPES as $type) {
+            $config = $this->getEndpointConfigByType($type);
+            if ($config->get->enabled) {
+                $endpoints[$type] = $this->getEndpoint($type);
+            }
+        }
+
+        return $endpoints;
     }
 
     protected function setPermalink()
