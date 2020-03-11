@@ -9,7 +9,7 @@ homepage: https://github.com/regaez/grav-plugin-api
 demo: http://demo.yoursite.com
 keywords: grav, plugin, etc
 bugs: https://github.com/regaez/grav-plugin-api/issues
-docs: https://github.com/regaez/grav-plugin-api/blob/develop/README.md
+docs: https://github.com/regaez/grav-plugin-api/tree/master/docs
 license: MIT
 
 form:

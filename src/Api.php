@@ -5,6 +5,7 @@ use Monolog\Logger;
 use GravApi\Config\Config;
 use GravApi\Middlewares\AuthMiddleware;
 use GravApi\Handlers\ConfigHandler;
+use GravApi\Handlers\NotFoundHandler;
 use GravApi\Handlers\PagesHandler;
 use GravApi\Handlers\PluginsHandler;
 use GravApi\Handlers\UsersHandler;
@@ -40,6 +41,12 @@ class Api
             ]
         ];
         $this->app = new \Slim\App($slimConfig);
+
+        // Override default slim notFoundHandler
+        $container = $this->app->getContainer();
+        $container['notFoundHandler'] = function ($container) {
+            return new NotFoundHandler();
+        };
 
         $this->attachHandlers();
     }
