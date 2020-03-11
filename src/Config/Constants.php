@@ -15,6 +15,14 @@ class Constants
     const TYPE_PLUGIN = 'plugin';
     const TYPE_CONFIG = 'config';
 
+    // All available types
+    const TYPES = [
+        Constants::TYPE_PAGE,
+        Constants::TYPE_USER,
+        Constants::TYPE_PLUGIN,
+        Constants::TYPE_CONFIG
+    ];
+
     // Endpoints
     const ENDPOINT_PAGE = '/pages';
     const ENDPOINT_USER = '/users';
