@@ -91,10 +91,8 @@ final class PageResourceTest extends Test
                 "title" => "Test page",
                 "custom_field" => "WORLD",
                 "taxonomy" => [
-                    "taxonomyKey1": [
-                        "taxonomyValue1"
-                    ],
-                    "taxonomyKey2": [
+                    "taxonomyKey1" => "taxonomyValue1",
+                    "taxonomyKey2" => [
                         "taxonomyValue2",
                         "taxonomyValue3"
                     ]
@@ -132,7 +130,7 @@ final class PageResourceTest extends Test
             "permalink" => "http://localhost/test",
             "publishDate" => null,
             "published" => true,
-            "raw" => "---\ntitle: 'Test page'\ncustom_field: WORLD\n---\n\n# Hello {{custom_field}}! This is a test.\n",
+            "raw" => "---\ntitle: 'Test page'\ncustom_field: WORLD\ntaxonomy:\n  taxonomyKey1: taxonomyValue1\n  taxonomyKey2: [taxonomyValue2, taxonomyValue3]\n---\n\n# Hello {{custom_field}}! This is a test.\n",
             "rawMarkdown" => "# Hello {{custom_field}}! This is a test.\n",
             "rawRoute" => "/test",
             "root" => false,
@@ -141,7 +139,15 @@ final class PageResourceTest extends Test
             "routeCanonical" => "/test",
             "slug" => "test",
             "summary" => "<h1>Hello {{custom_field}}! This is a test.</h1>",
-            "taxonomy" => [],
+            "taxonomy" => [
+                "taxonomyKey1" => [
+                    "taxonomyValue1"
+                ],
+                "taxonomyKey2" => [
+                    "taxonomyValue2",
+                    "taxonomyValue3"
+                ]
+            ],
             "template" => "default",
             "title" => "Test page",
             "translatedLanguages" => [],

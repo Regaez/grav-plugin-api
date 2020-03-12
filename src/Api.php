@@ -79,7 +79,7 @@ class Api
 
                     // TODO: add more fine-grained enabling/disabling support for sub-endpoints to avoid confusion
                     if ($config->pages->get->enabled) {
-                        $this->post('/searches', TaxonomiesHandler::class . ':findPages')
+                        $this->post('/searches', PagesHandler::class . ':findPages')
                             ->add(new AuthMiddleware($config->pages->get));
                     }
 

@@ -89,9 +89,9 @@ final class PagesHandlerTest extends Test
         )->withParsedBody([
             'taxonomyFilter' => [
                 'taxonomyKey1' => ['taxonomyValue1'],
-                'taxonomyKey2' => ['taxonomyValue2', 'taxonomyValue3'],
-                'operation' => 'and'
-            ]
+                'taxonomyKey2' => ['taxonomyValue2', 'taxonomyValue3']
+            ],
+            'operation' => 'and'
         ]);
 
         $response = $this->handler->findPages($request, $this->response, []);
@@ -108,15 +108,15 @@ final class PagesHandlerTest extends Test
             ])
         )->withParsedBody([
             'taxonomyFilter' => [
-                'taxonomyKey1' => ['taxonomyValue1'],
-                'operation' => 'and'
-            ]
+                'taxonomyKey1' => ['taxonomyValue1']
+            ],
+            'operation' => 'and'
         ]);
 
         $response = $this->handler->findPages($request, $this->response, []);
 
         var_dump(json_decode($response->getBody()->__toString())->items);
-        $this->assertEquals(2, json_decode($response->getBody()->__toString())->items);
+        $this->assertEquals(2, count(json_decode($response->getBody()->__toString())->items));
     }
 
     public function testFindPagesShouldReturnOnePage(): void
@@ -128,9 +128,9 @@ final class PagesHandlerTest extends Test
             ])
         )->withParsedBody([
             'taxonomyFilter' => [
-                'taxonomyKey2' => ['taxonomyValue2'],
-                'operation' => 'or'
-            ]
+                'taxonomyKey2' => ['taxonomyValue2']
+            ],
+            'operation' => 'or'
         ]);
 
         $response = $this->handler->findPages($request, $this->response, []);
