@@ -115,7 +115,8 @@ final class PagesHandlerTest extends Test
 
         $response = $this->handler->findPages($request, $this->response, []);
 
-        $this->assertEquals(2, count(json_decode($response->getBody()->__toString())->items));
+        var_dump(json_decode($response->getBody()->__toString())->items);
+        $this->assertEquals(2, json_decode($response->getBody()->__toString())->items);
     }
 
     public function testFindPagesShouldReturnOnePage(): void

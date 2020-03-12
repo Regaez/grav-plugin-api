@@ -56,6 +56,6 @@ final class PageCollectionResourceTest extends Test
     public function testToJsonReturnsMetaCount(): void
     {
         $result = $this->resource->toJson()['meta']['count'];
-        $this->assertEquals(3, $result);
+        $this->assertEquals(4, $result);
     }
 }

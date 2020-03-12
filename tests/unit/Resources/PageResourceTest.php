@@ -86,7 +86,16 @@ final class PageResourceTest extends Test
             "frontmatter" => "title: 'Test page'\ncustom_field: WORLD",
             "header" => [
                 "title" => "Test page",
-                "custom_field" => "WORLD"
+                "custom_field" => "WORLD",
+                "taxonomy" => [
+                    "taxonomyKey1": [
+                        "taxonomyValue1"
+                    ],
+                    "taxonomyKey2": [
+                        "taxonomyValue2",
+                        "taxonomyValue3"
+                    ]
+                ]
             ],
             "home" => false,
             "id" => "156564201272ebcd1270d0fccaa9958b7c3952fe87",
