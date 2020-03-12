@@ -14,22 +14,19 @@ class Constants
     const TYPE_USER = 'user';
     const TYPE_PLUGIN = 'plugin';
     const TYPE_CONFIG = 'config';
-    const TYPE_TAXONOMY = 'taxonomy';
 
     // Endpoints
     const ENDPOINT_PAGE = '/pages';
     const ENDPOINT_USER = '/users';
     const ENDPOINT_PLUGIN = '/plugins';
     const ENDPOINT_CONFIG = '/configs';
-    const ENDPOINT_TAXONOMY = '/taxonomies';
 
     // All available endpoints
     const ENDPOINTS = [
         Constants::ENDPOINT_PAGE,
         Constants::ENDPOINT_USER,
         Constants::ENDPOINT_PLUGIN,
-        Constants::ENDPOINT_CONFIG,
-        Constants::ENDPOINT_TAXONOMY
+        Constants::ENDPOINT_CONFIG
     ];
 
     // Methods

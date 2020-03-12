@@ -79,6 +79,64 @@ final class PagesHandlerTest extends Test
         $this->assertEquals(404, $response->getStatusCode());
     }
 
+    public function testFindPagesShouldReturnStatus200(): void
+    {
+        $request = Request::createFromEnvironment(
+            Environment::mock([
+                'REQUEST_METHOD' => 'POST',
+                'REQUEST_URI' => '/api/pages'
+            ])
+        )->withParsedBody([
+            'taxonomyFilter' => [
+                'taxonomyKey1' => ['taxonomyValue1'],
+                'taxonomyKey2' => ['taxonomyValue2', 'taxonomyValue3'],
+                'operation' => 'and'
+            ]
+        ]);
+
+        $response = $this->handler->findPages($request, $this->response, []);
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    public function testFindPagesShouldReturnTwoPages(): void
+    {
+        $request = Request::createFromEnvironment(
+            Environment::mock([
+                'REQUEST_METHOD' => 'POST',
+                'REQUEST_URI' => '/api/pages'
+            ])
+        )->withParsedBody([
+            'taxonomyFilter' => [
+                'taxonomyKey1' => ['taxonomyValue1'],
+                'operation' => 'and'
+            ]
+        ]);
+
+        $response = $this->handler->findPages($request, $this->response, []);
+
+        $this->assertEquals(2, count($response->getParsedBody()->items));
+    }
+
+    public function testFindPagesShouldReturnOnePage(): void
+    {
+        $request = Request::createFromEnvironment(
+            Environment::mock([
+                'REQUEST_METHOD' => 'POST',
+                'REQUEST_URI' => '/api/pages'
+            ])
+        )->withParsedBody([
+            'taxonomyFilter' => [
+                'taxonomyKey2' => ['taxonomyValue2'],
+                'operation' => 'or'
+            ]
+        ]);
+
+        $response = $this->handler->findPages($request, $this->response, []);
+
+        $this->assertEquals(1, count($response->getParsedBody()->items));
+    }
+
     public function testNewPageShouldReturnStatus400IfNoRouteGiven(): void
     {
         $request = Request::createFromEnvironment(
