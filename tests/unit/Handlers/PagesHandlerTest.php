@@ -115,7 +115,7 @@ final class PagesHandlerTest extends Test
 
         $response = $this->handler->findPages($request, $this->response, []);
 
-        $this->assertEquals(2, count($response->getParsedBody()->items));
+        $this->assertEquals(2, count($response->getBody()->items));
     }
 
     public function testFindPagesShouldReturnOnePage(): void
@@ -134,7 +134,7 @@ final class PagesHandlerTest extends Test
 
         $response = $this->handler->findPages($request, $this->response, []);
 
-        $this->assertEquals(1, count($response->getParsedBody()->items));
+        $this->assertEquals(1, count($response->getBody()->items));
     }
 
     public function testNewPageShouldReturnStatus400IfNoRouteGiven(): void
