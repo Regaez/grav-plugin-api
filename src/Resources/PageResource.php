@@ -22,6 +22,8 @@ class PageResource extends Resource
     {
         $this->resource = $page;
 
+        $this->setParent();
+
         // Set the attribute filter
         $this->setFilter();
     }
@@ -35,7 +37,24 @@ class PageResource extends Resource
     {
         return [
             'self' => $this->resource->permalink(),
+            'children' => $this->getChildrenHypermedia(),
+            'parent' => $this->getParentHypermedia(),
             'related' => $this->getRelatedHypermedia()
+        ];
+    }
+
+    /**
+     * Returns the releated hypermedia array for this resource type
+     *
+     * @return array
+     */
+    public function getRelatedHypermedia()
+    {
+        return [
+            'self' => $this->getRelatedSelf(),
+            'children' => $this->getChildrenHypermedia(true),
+            'parent' => $this->getParentHypermedia(true),
+            'resource' => $this->getResourceEndpoint()
         ];
     }
 
@@ -126,7 +145,9 @@ class PageResource extends Resource
             'orderDir' => $this->resource->orderDir(),
             'orderBy' => $this->resource->orderBy(),
             'orderManual' => $this->resource->orderManual(),
-            'parent' => $this->resource->parent()->route(),
+
+            // This should be included in hypermedia links
+            // 'parent' => $this->resource->parent()->rawRoute(),
 
             // This would expose server directory structure, so shouldn't be returned
             // 'path' => $this->resource->path(),
@@ -196,6 +217,66 @@ class PageResource extends Resource
     }
 
     /**
+     * Returns the fully qualified children URLs
+     *
+     * @param boolean $related Set true to return API endpoints
+     * @return array
+     */
+    public function getChildrenHypermedia($related = false)
+    {
+        $children = [];
+
+        foreach ($this->processChildren() as $child) {
+            $path = ltrim($child, '/');
+
+            if ($related) {
+                $children[] = $this->getResourceEndpoint() . $path;
+            } else {
+                $children[] = Config::instance()->rootUrl . $path;
+            }
+        }
+
+        return $children;
+    }
+
+    /**
+     * Returns the fully qualified parent URL, or null if no parent exists
+     *
+     * @param boolean $related Set true to return API endpoints
+     * @return string|null
+     */
+    public function getParentHypermedia($related = false)
+    {
+        $parent = $this->resource->parent();
+        $path = ltrim($parent->rawRoute(), '/');
+
+        if (!$parent || !$path) {
+            return null;
+        }
+
+        if ($related) {
+            return $this->getResourceEndpoint() . $path;
+        } else {
+            return Config::instance()->rootUrl . $path;
+        }
+    }
+
+    /**
+     * Sets the parent of the page to the previous route component
+     */
+    private function setParent()
+    {
+        $routeComponents = explode('/', $this->resource->rawRoute());
+        $parentRoute = implode('/', array_slice($routeComponents, 0, -1));
+
+        $parent = Grav::instance()['pages']->find($parentRoute);
+
+        if ($parent) {
+            $this->resource->parent($parent);
+        }
+    }
+
+    /**
      * We process the children because the collection's
      * toArray method will expose our server directory structure
      *
@@ -206,7 +287,7 @@ class PageResource extends Resource
         $children = [];
         foreach ($this->resource->children()->toArray() as $child) {
             // we generate the routes for each child
-            $children[] = $this->resource->route().'/'.$child['slug'];
+            $children[] = $this->resource->rawRoute().'/'.$child['slug'];
         }
         return $children;
     }

@@ -70,7 +70,10 @@ final class PageResourceTest extends Test
     public function testGetResourceAttributesReturnsPageData(): void
     {
         $attributes = [
-            "children" => [],
+            "children" => [
+                "/test/child",
+                "/test/another-child"
+            ],
             "childType" => "",
             "content" => "<h1>Hello {{custom_field}}! This is a test.</h1>",
             "date" => 1565642012,
@@ -126,7 +129,6 @@ final class PageResourceTest extends Test
             "orderDir" => "asc",
             "orderBy" => "default",
             "orderManual" => [],
-            "parent" => null,
             "permalink" => "http://localhost/test",
             "publishDate" => null,
             "published" => true,
@@ -269,10 +271,6 @@ final class PageResourceTest extends Test
             $result['orderManual']
         );
         $this->assertEquals(
-            $attributes['parent'],
-            $result['parent']
-        );
-        $this->assertEquals(
             $attributes['permalink'],
             $result['permalink']
         );
@@ -370,6 +368,11 @@ final class PageResourceTest extends Test
     {
         $expected = [
             'self' => 'http://localhost/api/pages/test',
+            'children' => [
+                'http://localhost/api/pages/test/child',
+                'http://localhost/api/pages/test/another-child'
+            ],
+            'parent' => null,
             'resource' => 'http://localhost/api/pages/'
         ];
 
@@ -383,8 +386,18 @@ final class PageResourceTest extends Test
     {
         $expected = [
             'self' => 'http://localhost/test',
+            'children' => [
+                'http://localhost/test/child',
+                'http://localhost/test/another-child'
+            ],
+            'parent' => null,
             'related' => [
                 'self' => 'http://localhost/api/pages/test',
+                'children' => [
+                    'http://localhost/api/pages/test/child',
+                    'http://localhost/api/pages/test/another-child'
+                ],
+                'parent' => null,
                 'resource' => 'http://localhost/api/pages/'
             ]
         ];
@@ -403,8 +416,18 @@ final class PageResourceTest extends Test
             'attributes' => $this->resource->getResourceAttributes(),
             'links' => [
                 'self' => 'http://localhost/test',
+                'children' => [
+                    'http://localhost/test/child',
+                    'http://localhost/test/another-child'
+                ],
+                'parent' => null,
                 'related' => [
                     'self' => 'http://localhost/api/pages/test',
+                    'children' => [
+                        'http://localhost/api/pages/test/child',
+                        'http://localhost/api/pages/test/another-child'
+                    ],
+                    'parent' => null,
                     'resource' => 'http://localhost/api/pages/'
                 ]
             ]
@@ -440,8 +463,18 @@ final class PageResourceTest extends Test
             'attributes' => $attributes,
             'links' => [
                 'self' => 'http://localhost/test',
+                'children' => [
+                    'http://localhost/test/child',
+                    'http://localhost/test/another-child'
+                ],
+                'parent' => null,
                 'related' => [
                     'self' => 'http://localhost/api/pages/test',
+                    'children' => [
+                        'http://localhost/api/pages/test/child',
+                        'http://localhost/api/pages/test/another-child'
+                    ],
+                    'parent' => null,
                     'resource' => 'http://localhost/api/pages/'
                 ]
             ]

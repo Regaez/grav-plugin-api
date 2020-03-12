@@ -108,4 +108,26 @@ final class ConfigTest extends Test
         $this->assertEquals('blah', $config->route);
         Config::resetInstance();
     }
+
+    public function testGetEndpointConfigByTypeReturnsClass(): void
+    {
+        $config = Config::instance();
+
+        $this->assertEquals(
+            $config->pages,
+            $config->getEndpointConfigByType(Constants::TYPE_PAGE)
+        );
+        $this->assertEquals(
+            $config->users,
+            $config->getEndpointConfigByType(Constants::TYPE_USER)
+        );
+        $this->assertEquals(
+            $config->configs,
+            $config->getEndpointConfigByType(Constants::TYPE_CONFIG)
+        );
+        $this->assertEquals(
+            $config->plugins,
+            $config->getEndpointConfigByType(Constants::TYPE_PLUGIN)
+        );
+    }
 }

@@ -59,10 +59,13 @@ class ApiPlugin extends Plugin
             return;
         }
 
-        $this->loadApi()->run();
+        // We only run the API if enabled in the config
+        if ($this->config->get('plugins.api.enabled')) {
+            $this->loadApi()->run();
 
-        // We don't need Grav to do any more
-        exit();
+            // We don't need Grav to do any more
+            exit();
+        }
     }
 
     /**

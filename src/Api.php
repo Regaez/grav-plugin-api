@@ -5,6 +5,7 @@ use Monolog\Logger;
 use GravApi\Config\Config;
 use GravApi\Middlewares\AuthMiddleware;
 use GravApi\Handlers\ConfigHandler;
+use GravApi\Handlers\NotFoundHandler;
 use GravApi\Handlers\PagesHandler;
 use GravApi\Handlers\PluginsHandler;
 use GravApi\Handlers\UsersHandler;
@@ -41,6 +42,12 @@ class Api
         ];
         $this->app = new \Slim\App($slimConfig);
 
+        // Override default slim notFoundHandler
+        $container = $this->app->getContainer();
+        $container['notFoundHandler'] = function ($container) {
+            return new NotFoundHandler();
+        };
+
         $this->attachHandlers();
     }
 
@@ -51,23 +58,9 @@ class Api
 
             $this->get('', function ($request, $response, $args) {
                 $config = Config::instance();
+                $endpoints = $config->getEnabledResourceEndpoints();
 
-                $urls = [
-                    Constants::TYPE_PAGE => $config->getEndpoint(
-                        Constants::TYPE_PAGE
-                    ),
-                    Constants::TYPE_USER => $config->getEndpoint(
-                        Constants::TYPE_USER
-                    ),
-                    Constants::TYPE_PLUGIN => $config->getEndpoint(
-                        Constants::TYPE_PLUGIN
-                    ),
-                    Constants::TYPE_CONFIG => $config->getEndpoint(
-                        Constants::TYPE_CONFIG
-                    )
-                ];
-
-                return $response->withJson($urls);
+                return $response->withJson($endpoints);
             });
 
             $config = Config::instance();
