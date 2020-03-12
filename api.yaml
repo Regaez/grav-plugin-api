@@ -62,7 +62,3 @@ endpoints:
       # Prevents API from accessing these config files
       ignore_files:
         - streams
-  /taxonomies:
-    post:
-      enabled: true
-      auth: false
