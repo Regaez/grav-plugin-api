@@ -84,7 +84,7 @@ final class PagesHandlerTest extends Test
         $request = Request::createFromEnvironment(
             Environment::mock([
                 'REQUEST_METHOD' => 'POST',
-                'REQUEST_URI' => '/api/pages'
+                'REQUEST_URI' => '/api/pages/searches'
             ])
         )->withParsedBody([
             'taxonomyFilter' => [
@@ -104,7 +104,7 @@ final class PagesHandlerTest extends Test
         $request = Request::createFromEnvironment(
             Environment::mock([
                 'REQUEST_METHOD' => 'POST',
-                'REQUEST_URI' => '/api/pages'
+                'REQUEST_URI' => '/api/pages/searches'
             ])
         )->withParsedBody([
             'taxonomyFilter' => [
@@ -124,7 +124,7 @@ final class PagesHandlerTest extends Test
         $request = Request::createFromEnvironment(
             Environment::mock([
                 'REQUEST_METHOD' => 'POST',
-                'REQUEST_URI' => '/api/pages'
+                'REQUEST_URI' => '/api/pages/searches'
             ])
         )->withParsedBody([
             'taxonomyFilter' => [

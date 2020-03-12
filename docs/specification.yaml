@@ -806,20 +806,16 @@ components:
       type: object
       properties:
         taxonomyFilter:
-          type: array
-          items:
-            type: object
-            description: The taxonomy filters
-            properties:
-              custom_taxonomy_key:
+          type: object
+          nullable: true
+          description: The taxonomy filters
+          properties:
+            custom_taxonomy_key:
+              type: array
+              items:
                 type: string
-                example: "author"
-              custom_taxonomy_values:
-                type: array
-                items:
-                  type: string
-                  description: The taxonomy value
-                  example: "ksmith"
+                description: The taxonomy value
+                example: "custom_taxonomy_value"
         operation:
           type: string
           nullable: true
