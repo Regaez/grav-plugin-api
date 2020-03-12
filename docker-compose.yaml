@@ -12,3 +12,4 @@ services:
       - ./:/var/www/html/user/plugins/api
       - ./grav/accounts:/var/www/html/user/accounts
       - ./grav/pages:/var/www/html/user/pages
+      - ./grav/config:/var/www/html/user/config
