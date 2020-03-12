@@ -822,6 +822,10 @@ components:
                   example: "ksmith"
         operation:
           type: string
+          nullable: true
+          enum:
+            - or
+            - and
           description: The operation to apply with the filters
           example: "or"
     PageHypermedia:
