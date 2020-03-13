@@ -1,0 +1,7 @@
+email: andy@email.com
+fullname: Andy Admin
+title: Permissions Tester
+state: enabled
+groups:
+  - siteadmin
+hashed_password: $2y$10$aIw9wIWgj6bVuOk.sGRgw.TSZFOkIFmteDOLUFNj5Uka4ugxp5cTu
