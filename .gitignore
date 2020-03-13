@@ -4,3 +4,10 @@ vendor
 logs
 cghooks.lock
 build
+
+# Ignore config files we don't care about
+grav/config/backups.yaml
+grav/config/media.yaml
+grav/config/scheduler.yaml
+grav/config/security.yaml
+grav/config/streams.yaml
