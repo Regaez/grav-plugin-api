@@ -5,7 +5,7 @@ logs
 cghooks.lock
 build
 
-# Ignore config files we don't care about
+# Ignore config files we don't care about for now
 grav/config/backups.yaml
 grav/config/media.yaml
 grav/config/scheduler.yaml

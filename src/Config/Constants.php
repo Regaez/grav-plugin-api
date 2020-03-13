@@ -68,7 +68,7 @@ class Constants
     const ROLE_CONFIGS_READ = 'api.configs_read';
     const ROLE_CONFIGS_EDIT = 'api.configs_edit';
 
-    // All available methods
+    // All available roles
     const ROLES = [
         Constants::ROLE_SUPER,
         Constants::ROLE_PAGES_READ,
