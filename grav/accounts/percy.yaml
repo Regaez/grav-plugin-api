@@ -1,0 +1,26 @@
+email: percy@email.com
+fullname: Percy Permit
+title: Permissions Tester
+state: enabled
+access:
+  api:
+    pages_read: true
+    pages_delete: true
+    pages_edit: true
+    pages_create: true
+    users_read: true
+    users_delete: true
+    users_create: true
+    users_edit: true
+    plugins_read: true
+    plugins_edit: true
+    plugins_install: true
+    plugins_uninstall: true
+    configs_read: true
+    configs_edit: true
+  admin:
+    super: false
+    login: true
+  site:
+    login: true
+hashed_password: $2y$10$aIw9wIWgj6bVuOk.sGRgw.TSZFOkIFmteDOLUFNj5Uka4ugxp5cTu
