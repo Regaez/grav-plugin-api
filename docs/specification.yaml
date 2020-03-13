@@ -101,6 +101,41 @@ paths:
               examples:
                 Forbidden:
                   $ref: '#/components/examples/ForbiddenResponse'
+  /pages/searches:
+    post:
+      tags:
+        - pages
+      summary: Find pages on the site
+      description: >-
+        There are two optional fields you may specify: `taxonomyFilter` and `operation`. If a `taxonomyFilter` is not defined, it will fallback to an empty filter, returning no pages. If an `operation` is not defined, it will default to `or`.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FindPagesRequestBody'
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PageResponse'
+                  meta:
+                    $ref: '#/components/schemas/ResponseMetadata'
+        401:
+          description: Invalid authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                InvalidAuth:
+                  $ref: '#/components/examples/InvalidAuthResponse'
   /pages/{id}:
     get:
       tags:
@@ -767,6 +802,28 @@ components:
           example: "This is a _new_ page's content in **markdown**!"
       required:
         - route
+    FindPagesRequestBody:
+      type: object
+      properties:
+        taxonomyFilter:
+          type: object
+          nullable: true
+          description: The taxonomy filters
+          properties:
+            custom_taxonomy_key:
+              type: array
+              items:
+                type: string
+                description: The taxonomy value
+                example: "custom_taxonomy_value"
+        operation:
+          type: string
+          nullable: true
+          enum:
+            - or
+            - and
+          description: The operation to apply with the filters
+          example: "or"
     PageHypermedia:
       type: object
       properties:

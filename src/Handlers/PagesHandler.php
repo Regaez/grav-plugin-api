@@ -41,6 +41,18 @@ class PagesHandler extends BaseHandler
         return $response->withJson($resource->toJson());
     }
 
+    public function findPages($request, $response, $args)
+    {
+        $parsedBody = $request->getParsedBody();
+        $operation = $parsedBody['operation'] ?? 'or';
+        $filter = $parsedBody['taxonomyFilter'] ?? array();
+        $collection = $this->grav['taxonomy']->findTaxonomy($filter, strtolower($operation));
+
+        $resource = new PageCollectionResource($collection);
+
+        return $response->withJson($resource->toJson());
+    }
+
     public function newPage($request, $response, $args)
     {
         $parsedBody = $request->getParsedBody();

@@ -77,6 +77,12 @@ class Api
                             ->add(new AuthMiddleware($config->pages->get));
                     }
 
+                    // TODO: add more fine-grained enabling/disabling support for sub-endpoints to avoid confusion
+                    if ($config->pages->get->enabled) {
+                        $this->post('/searches', PagesHandler::class . ':findPages')
+                            ->add(new AuthMiddleware($config->pages->get));
+                    }
+
                     if ($config->pages->post->enabled) {
                         $this->post('', PagesHandler::class . ':newPage')
                             ->add(new AuthMiddleware($config->pages->post));
