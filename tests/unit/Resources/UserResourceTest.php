@@ -79,7 +79,8 @@ final class UserResourceTest extends Test
                 'site' => [
                     'login' => true
                 ]
-            ]
+            ],
+            'groups' => null
         ];
 
         $this->assertEquals(
@@ -149,7 +150,8 @@ final class UserResourceTest extends Test
                 'site' => [
                     'login' => true
                 ]
-            ]
+            ],
+            'groups' => null
         ];
 
         $expected = [
