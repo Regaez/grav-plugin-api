@@ -1,7 +1,7 @@
 <?php
 namespace GravApi\Middlewares;
 
-use Grav\Common\User\User;
+use Grav\Common\Grav;
 use GravApi\Config\Constants;
 use GravApi\Config\Method;
 use GravApi\Responses\Response;
@@ -29,6 +29,7 @@ class AuthMiddleware
     public function __construct(Method $config, array $roles = array())
     {
         $this->config = $config;
+        $this->grav = Grav::instance();
 
         // These are default roles which allow for a user
         // to use any part of the API
@@ -68,7 +69,7 @@ class AuthMiddleware
      */
     public function isAuthorised($username, $password)
     {
-        $user = User::load($username);
+        $user = $this->grav['accounts']->load($username);
         $isAuthenticated = $user->authenticate($password);
 
         if ($isAuthenticated) {
