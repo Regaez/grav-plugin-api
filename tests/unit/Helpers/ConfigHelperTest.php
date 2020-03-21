@@ -43,7 +43,8 @@ final class ConfigHelperTest extends Test
             'streams',
             'media',
             'backups',
-            'system'
+            'system',
+            'groups'
         ];
 
         $configs = ConfigHelper::loadConfigs();

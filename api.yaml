@@ -42,6 +42,7 @@ endpoints:
         - title
         - state
         - access
+        - groups
     post:
       enabled: true
       auth: true

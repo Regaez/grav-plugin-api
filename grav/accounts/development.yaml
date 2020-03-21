@@ -2,6 +2,7 @@ email: dummy@email.com
 fullname: Development
 title: Administrator
 state: enabled
+custom: this is a custom field
 access:
   admin:
     login: true

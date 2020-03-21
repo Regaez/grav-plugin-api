@@ -320,7 +320,7 @@ class PageResource extends Resource
 
         return $media;
     }
-    
+
     /**
      * We process the header to return a stricter respresentation of the taxonomy (all arrays, all strings).
      *
@@ -334,11 +334,13 @@ class PageResource extends Resource
                 if (!is_array($value)) {
                     $header->taxonomy[$key] = array(is_string($value) ? $value : json_encode($value));
                 } else {
-                    $header->taxonomy[$key] = array_map(function ($e) { return is_string($e) ? $e : json_encode($e); }, $header->taxonomy[$key]);
-                } 
+                    $header->taxonomy[$key] = array_map(function ($e) {
+                        return is_string($e) ? $e : json_encode($e);
+                    }, $header->taxonomy[$key]);
+                }
             }
         }
-        
+
         return $header;
     }
 

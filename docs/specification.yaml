@@ -953,24 +953,9 @@ components:
           description: The user's title
           example: "Administrator"
         access:
-          type: object
-          description: The user's access roles
-          properties:
-            admin:
-              type: object
-              properties:
-                login:
-                  type: boolean
-                  example: true
-                super:
-                  type: boolean
-                  example: true
-            site:
-              type: object
-              properties:
-                login:
-                  type: boolean
-                  example: true
+          $ref: '#/components/schemas/UserResourceAccessProperty'
+        groups:
+          $ref: '#/components/schemas/UserResourceGroupsProperty'
     UserRequestBody:
       type: object
       properties:
@@ -1003,27 +988,9 @@ components:
           description: Whether or not the user account should be active.
           default: enabled
         access:
-          type: object
-          description: The user's access roles
-          properties:
-            admin:
-              type: object
-              properties:
-                login:
-                  type: boolean
-                  example: true
-                super:
-                  type: boolean
-                  example: true
-            site:
-              type: object
-              properties:
-                login:
-                  type: boolean
-                  example: true
-          default:
-            site:
-              login: true
+          $ref: '#/components/schemas/UserResourceAccessProperty'
+        groups:
+          $ref: '#/components/schemas/UserResourceGroupsProperty'
       required:
         - username
         - password
@@ -1058,26 +1025,103 @@ components:
             - disabled
           description: Whether or not the user account should be active.
         access:
-          type: object
-          description: The user's new access roles. Can only be set by an administrator.
-          properties:
-            admin:
-              type: object
-              properties:
-                login:
-                  type: boolean
-                  example: true
-                super:
-                  type: boolean
-                  example: true
-            site:
-              type: object
-              properties:
-                login:
-                  type: boolean
-                  example: true
+          $ref: '#/components/schemas/UserResourceAccessProperty'
+        groups:
+          $ref: '#/components/schemas/UserResourceGroupsProperty'
       required:
         - password
+    UserResourceGroupsProperty:
+      type: array
+      description: The Grav groups to which the user belongs. These are defined in the grav/user/config/groups.yaml file.
+      items:
+        type: string
+      example: ["administrators"]
+    UserResourceAccessProperty:
+      type: object
+      description: The user's new access roles. Can only be set by an administrator.
+      properties:
+        admin:
+          type: object
+          properties:
+            login:
+              type: boolean
+              example: true
+            super:
+              type: boolean
+              description: This role will also grant access to ALL API resources
+              example: true
+        api:
+          type: object
+          properties:
+            super:
+              type: boolean
+              description: Grants access to ALL API resources
+              example: true
+            pages_read:
+              type: boolean
+              description: Grants access to read page resources
+              example: true
+            pages_delete:
+              type: boolean
+              description: Grants access to delete page resources
+              example: true
+            pages_edit:
+              type: boolean
+              description: Grants access to edit page resources
+              example: true
+            pages_create:
+              type: boolean
+              description: Grants access to create page resources
+              example: true
+            users_read:
+              type: boolean
+              description: Grants access to read user resources
+              example: true
+            users_delete:
+              type: boolean
+              description: Grants access to delete user resources
+              example: true
+            users_create:
+              type: boolean
+              description: Grants access to create user resources
+              example: true
+            users_edit:
+              type: boolean
+              description: Grants access to edit user resources
+              example: true
+            plugins_read:
+              type: boolean
+              description: Grants access to read plugin resources
+              example: true
+            plugins_edit:
+              type: boolean
+              description: Grants access to edit plugin resources
+              example: true
+            plugins_install:
+              type: boolean
+              description: Grants access to install new plugins
+              example: true
+            plugins_uninstall:
+              type: boolean
+              description: Grants access to uninstall existing plugins
+              example: true
+            configs_read:
+              type: boolean
+              description: Grants access to read config resources
+              example: true
+            configs_edit:
+              type: boolean
+              description: Grants access to edit config resources
+              example: true
+        site:
+          type: object
+          properties:
+            login:
+              type: boolean
+              example: true
+      default:
+            site:
+              login: true
   examples:
     InvalidAuthResponse:
       value:

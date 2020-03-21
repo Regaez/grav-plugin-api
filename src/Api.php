@@ -59,7 +59,6 @@ class Api
             $this->get('', function ($request, $response, $args) {
                 $config = Config::instance();
                 $endpoints = $config->getEnabledResourceEndpoints();
-
                 return $response->withJson($endpoints);
             });
 
@@ -71,31 +70,61 @@ class Api
 
                     if ($config->pages->get->enabled) {
                         $this->get('', PagesHandler::class . ':getPages')
-                            ->add(new AuthMiddleware($config->pages->get));
+                        ->add(
+                            new AuthMiddleware(
+                                $config->pages->get,
+                                [Constants::ROLE_PAGES_READ]
+                            )
+                        );
 
                         $this->get('/{page:.*}', PagesHandler::class . ':getPage')
-                            ->add(new AuthMiddleware($config->pages->get));
+                        ->add(
+                            new AuthMiddleware(
+                                $config->pages->get,
+                                [Constants::ROLE_PAGES_READ]
+                            )
+                        );
                     }
 
                     // TODO: add more fine-grained enabling/disabling support for sub-endpoints to avoid confusion
                     if ($config->pages->get->enabled) {
                         $this->post('/searches', PagesHandler::class . ':findPages')
-                            ->add(new AuthMiddleware($config->pages->get));
+                        ->add(
+                            new AuthMiddleware(
+                                $config->pages->get,
+                                [Constants::ROLE_PAGES_READ]
+                            )
+                        );
                     }
 
                     if ($config->pages->post->enabled) {
                         $this->post('', PagesHandler::class . ':newPage')
-                            ->add(new AuthMiddleware($config->pages->post));
+                        ->add(
+                            new AuthMiddleware(
+                                $config->pages->post,
+                                [Constants::ROLE_PAGES_CREATE]
+                            )
+                        );
                     }
 
                     if ($config->pages->delete->enabled) {
                         $this->delete('/{page:.*}', PagesHandler::class . ':deletePage')
-                            ->add(new AuthMiddleware($config->pages->delete));
+                        ->add(
+                            new AuthMiddleware(
+                                $config->pages->delete,
+                                [Constants::ROLE_PAGES_DELETE]
+                            )
+                        );
                     }
 
                     if ($config->pages->patch->enabled) {
                         $this->patch('/{page:.*}', PagesHandler::class . ':updatePage')
-                            ->add(new AuthMiddleware($config->pages->patch));
+                        ->add(
+                            new AuthMiddleware(
+                                $config->pages->patch,
+                                [Constants::ROLE_PAGES_EDIT]
+                            )
+                        );
                     }
                 }
             );
@@ -106,25 +135,50 @@ class Api
 
                     if ($config->users->get->enabled) {
                         $this->get('', UsersHandler::class . ':getUsers')
-                            ->add(new AuthMiddleware($config->users->get));
+                        ->add(
+                            new AuthMiddleware(
+                                $config->users->get,
+                                [Constants::ROLE_USERS_READ]
+                            )
+                        );
 
                         $this->get('/{user}', UsersHandler::class . ':getUser')
-                            ->add(new AuthMiddleware($config->users->get));
+                        ->add(
+                            new AuthMiddleware(
+                                $config->users->get,
+                                [Constants::ROLE_USERS_READ]
+                            )
+                        );
                     }
 
                     if ($config->users->post->enabled) {
                         $this->post('', UsersHandler::class . ':newUser')
-                            ->add(new AuthMiddleware($config->users->post));
+                        ->add(
+                            new AuthMiddleware(
+                                $config->users->post,
+                                [Constants::ROLE_USERS_CREATE]
+                            )
+                        );
                     }
 
                     if ($config->users->delete->enabled) {
                         $this->delete('/{user}', UsersHandler::class . ':deleteUser')
-                        ->add(new AuthMiddleware($config->users->delete));
+                        ->add(
+                            new AuthMiddleware(
+                                $config->users->delete,
+                                [Constants::ROLE_USERS_DELETE]
+                            )
+                        );
                     }
 
                     if ($config->users->patch->enabled) {
                         $this->patch('/{user}', UsersHandler::class . ':updateUser')
-                            ->add(new AuthMiddleware($config->users->patch));
+                        ->add(
+                            new AuthMiddleware(
+                                $config->users->patch,
+                                [Constants::ROLE_USERS_EDIT]
+                            )
+                        );
                     }
                 }
             );
@@ -134,12 +188,22 @@ class Api
                 function () use ($config) {
                     if ($config->plugins->get->enabled) {
                         $this->get('', PluginsHandler::class . ':getPlugins')
-                            ->add(new AuthMiddleware($config->plugins->get));
+                        ->add(
+                            new AuthMiddleware(
+                                $config->plugins->get,
+                                [Constants::ROLE_PLUGINS_READ]
+                            )
+                        );
                     }
 
                     if ($config->plugins->get->enabled) {
                         $this->get('/{plugin}', PluginsHandler::class . ':getPlugin')
-                            ->add(new AuthMiddleware($config->plugins->get));
+                        ->add(
+                            new AuthMiddleware(
+                                $config->plugins->get,
+                                [Constants::ROLE_PLUGINS_READ]
+                            )
+                        );
                     }
                 }
             );
@@ -150,12 +214,22 @@ class Api
 
                     if ($config->configs->get->enabled) {
                         $this->get('', ConfigHandler::class . ':getConfigs')
-                            ->add(new AuthMiddleware($config->configs->get));
+                        ->add(
+                            new AuthMiddleware(
+                                $config->configs->get,
+                                [Constants::ROLE_CONFIGS_READ]
+                            )
+                        );
                     }
 
                     if ($config->configs->get->enabled) {
                         $this->get('/{config}', ConfigHandler::class . ':getConfig')
-                            ->add(new AuthMiddleware($config->configs->get));
+                        ->add(
+                            new AuthMiddleware(
+                                $config->configs->get,
+                                [Constants::ROLE_CONFIGS_READ]
+                            )
+                        );
                     }
                 }
             );

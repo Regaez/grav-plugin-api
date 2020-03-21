@@ -3,6 +3,7 @@ namespace Grav\Plugin;
 
 use Grav\Common\Plugin;
 use RocketTheme\Toolbox\Event\Event;
+use GravApi\Config\Constants;
 
 /**
  * Class ApiPlugin
@@ -25,8 +26,11 @@ class ApiPlugin extends Plugin
      */
     public static function getSubscribedEvents()
     {
+        require_once __DIR__ . '/vendor/autoload.php';
+
         return [
-            'onPluginsInitialized' => ['onPluginsInitialized', 0]
+            'onPluginsInitialized' => ['onPluginsInitialized', 0],
+            'onAdminRegisterPermissions' => ['onAdminRegisterPermissions', 0]
         ];
     }
 
@@ -69,6 +73,24 @@ class ApiPlugin extends Plugin
     }
 
     /**
+     * Register custom API role permissions
+     *
+     * @param Event $e
+     */
+    public function onAdminRegisterPermissions(Event $e)
+    {
+        if (isset($e['admin'])) {
+            $permissions = [];
+
+            foreach (Constants::ROLES as $role) {
+                $permissions[$role] = 'boolean';
+            }
+
+            $e['admin']->addPermissions($permissions);
+        }
+    }
+
+    /**
      * Loads the GravApi dependencies and returns a new instance the Api app
      *
      * @return GravApi\Api $api
@@ -76,7 +98,6 @@ class ApiPlugin extends Plugin
     public function loadApi()
     {
         // Load app dependencies once we know the request is for the API
-        require_once __DIR__ . '/vendor/autoload.php';
         require_once __DIR__ . '/src/Api.php';
 
         return new \GravApi\Api();
