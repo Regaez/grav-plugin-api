@@ -97,6 +97,13 @@ class PagesHandler extends BaseHandler
                 $page->content($parsedBody['content']);
             }
 
+            if (!empty($parsedBody['order'])) {
+                // Move the page we just initialised with PageHelper
+                // so that we can set the desired page order
+                $page->move($page->parent());
+                $page->order($parsedBody['order']);
+            }
+
             // Save the page with the new header/content fields
             $page->save();
         } catch (\Exception $e) {
@@ -223,6 +230,13 @@ class PagesHandler extends BaseHandler
 
             // sets the file to use our new template
             $page->name($helper->getFilename());
+        }
+
+        if (!empty($parsedBody['order'])) {
+            // We have to "move" the page, otherwise
+            // the old page order folder will remain
+            $page->move($page->parent());
+            $page->order($parsedBody['order']);
         }
 
         // save the changes to the file
