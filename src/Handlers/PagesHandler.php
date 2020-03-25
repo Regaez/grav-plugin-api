@@ -232,7 +232,8 @@ class PagesHandler extends BaseHandler
             $page->name($helper->getFilename());
         }
 
-        if (!empty($parsedBody['order'])) {
+        // We need to be able to pass `false` to remove page order
+        if (isset($parsedBody['order'])) {
             // We have to "move" the page, otherwise
             // the old page order folder will remain
             $page->move($page->parent());
