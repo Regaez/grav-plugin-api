@@ -9,6 +9,7 @@ use Slim\Http\Response;
 use Slim\Http\Environment;
 use Grav\Common\Grav;
 use GravApi\Config\Config;
+use GravApi\Config\Constants;
 use GravApi\Handlers\PagesHandler;
 
 final class PagesHandlerTest extends Test
@@ -22,12 +23,21 @@ final class PagesHandlerTest extends Test
     /** @var PagesHandler $handler */
     protected $handler;
 
-    protected function _before()
+    protected function _before($attributeFields = array())
     {
         $grav = Fixtures::get('grav');
         $this->grav = $grav();
 
-        Config::instance();
+        Config::instance([
+            'endpoints' => [
+                Constants::ENDPOINT_PAGE => [
+                    Constants::METHOD_GET => [
+                        'enabled' => true,
+                        'fields' => $attributeFields
+                    ]
+                ]
+            ]
+        ]);
 
         $this->handler = new PagesHandler();
         $this->response = new Response();
@@ -115,7 +125,6 @@ final class PagesHandlerTest extends Test
 
         $response = $this->handler->findPages($request, $this->response, []);
 
-        var_dump(json_decode($response->getBody()->__toString())->items);
         $this->assertEquals(2, count(json_decode($response->getBody()->__toString())->items));
     }
 
@@ -211,6 +220,33 @@ final class PagesHandlerTest extends Test
         $this->assertEquals(200, $response->getStatusCode());
     }
 
+    public function testNewPageShouldSetPageOrder(): void
+    {
+        $this->_before(['order', 'folder', 'route', 'slug']);
+
+        $request = Request::createFromEnvironment(
+            Environment::mock([
+                'REQUEST_METHOD' => 'POST',
+                'REQUEST_URI' => '/api/pages'
+            ])
+        )->withParsedBody([
+            'route' => '/test-order',
+            'header' => [
+                'title' => 'Test page'
+            ],
+            'order' => 1
+        ]);
+
+        $response = $this->handler->newPage($request, $this->response, []);
+
+        $data = json_decode($response->getBody()->__toString());
+
+        $this->assertEquals('01.', $data->attributes->order);
+        $this->assertEquals('01.test-order', $data->attributes->folder);
+        $this->assertEquals('test-order', $data->attributes->slug);
+        $this->assertEquals('/test-order', $data->attributes->route);
+    }
+
     public function testUpdatePageShouldReturnStatus400IfNoRouteGiven(): void
     {
         $request = Request::createFromEnvironment(
@@ -291,6 +327,66 @@ final class PagesHandlerTest extends Test
         $this->assertEquals(200, $response->getStatusCode());
     }
 
+    public function testUpdatePageShouldChangePageOrder(): void
+    {
+        $this->_before(['order', 'folder', 'route', 'slug']);
+
+        $request = Request::createFromEnvironment(
+            Environment::mock([
+                'REQUEST_METHOD' => 'PATCH',
+                'REQUEST_URI' => '/api/pages/test-order'
+            ])
+        )->withParsedBody([
+            'route' => '/test-order',
+            'header' => [
+                'title' => 'Test page'
+            ],
+            'order' => 2
+        ]);
+
+        $response = $this->handler->updatePage(
+            $request,
+            $this->response,
+            [ 'page' => 'test-order' ]
+        );
+
+        $data = json_decode($response->getBody()->__toString());
+        $this->assertEquals('02.', $data->attributes->order);
+        $this->assertEquals('02.test-order', $data->attributes->folder);
+        $this->assertEquals('test-order', $data->attributes->slug);
+        $this->assertEquals('/test-order', $data->attributes->route);
+    }
+
+    public function testUpdatePageShouldRemovePageOrder(): void
+    {
+        $this->_before(['order', 'folder', 'route', 'slug']);
+
+        $request = Request::createFromEnvironment(
+            Environment::mock([
+                'REQUEST_METHOD' => 'PATCH',
+                'REQUEST_URI' => '/api/pages/test-order'
+            ])
+        )->withParsedBody([
+            'route' => '/test-order',
+            'header' => [
+                'title' => 'Test page'
+            ],
+            'order' => false
+        ]);
+
+        $response = $this->handler->updatePage(
+            $request,
+            $this->response,
+            [ 'page' => 'test-order' ]
+        );
+
+        $data = json_decode($response->getBody()->__toString());
+        $this->assertEquals(false, $data->attributes->order);
+        $this->assertEquals('test-order', $data->attributes->folder);
+        $this->assertEquals('test-order', $data->attributes->slug);
+        $this->assertEquals('/test-order', $data->attributes->route);
+    }
+
     public function testDeletePageShouldReturnStatus404(): void
     {
         $request = Request::createFromEnvironment(
@@ -309,17 +405,31 @@ final class PagesHandlerTest extends Test
 
     public function testDeletePageShouldReturnStatus204(): void
     {
-        $request = Request::createFromEnvironment(
+        $requestTest = Request::createFromEnvironment(
             Environment::mock([
                 'REQUEST_METHOD' => 'DELETE',
                 'REQUEST_URI' => '/api/pages/test-page'
             ])
         );
+        $requestOrder = Request::createFromEnvironment(
+            Environment::mock([
+                'REQUEST_METHOD' => 'DELETE',
+                'REQUEST_URI' => '/api/pages/test-order'
+            ])
+        );
 
-        $response = $this->handler->deletePage($request, $this->response, [
-            'page' => 'test-page'
-        ]);
+        $responseTest = $this->handler->deletePage(
+            $requestTest,
+            $this->response,
+            [ 'page' => 'test-page' ]
+        );
+        $responseOrder = $this->handler->deletePage(
+            $requestOrder,
+            $this->response,
+            [ 'page' => 'test-order' ]
+        );
 
-        $this->assertEquals(204, $response->getStatusCode());
+        $this->assertEquals(204, $responseTest->getStatusCode());
+        $this->assertEquals(204, $responseOrder->getStatusCode());
     }
 }
