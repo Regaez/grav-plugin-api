@@ -3,9 +3,8 @@ route: /api
 endpoints:
   /pages:
     get:
-      enabled: false
-      auth: true
-      # Only return these fields for each page
+      enabled: true
+      auth: false
       fields:
         - title
         - frontmatter
@@ -23,19 +22,18 @@ endpoints:
         - modified
         - media
     post:
-      enabled: false
+      enabled: true
       auth: true
     patch:
-      enabled: false
+      enabled: true
       auth: true
     delete:
-      enabled: false
+      enabled: true
       auth: true
   /users:
     get:
-      enabled: false
+      enabled: true
       auth: true
-      # Only return these fields for each user
       fields:
         - username
         - email
@@ -45,25 +43,24 @@ endpoints:
         - access
         - groups
     post:
-      enabled: false
+      enabled: true
       auth: true
     patch:
-      enabled: false
+      enabled: true
       auth: true
     delete:
-      enabled: false
+      enabled: true
       auth: true
   /plugins:
     get:
-      enabled: false
+      enabled: true
       auth: true
     patch:
-      enabled: false
+      enabled: true
       auth: true
   /configs:
     get:
-      enabled: false
+      enabled: true
       auth: true
-      # Prevents API from accessing these config files
       ignore_files:
         - streams
