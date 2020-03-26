@@ -800,6 +800,12 @@ components:
           type: string
           description: The new page's content, formatted as markdown
           example: "This is a _new_ page's content in **markdown**!"
+        order:
+          description: Set page order by specifying a number. To remove page order, set to false.
+          oneOf:
+            - type: integer
+              format: int32
+            - type: boolean
       required:
         - route
     FindPagesRequestBody:
