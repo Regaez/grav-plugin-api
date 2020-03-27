@@ -48,7 +48,7 @@ paths:
         - pages
       summary: Add a new page to the site
       security:
-        - basic: ['admin.api', 'admin.super']
+        - basic: ['api.super', 'admin.super']
       description: >-
         In order to create a new page, one must **not** already exist at the specified route.
 
@@ -179,7 +179,7 @@ paths:
         - pages
       summary: Update a specific page
       security:
-        - basic: ['admin.api', 'admin.super']
+        - basic: ['api.super', 'admin.super']
       description: >-
         When passing new content via a `PATCH` request, the existing page content will be _entirely overridden_.
 
@@ -240,7 +240,7 @@ paths:
         - pages
       summary: Delete a specific page
       security:
-        - basic: ['admin.api', 'admin.super']
+        - basic: ['api.super', 'admin.super']
       description: >-
         If the deletion is successful, the API will respond with a `204` no-content status code.
 
@@ -280,7 +280,7 @@ paths:
         - users
       summary: Get all the users on the site
       security:
-        - basic: ['admin.api', 'admin.super']
+        - basic: ['api.super', 'admin.super']
       responses:
         200:
           description: Successful operation
@@ -309,7 +309,7 @@ paths:
         - users
       summary: Add a new user
       security:
-        - basic: ['admin.api', 'admin.super']
+        - basic: ['api.super', 'admin.super']
       description: >-
         There are a minimum of three required fields you must provide for the POST request to be successful. These are: `username`, `password` and `email`. If any of these are not specified, then the user will not be created. They are all expected as plain strings. Additionally, the `email` field must be a **valid email format**.
 
@@ -372,7 +372,7 @@ paths:
         - users
       summary: Get a specific user
       security:
-        - basic: ['admin.api', 'admin.super']
+        - basic: ['api.super', 'admin.super']
       parameters:
         - name: id
           in: path
@@ -411,7 +411,7 @@ paths:
         - users
       summary: Update a specific user
       security:
-        - basic: ['admin.api', 'admin.super']
+        - basic: ['api.super', 'admin.super']
       description: >-
         In order to change user information, you **must** provide a valid `password` for that user.
 
@@ -475,7 +475,7 @@ paths:
         - users
       summary: Delete a specific user
       security:
-        - basic: ['admin.api', 'admin.super']
+        - basic: ['api.super', 'admin.super']
       description: >-
         If the deletion is successful, the API will respond with a `204` no-content status code.
 
@@ -515,7 +515,7 @@ paths:
         - plugins
       summary: Get all the plugins installed on the site
       security:
-        - basic: ['admin.api', 'admin.super']
+        - basic: ['api.super', 'admin.super']
       responses:
         200:
           description: Successful operation
@@ -545,7 +545,7 @@ paths:
         - plugins
       summary: Get a specific plugin
       security:
-        - basic: ['admin.api', 'admin.super']
+        - basic: ['api.super', 'admin.super']
       parameters:
         - name: id
           in: path
@@ -579,13 +579,72 @@ paths:
               examples:
                 NotFound:
                   $ref: '#/components/examples/NotFoundResponse'
+    patch:
+      tags:
+        - plugins
+      summary: Update a specific plugin
+      description: The request's body JSON should match the config structure of the plugin which you wish to update. If you wish to remove existing properties from the config, you can set their values to `null` and they will be unset.
+      security:
+        - basic: ['api.super', 'admin.super']
+      parameters:
+        - name: id
+          in: path
+          description: The id of the plugin to update
+          required: true
+          schema:
+            type: string
+            example: "api"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                enabled:
+                  type: boolean
+                plugin_field:
+                  type: string
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PluginResponse'
+        400:
+          description: Invalid authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                InvalidAuth:
+                  $ref: '#/components/examples/BadRequestResponse'
+        401:
+          description: Invalid authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                InvalidAuth:
+                  $ref: '#/components/examples/InvalidAuthResponse'
+        404:
+          description: Plugin not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                NotFound:
+                  $ref: '#/components/examples/NotFoundResponse'
   /configs:
     get:
       tags:
         - configs
       summary: Get all the site configuration files
       security:
-        - basic: ['admin.api', 'admin.super']
+        - basic: ['api.super', 'admin.super']
       responses:
         200:
           description: Successful operation
@@ -615,7 +674,7 @@ paths:
         - configs
       summary: Get a specific config file
       security:
-        - basic: ['admin.api', 'admin.super']
+        - basic: ['api.super', 'admin.super']
       parameters:
         - name: id
           in: path
