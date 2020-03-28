@@ -190,7 +190,7 @@ final class UserResourceTest extends Test
                 ]
             ],
             'groups' => null
-        ];;
+        ];
 
         $this->assertEquals(
             $expected,

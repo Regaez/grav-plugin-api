@@ -205,6 +205,16 @@ class Api
                             )
                         );
                     }
+
+                    if ($config->plugins->patch->enabled) {
+                        $this->patch('/{plugin}', PluginsHandler::class . ':updatePlugin')
+                        ->add(
+                            new AuthMiddleware(
+                                $config->plugins->patch,
+                                [Constants::ROLE_PLUGINS_EDIT]
+                            )
+                        );
+                    }
                 }
             );
 
