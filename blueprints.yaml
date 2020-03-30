@@ -7,17 +7,27 @@ author:
   email: thomas@threadgold.nz
 homepage: https://github.com/regaez/grav-plugin-api
 demo: http://demo.yoursite.com
-keywords: grav, plugin, etc
+keywords: grav, plugin, rest, api, json
 bugs: https://github.com/regaez/grav-plugin-api/issues
 docs: https://github.com/regaez/grav-plugin-api/tree/master/docs
 license: MIT
 
+dependencies:
+  - { name: grav, version: '>=1.6.15' }
+
 form:
   validation: strict
   fields:
+    general:
+      type: section
+      title: General
+      text: Hover over the field labels to discover more information about the plugin's configuration setting.
+      underline: true
+
     enabled:
       type: toggle
-      label: Plugin status
+      label: Plugin Status
+      help: Enable, or disable, the API plugin.
       highlight: 1
       default: 0
       options:
@@ -27,5 +37,445 @@ form:
         type: bool
     route:
       type: text
-      label: Route
-      help: The base route for the API
+      label: Base Route
+      help: The base route for the API. All API endpoints will be prefixed with this route.
+      validate:
+        required: true
+        message: You must provide a valid base route for the API. It can be alphanumeric, must start with slash, and cannot contain two consecutive slashes.
+        pattern: '^(?!.*\/\/)\/[a-zA-Z0-9_\-\/]+$'
+
+
+    endpoints:
+      type: section
+      title: Endpoints
+      underline: true
+
+    endpoints./pages:
+      type: fieldset
+      title: /pages
+      text: Configure whether clients can read, create, edit, or delete pages by enabling or disabling the following HTTP methods.
+      collapsed: true
+      collapsible: true
+      icon: copy
+      fields:
+
+        Get:
+          type: section
+          title: GET
+          text: This method allows clients to read page data.
+          underline: true
+        endpoints./pages.get.enabled:
+          type: toggle
+          label: Enable
+          help: Enable, or disable, the GET method for the `/pages` endpoint.
+          highlight: 1
+          default: 0
+          options:
+            1: Enabled
+            0: Disabled
+          validate:
+            type: bool
+        endpoints./pages.get.auth:
+          type: toggle
+          label: Authentication
+          help: Enabling this endpoint will require a client to have valid user credentials and the `api.super` or `api.pages_read` roles.
+          highlight: 1
+          default: 0
+          options:
+            1: Enabled
+            0: Disabled
+          validate:
+            type: bool
+        endpoints./pages.get.fields:
+          type: selectize
+          selectize:
+              options:
+                  - text: Title
+                    value: title
+                  - text: Frontmatter
+                    value: frontmatter
+                  - text: Header
+                    value: header
+                  - text: Raw Markdown
+                    value: rawMarkdown
+                  - text: Content
+                    value: content
+                  - text: Route
+                    value: route
+                  - text: Page Order
+                    value: order
+                  - text: Slug
+                    value: slug
+                  - text: Permalink
+                    value: permalink
+                  - text: Template
+                    value: template
+                  - text: Published
+                    value: published
+                  - text: Date
+                    value: date
+                  - text: Modified
+                    value: modified
+                  - text: Media
+                    value: media
+          size: large
+          label: Page Attributes
+          classes: fancy
+          help: Choose which page attributes will be returned when requesting a PageResource.
+          validate:
+              type: commalist
+
+        Post:
+          type: section
+          title: POST
+          text: This method allows clients to create new pages.
+          underline: true
+        endpoints./pages.post.enabled:
+          type: toggle
+          label: Enable
+          help: Enable, or disable, the POST method for the `/pages` endpoint.
+          highlight: 1
+          default: 0
+          options:
+            1: Enabled
+            0: Disabled
+          validate:
+            type: bool
+        endpoints./pages.post.auth:
+          type: toggle
+          label: Authentication
+          help: Enabling this endpoint will require a client to have valid user credentials and the `api.super` or `api.pages_create` roles.
+          highlight: 1
+          default: 0
+          options:
+            1: Enabled
+            0: Disabled
+          validate:
+            type: bool
+
+        Patch:
+          type: section
+          title: PATCH
+          text: This method allows clients to update existing pages.
+          underline: true
+        endpoints./pages.patch.enabled:
+          type: toggle
+          label: Enable
+          help: Enable, or disable, the PATCH method for the `/pages` endpoint.
+          highlight: 1
+          default: 0
+          options:
+            1: Enabled
+            0: Disabled
+          validate:
+            type: bool
+        endpoints./pages.patch.auth:
+          type: toggle
+          label: Authentication
+          help: Enabling this endpoint will require a client to have valid user credentials and the `api.super` or `api.pages_edit` roles.
+          highlight: 1
+          default: 0
+          options:
+            1: Enabled
+            0: Disabled
+          validate:
+            type: bool
+
+        Delete:
+          type: section
+          title: DELETE
+          text: This method allows clients to delete existing pages.
+          underline: true
+        endpoints./pages.delete.enabled:
+          type: toggle
+          label: Enable
+          help: Enable, or disable, the DELETE method for the `/pages` endpoint.
+          highlight: 1
+          default: 0
+          options:
+            1: Enabled
+            0: Disabled
+          validate:
+            type: bool
+        endpoints./pages.delete.auth:
+          type: toggle
+          label: Authentication
+          help: Enabling this endpoint will require a client to have valid user credentials and the `api.super` or `api.pages_read` roles.
+          highlight: 1
+          default: 0
+          options:
+            1: Enabled
+            0: Disabled
+          validate:
+            type: bool
+
+    endpoints./users:
+      type: fieldset
+      title: /users
+      text: Configure whether clients can read, create, edit, or delete user accounts by enabling or disabling the following HTTP methods.
+      collapsed: true
+      collapsible: true
+      icon: users
+      fields:
+
+        Get:
+          type: section
+          title: GET
+          text: This method allows clients to read user data.
+          underline: true
+        endpoints./users.get.enabled:
+          type: toggle
+          label: Enable
+          help: Enable, or disable, the GET method for the `/users` endpoint.
+          highlight: 1
+          default: 0
+          options:
+            1: Enabled
+            0: Disabled
+          validate:
+            type: bool
+        endpoints./users.get.auth:
+          type: toggle
+          label: Authentication
+          help: Enabling this endpoint will require a client to have valid user credentials and the `api.super` or `api.users_read` roles.
+          highlight: 1
+          default: 0
+          options:
+            1: Enabled
+            0: Disabled
+          validate:
+            type: bool
+        endpoints./users.get.fields:
+          type: selectize
+          selectize:
+              options:
+                - text: Username
+                  value: username
+                - text: Email
+                  value: email
+                - text: Fullname
+                  value: fullname
+                - text: Title
+                  value: title
+                - text: State
+                  value: state
+                - text: Access
+                  value: access
+                - text: Groups
+                  value: groups
+          size: large
+          label: User Attributes
+          classes: fancy
+          help: Choose which user attributes will be returned when requesting a UserResource.
+          validate:
+              type: commalist
+
+        Post:
+          type: section
+          title: POST
+          text: This method allows clients to create new users.
+          underline: true
+        endpoints./users.post.enabled:
+          type: toggle
+          label: Enable
+          help: Enable, or disable, the POST method for the `/users` endpoint.
+          highlight: 1
+          default: 0
+          options:
+            1: Enabled
+            0: Disabled
+          validate:
+            type: bool
+        endpoints./users.post.auth:
+          type: toggle
+          label: Authentication
+          help: Enabling this endpoint will require a client to have valid user credentials and the `api.super` or `api.users_create` roles.
+          highlight: 1
+          default: 0
+          options:
+            1: Enabled
+            0: Disabled
+          validate:
+            type: bool
+
+        Patch:
+          type: section
+          title: PATCH
+          text: This method allows clients to update existing users.
+          underline: true
+        endpoints./users.patch.enabled:
+          type: toggle
+          label: Enable
+          help: Enable, or disable, the PATCH method for the `/users` endpoint.
+          highlight: 1
+          default: 0
+          options:
+            1: Enabled
+            0: Disabled
+          validate:
+            type: bool
+        endpoints./users.patch.auth:
+          type: toggle
+          label: Authentication
+          help: Enabling this endpoint will require a client to have valid user credentials and the `api.super` or `api.users_edit` roles.
+          highlight: 1
+          default: 0
+          options:
+            1: Enabled
+            0: Disabled
+          validate:
+            type: bool
+
+        Delete:
+          type: section
+          title: DELETE
+          text: This method allows clients to delete existing users.
+          underline: true
+        endpoints./users.delete.enabled:
+          type: toggle
+          label: Enable
+          help: Enable, or disable, the DELETE method for the `/users` endpoint.
+          highlight: 1
+          default: 0
+          options:
+            1: Enabled
+            0: Disabled
+          validate:
+            type: bool
+        endpoints./users.delete.auth:
+          type: toggle
+          label: Authentication
+          help: Enabling this endpoint will require a client to have valid user credentials and the `api.super` or `api.users_delete` roles.
+          highlight: 1
+          default: 0
+          options:
+            1: Enabled
+            0: Disabled
+          validate:
+            type: bool
+
+    endpoints./plugins:
+      type: fieldset
+      title: /plugins
+      text: Configure whether clients can read, or edit, install, or uninstall plugins by enabling or disabling the following HTTP methods.
+      collapsed: true
+      collapsible: true
+      icon: plug
+      fields:
+
+        Get:
+          type: section
+          title: GET
+          text: This method allows clients to read plugin configurations.
+          underline: true
+        endpoints./plugins.get.enabled:
+          type: toggle
+          label: Enable
+          help: Enable, or disable, the GET method for the `/plugins` endpoint.
+          highlight: 1
+          default: 0
+          options:
+            1: Enabled
+            0: Disabled
+          validate:
+            type: bool
+        endpoints./plugins.get.auth:
+          type: toggle
+          label: Authentication
+          help: Enabling this endpoint will require a client to have valid user credentials and the `api.super` or `api.plugins_read` roles.
+          highlight: 1
+          default: 0
+          options:
+            1: Enabled
+            0: Disabled
+          validate:
+            type: bool
+
+        Patch:
+          type: section
+          title: PATCH
+          text: This method allows clients to update existing plugin configurations.
+          underline: true
+        endpoints./plugins.patch.enabled:
+          type: toggle
+          label: Enable
+          help: Enable, or disable, the PATCH method for the `/plugins` endpoint.
+          highlight: 1
+          default: 0
+          options:
+            1: Enabled
+            0: Disabled
+          validate:
+            type: bool
+        endpoints./plugins.patch.auth:
+          type: toggle
+          label: Authentication
+          help: Enabling this endpoint will require a client to have valid user credentials and the `api.super` or `api.plugins_edit` roles.
+          highlight: 1
+          default: 0
+          options:
+            1: Enabled
+            0: Disabled
+          validate:
+            type: bool
+
+    endpoints./configs:
+      type: fieldset
+      title: /configs
+      text: Configure whether clients can read, or edit, site configuration files by enabling or disabling the following HTTP methods.
+      collapsed: true
+      collapsible: true
+      icon: gear
+      fields:
+
+        Get:
+          type: section
+          title: GET
+          text: This method allows clients to read config data.
+          underline: true
+        endpoints./configs.get.enabled:
+          type: toggle
+          label: Enable
+          help: Enable, or disable, the GET method for the `/configs` endpoint.
+          highlight: 1
+          default: 0
+          options:
+            1: Enabled
+            0: Disabled
+          validate:
+            type: bool
+        endpoints./configs.get.auth:
+          type: toggle
+          label: Authentication
+          help: Enabling this endpoint will require a client to have valid user credentials and the `api.super` or `api.configs_read` roles.
+          highlight: 1
+          default: 0
+          options:
+            1: Enabled
+            0: Disabled
+          validate:
+            type: bool
+        endpoints./configs.get.ignore_files:
+          type: selectize
+          selectize:
+              options:
+                - text: Backups
+                  value: backups
+                - text: Groups
+                  value: groups
+                - text: Media
+                  value: media
+                - text: Scheduler
+                  value: scheduler
+                - text: Site
+                  value: site
+                - text: Streams
+                  value: streams
+                - text: System
+                  value: system
+          size: large
+          label: Ignore Files
+          classes: fancy
+          help: Choose which Config files will be ignored by the API, preventing you from reading them. By default, the security config will never be returned.
+          validate:
+              type: commalist
