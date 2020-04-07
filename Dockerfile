@@ -62,5 +62,8 @@ RUN curl -o grav-admin.zip -SL https://getgrav.org/download/core/grav-admin/${GR
     mv -T /var/www/grav-admin /var/www/html && \
     rm grav-admin.zip
 
+# Install login plugin
+RUN cd /var/www/html && bin/gpm install login
+
 # Return to root user
 USER root
