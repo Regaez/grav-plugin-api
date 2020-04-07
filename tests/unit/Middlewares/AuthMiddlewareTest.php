@@ -13,6 +13,9 @@ use GravApi\Middlewares\AuthMiddleware;
 
 final class AuthMiddlewareTest extends Test
 {
+    /** @var Grav $grav */
+    protected $grav;
+
     /** @var AuthMiddleware $middleware */
     protected $middleware;
 
@@ -21,6 +24,9 @@ final class AuthMiddlewareTest extends Test
 
     protected function _before()
     {
+        $grav = Fixtures::get('grav');
+        $this->grav = $grav();
+
         $this->middleware = new AuthMiddleware(
             Config::instance()->users->get,
             [Constants::ROLE_USERS_READ]
@@ -171,5 +177,74 @@ final class AuthMiddlewareTest extends Test
         );
 
         $this->assertEquals(401, $response->getStatusCode());
+    }
+
+    public function testSessionUserWithAdminRoleShouldReturnStatus200(): void
+    {
+        // Sets a user to be "logged in" and authenticated
+        $user = $this->grav['accounts']->load('development');
+        $user->authenticated = true;
+        $this->grav['session']->user = $user;
+
+        $request = Request::createFromEnvironment(
+            Environment::mock([
+                'REQUEST_METHOD' => 'GET',
+                'REQUEST_URI' => '/api/users'
+            ])
+        );
+
+        $response = $this->middleware->__invoke(
+            $request,
+            new Response(),
+            $this->next
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    public function testSessionUserWithoutRolesShouldReturnStatus401(): void
+    {
+        // Sets a user to be "logged in" and authenticated
+        $user = $this->grav['accounts']->load('joe');
+        $user->authenticated = true;
+        $this->grav['session']->user = $user;
+
+        $request = Request::createFromEnvironment(
+            Environment::mock([
+                'REQUEST_METHOD' => 'GET',
+                'REQUEST_URI' => '/api/users'
+            ])
+        );
+
+        $response = $this->middleware->__invoke(
+            $request,
+            new Response(),
+            $this->next
+        );
+
+        $this->assertEquals(401, $response->getStatusCode());
+    }
+
+    public function testSessionUserInGroupShouldReturnStatus200(): void
+    {
+        // Sets a user to be "logged in" and authenticated
+        $user = $this->grav['accounts']->load('andy');
+        $user->authenticated = true;
+        $this->grav['session']->user = $user;
+
+        $request = Request::createFromEnvironment(
+            Environment::mock([
+                'REQUEST_METHOD' => 'GET',
+                'REQUEST_URI' => '/api/users'
+            ])
+        );
+
+        $response = $this->middleware->__invoke(
+            $request,
+            new Response(),
+            $this->next
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
     }
 }

@@ -21,6 +21,7 @@ $grav = function () {
     $grav['debugger']->init();
     $grav['assets']->init();
     $grav['config']->set('system.cache.enabled', false);
+    $grav['session']->init();
     $grav['pages']->init();
 
     return $grav;
