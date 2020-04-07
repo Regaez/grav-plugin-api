@@ -48,11 +48,22 @@ class AuthMiddleware
     public function __invoke($request, $response, $next)
     {
         if ($this->config->useAuth) {
-            $authUser = implode(' ', $request->getHeader('PHP_AUTH_USER')) ?: '';
-            $authPass = implode(' ', $request->getHeader('PHP_AUTH_PW')) ?: '';
+            // We try to get the user from the session
+            $sessionUser = $this->grav['session']->user;
 
-            if (!$this->isAuthorised($authUser, $authPass)) {
-                return $response->withJson(Response::unauthorized(), 401);
+            if ($sessionUser) {
+                // Check if the session user has the required roles
+                if (!$this->checkRoles($sessionUser)) {
+                    return $response->withJson(Response::unauthorized(), 401);
+                }
+            } else {
+                // Otherwise we check credentials from Basic auth
+                $authUser = implode(' ', $request->getHeader('PHP_AUTH_USER')) ?: '';
+                $authPass = implode(' ', $request->getHeader('PHP_AUTH_PW')) ?: '';
+
+                if (!$this->isAuthorised($authUser, $authPass)) {
+                    return $response->withJson(Response::unauthorized(), 401);
+                }
             }
         }
 
