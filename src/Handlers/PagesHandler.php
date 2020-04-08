@@ -42,7 +42,7 @@ class PagesHandler extends BaseHandler
 
         // If auth is enabled, we need to check if user has
         // one of the custom taxonomy roles
-        if (Config::instance()->pages->get->auth) {
+        if (Config::instance()->pages->get->useAuth) {
             $user = $request->getAttribute('user');
 
             // Compare user's access roles against the available
