@@ -4,6 +4,7 @@ namespace GravApi\Middlewares;
 use Grav\Common\Grav;
 use GravApi\Config\Constants;
 use GravApi\Config\Method;
+use GravApi\Helpers\AuthHelper;
 use GravApi\Responses\Response;
 
 /**
@@ -53,17 +54,27 @@ class AuthMiddleware
 
             if ($sessionUser) {
                 // Check if the session user has the required roles
-                if (!$this->checkRoles($sessionUser)) {
+                if (!AuthHelper::checkRoles($sessionUser, $this->roles)) {
                     return $response->withJson(Response::unauthorized(), 401);
                 }
+
+                // Authorisation has now passed for session auth,
+                // so we decorate the request with the user
+                $request = $request->withAttribute('user', $sessionUser);
             } else {
                 // Otherwise we check credentials from Basic auth
                 $authUser = implode(' ', $request->getHeader('PHP_AUTH_USER')) ?: '';
                 $authPass = implode(' ', $request->getHeader('PHP_AUTH_PW')) ?: '';
 
-                if (!$this->isAuthorised($authUser, $authPass)) {
+                $user = $this->isAuthorised($authUser, $authPass);
+
+                if (!$user) {
                     return $response->withJson(Response::unauthorized(), 401);
                 }
+
+                // Authorisation has now passed for Basic auth,
+                // so we decorate the request with the user
+                $request = $request->withAttribute('user', $user);
             }
         }
 
@@ -76,7 +87,7 @@ class AuthMiddleware
      * Authenticate against specified Grav user
      * @param  string $username
      * @param  string $password
-     * @return bool
+     * @return bool|User
      */
     public function isAuthorised($username, $password)
     {
@@ -86,26 +97,11 @@ class AuthMiddleware
         if ($isAuthenticated) {
             $user->authenticated = true;
 
-            if ($this->checkRoles($user)) {
-                return true;
+            if (AuthHelper::checkRoles($user, $this->roles)) {
+                return $user;
             }
         }
 
-        return false;
-    }
-
-    /**
-     * Checks if the user has any of the required roles
-     * @param  \Grav\Common\User\User $user
-     * @return bool
-     */
-    public function checkRoles($user)
-    {
-        foreach ($this->roles as $role) {
-            if ($user->authorize($role)) {
-                return true;
-            }
-        }
         return false;
     }
 }
