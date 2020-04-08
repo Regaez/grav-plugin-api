@@ -2,6 +2,7 @@
 namespace GravApi\Helpers;
 
 use Grav\Common\User;
+use GravApi\Config\Constants;
 
 /**
  * Class AuthHelper
@@ -18,7 +19,14 @@ class AuthHelper
      */
     public static function checkRoles($user, $roles)
     {
-        foreach ($roles as $role) {
+        if (!$user) {
+            return false;
+        }
+
+        // By default, the super role will always be allowed
+        $allRoles = array_merge([Constants::ROLE_SUPER], $roles);
+
+        foreach ($allRoles as $role) {
             if ($user->authorize($role)) {
                 return true;
             }

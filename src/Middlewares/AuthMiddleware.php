@@ -2,7 +2,6 @@
 namespace GravApi\Middlewares;
 
 use Grav\Common\Grav;
-use GravApi\Config\Constants;
 use GravApi\Config\Method;
 use GravApi\Helpers\AuthHelper;
 use GravApi\Responses\Response;
@@ -31,12 +30,7 @@ class AuthMiddleware
     {
         $this->config = $config;
         $this->grav = Grav::instance();
-
-        // These are default roles which allow for a user
-        // to use any part of the API
-        $defaultRoles = ['admin.super', Constants::ROLE_SUPER];
-
-        $this->roles = array_merge($defaultRoles, $roles);
+        $this->roles = $roles;
     }
 
     /**
