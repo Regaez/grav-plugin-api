@@ -34,11 +34,11 @@ class AuthMiddleware
     }
 
     /**
-     * @param  \Psr\Http\Message\ServerRequestInterface $request  PSR7 request
-     * @param  \Psr\Http\Message\ResponseInterface      $response PSR7 response
-     * @param  callable                                 $next     Next middleware
+     * @param  \Slim\Http\Request $request  PSR7 request
+     * @param  \Slim\Http\Response $response PSR7 response
+     * @param  callable $next Next middleware
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Slim\Http\Response
      */
     public function __invoke($request, $response, $next)
     {
