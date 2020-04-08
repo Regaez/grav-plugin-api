@@ -10,6 +10,7 @@ use GravApi\Handlers\PagesHandler;
 use GravApi\Handlers\PluginsHandler;
 use GravApi\Handlers\UsersHandler;
 use GravApi\Config\Constants;
+use GravApi\Helpers\TaxonomyHelper;
 
 /**
  * Class Api
@@ -81,7 +82,11 @@ class Api
                         ->add(
                             new AuthMiddleware(
                                 $config->pages->get,
-                                [Constants::ROLE_PAGES_READ]
+                                array_merge(
+                                    [Constants::ROLE_PAGES_READ],
+                                    // We allow all taxonomy roles through and will authorise in handler
+                                    TaxonomyHelper::getRoles()
+                                )
                             )
                         );
                     }

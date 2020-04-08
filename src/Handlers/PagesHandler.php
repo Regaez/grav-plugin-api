@@ -2,11 +2,15 @@
 namespace GravApi\Handlers;
 
 use Grav\Common\Filesystem\Folder;
+use GravApi\Config\Config;
+use GravApi\Config\Constants;
 use GravApi\Responses\Response;
 use GravApi\Resources\PageResource;
 use GravApi\Resources\PageCollectionResource;
 use GravApi\Helpers\PageHelper;
 use GravApi\Helpers\ArrayHelper;
+use GravApi\Helpers\AuthHelper;
+use GravApi\Helpers\TaxonomyHelper;
 
 /**
  * Class PagesHandler
@@ -34,6 +38,24 @@ class PagesHandler extends BaseHandler
 
         if (!$page) {
             return $response->withJson(Response::notFound(), 404);
+        }
+
+        // If auth is enabled, we need to check if user has
+        // one of the custom taxonomy roles
+        if (Config::instance()->pages->get->auth) {
+            $user = $request->getAttribute('user');
+
+            // Compare user's access roles against the available
+            // taxonomy roles for the page. User might also have a
+            // generic read role, so we need to check again for that.
+            $hasRole = AuthHelper::checkRoles($user, array_merge(
+                [Constants::ROLE_PAGES_READ],
+                TaxonomyHelper::getPageRoles($page)
+            ));
+
+            if (!$hasRole) {
+                return $response->withJson(Response::unauthorized(), 401);
+            }
         }
 
         $resource = new PageResource($page);
