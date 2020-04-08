@@ -1,7 +1,7 @@
 ---
 title: 'Other test page'
 taxonomy:
-  taxonomyKey1: taxonomyValue1
+  category: blog
 ---
 
 # Hello! This is a test.

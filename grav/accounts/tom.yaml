@@ -1,14 +1,13 @@
-email: dummy@email.com
-fullname: Development
-title: Administrator
+email: tom@email.com
+fullname: Taxonomy Tom
+title: Permissions Tester
 state: enabled
-custom: this is a custom field
 access:
   api:
-    super: true
+    taxonomy_category_blog: true
   admin:
+    super: false
     login: true
-    super: true
   site:
     login: true
 hashed_password: $2y$10$aIw9wIWgj6bVuOk.sGRgw.TSZFOkIFmteDOLUFNj5Uka4ugxp5cTu

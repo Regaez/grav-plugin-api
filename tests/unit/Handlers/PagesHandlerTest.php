@@ -98,8 +98,8 @@ final class PagesHandlerTest extends Test
             ])
         )->withParsedBody([
             'taxonomyFilter' => [
-                'taxonomyKey1' => ['taxonomyValue1'],
-                'taxonomyKey2' => ['taxonomyValue2', 'taxonomyValue3']
+                'category' => ['blog'],
+                'tag' => ['news', 'grav']
             ],
             'operation' => 'and'
         ]);
@@ -118,7 +118,7 @@ final class PagesHandlerTest extends Test
             ])
         )->withParsedBody([
             'taxonomyFilter' => [
-                'taxonomyKey1' => ['taxonomyValue1']
+                'category' => ['blog']
             ],
             'operation' => 'and'
         ]);
@@ -137,7 +137,7 @@ final class PagesHandlerTest extends Test
             ])
         )->withParsedBody([
             'taxonomyFilter' => [
-                'taxonomyKey2' => ['taxonomyValue2']
+                'tag' => ['news']
             ],
             'operation' => 'or'
         ]);

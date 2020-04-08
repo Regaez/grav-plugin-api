@@ -14,6 +14,7 @@ siteadmin:
       plugins_uninstall: true
       configs_read: true
       configs_edit: true
+      taxonomy_category_blog: true
     admin:
       login: true
     site:
