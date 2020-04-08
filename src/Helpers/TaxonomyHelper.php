@@ -38,7 +38,11 @@ class TaxonomyHelper
      */
     public function formatAsRole($name, $value)
     {
-        return sprintf('api.taxonomy_%s_%s', $name, $value);
+        return sprintf(
+            'api.taxonomy_%s_%s',
+            strtolower(preg_replace('/\s+/', '_', $name)),
+            strtolower(preg_replace('/\s+/', '_', $value))
+        );
     }
 
     /**
