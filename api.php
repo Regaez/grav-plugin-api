@@ -4,6 +4,7 @@ namespace Grav\Plugin;
 use Grav\Common\Plugin;
 use RocketTheme\Toolbox\Event\Event;
 use GravApi\Config\Constants;
+use GravApi\Helpers\TaxonomyHelper;
 
 /**
  * Class ApiPlugin
@@ -13,6 +14,7 @@ class ApiPlugin extends Plugin
 {
     protected $defaultBaseRoute = 'api';
     protected $api;
+    protected $admin;
 
     /**
      * @return array
@@ -39,8 +41,13 @@ class ApiPlugin extends Plugin
      */
     public function onPluginsInitialized()
     {
-        // Don't proceed if we are in the admin plugin
         if ($this->isAdmin()) {
+            // We register our permissions once we can get taxonomy info
+            $this->enable([
+                'onPagesInitialized' => ['registerAdminPermissions', 0]
+            ]);
+
+            // Don't proceed if we are in the admin plugin
             return;
         }
 
@@ -73,20 +80,36 @@ class ApiPlugin extends Plugin
     }
 
     /**
-     * Register custom API role permissions
+     * Capture admin instance so we can register roles
+     * once we have the necessary taxonomy information
      *
      * @param Event $e
      */
     public function onAdminRegisterPermissions(Event $e)
     {
         if (isset($e['admin'])) {
+            $this->admin = $e['admin'];
+        }
+    }
+
+    /**
+     * Register custom API role permissions with admin
+     */
+    public function registerAdminPermissions()
+    {
+        if ($this->admin) {
             $permissions = [];
 
-            foreach (Constants::ROLES as $role) {
+            $roles = array_merge(
+                Constants::ROLES,
+                TaxonomyHelper::getRoles()
+            );
+
+            foreach ($roles as $role) {
                 $permissions[$role] = 'boolean';
             }
 
-            $e['admin']->addPermissions($permissions);
+            $this->admin->addPermissions($permissions);
         }
     }
 
