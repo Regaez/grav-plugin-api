@@ -35,6 +35,14 @@ final class PagesHandlerTest extends Test
                         'enabled' => true,
                         'auth' => false,
                         'fields' => $attributeFields
+                    ],
+                    Constants::METHOD_PATCH => [
+                        'enabled' => true,
+                        'auth' => false
+                    ],
+                    Constants::METHOD_DELETE => [
+                        'enabled' => true,
+                        'auth' => false
                     ]
                 ]
             ]
