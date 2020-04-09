@@ -121,7 +121,11 @@ class Api
                         ->add(
                             new AuthMiddleware(
                                 $config->pages->delete,
-                                [Constants::ROLE_PAGES_DELETE]
+                                array_merge(
+                                    [Constants::ROLE_PAGES_DELETE],
+                                    // We allow all taxonomy roles through and will authorise in handler
+                                    TaxonomyHelper::getRoles()
+                                )
                             )
                         );
                     }

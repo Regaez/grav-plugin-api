@@ -180,6 +180,24 @@ class PagesHandler extends BaseHandler
             return $response->withJson(Response::notFound(), 404);
         }
 
+        // If auth is enabled, we need to check if user has
+        // one of the custom taxonomy roles
+        if (Config::instance()->pages->delete->useAuth) {
+            $user = $request->getAttribute('user');
+
+            // Compare user's access roles against the available
+            // taxonomy roles for the page. User might also have a
+            // generic delete role, so we need to check again for that.
+            $hasRole = AuthHelper::checkRoles($user, array_merge(
+                [Constants::ROLE_PAGES_DELETE],
+                TaxonomyHelper::getPageRoles($page)
+            ));
+
+            if (!$hasRole) {
+                return $response->withJson(Response::unauthorized(), 401);
+            }
+        }
+
         // if the requested route has non-modular children,
         // we just delete the route's markdown file, keeping the directory
         if (0 < count($page->children()->nonModular())) {
