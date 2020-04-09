@@ -2,6 +2,7 @@
 namespace GravApi\Helpers;
 
 use Grav\Common\Grav;
+use Grav\Common\User;
 
 /**
  * Class TaxonomyHelper
@@ -59,5 +60,26 @@ class TaxonomyHelper
         }
 
         return $roles;
+    }
+
+    /**
+    * Gets all taxonomy access roles posssessed by a user
+    *
+    * @param User $user
+    * @return array $taxonomies
+    */
+    public static function getUserRolesAsTaxonomy($user)
+    {
+        $taxonomies = [];
+
+        $roles = $user->get('access.api');
+
+        foreach ($roles as $name => $value) {
+            if (preg_match('/^taxonomy___(.*)___(.*)/', $name, $matches)) {
+                $taxonomies[$matches[1]][] = $matches[2];
+            }
+        }
+
+        return $taxonomies;
     }
 }
