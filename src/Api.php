@@ -135,7 +135,11 @@ class Api
                         ->add(
                             new AuthMiddleware(
                                 $config->pages->patch,
-                                [Constants::ROLE_PAGES_EDIT]
+                                array_merge(
+                                    [Constants::ROLE_PAGES_EDIT],
+                                    // We allow all taxonomy roles through and will authorise in handler
+                                    TaxonomyHelper::getRoles()
+                                )
                             )
                         );
                     }
