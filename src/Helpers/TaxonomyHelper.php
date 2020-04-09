@@ -39,7 +39,7 @@ class TaxonomyHelper
      */
     public function formatAsRole($name, $value)
     {
-        return sprintf('api.taxonomy___%s___%s', $name, $value);
+        return sprintf('api.taxonomy_%s___%s', $name, $value);
     }
 
     /**
@@ -75,7 +75,7 @@ class TaxonomyHelper
         $roles = $user->get('access.api');
 
         foreach ($roles as $name => $value) {
-            if (preg_match('/^taxonomy___(.*)___(.*)/', $name, $matches)) {
+            if (preg_match('/^taxonomy_(.*)___(.*)/', $name, $matches)) {
                 $taxonomies[$matches[1]][] = $matches[2];
             }
         }

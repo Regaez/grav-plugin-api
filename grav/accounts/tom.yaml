@@ -4,7 +4,7 @@ title: Permissions Tester
 state: enabled
 access:
   api:
-    taxonomy___category___blog: true
+    taxonomy_category___blog: true
   admin:
     super: false
     login: true
