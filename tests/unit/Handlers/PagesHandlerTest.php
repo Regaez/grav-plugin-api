@@ -33,6 +33,7 @@ final class PagesHandlerTest extends Test
                 Constants::ENDPOINT_PAGE => [
                     Constants::METHOD_GET => [
                         'enabled' => true,
+                        'auth' => false,
                         'fields' => $attributeFields
                     ]
                 ]
