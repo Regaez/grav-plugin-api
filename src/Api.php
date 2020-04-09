@@ -74,7 +74,11 @@ class Api
                         ->add(
                             new AuthMiddleware(
                                 $config->pages->get,
-                                [Constants::ROLE_PAGES_READ]
+                                array_merge(
+                                    [Constants::ROLE_PAGES_READ],
+                                    // We allow all taxonomy roles and will filter collection in handler
+                                    TaxonomyHelper::getRoles()
+                                )
                             )
                         );
 

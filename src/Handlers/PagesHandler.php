@@ -20,7 +20,32 @@ class PagesHandler extends BaseHandler
 {
     public function getPages($request, $response, $args)
     {
+        // By default, we will get all pages
         $collection = $this->grav['pages']->all();
+
+        // If auth is enabled, we need to check if user has
+        // one of the custom taxonomy roles. The AuthMiddleware
+        // will only let authenticated users through, but we don't
+        // yet know which users were allowed due to a taxonomy role.
+        if (Config::instance()->pages->get->useAuth) {
+            $user = $request->getAttribute('user');
+
+            // Check if the user has a role that allows to read all pages
+            $hasRole = AuthHelper::checkRoles(
+                $user,
+                [Constants::ROLE_PAGES_READ]
+            );
+
+            // If they don't, then we override the default collection
+            // so we only return pages matching the user's taxonomy roles
+            if (!$hasRole) {
+                // Generate all available taxonomies based on user's roles
+                $taxonomies = TaxonomyHelper::getUserRolesAsTaxonomy($user);
+
+                // Set collection to only pages with allowed taxonomies
+                $collection = self::getPagesByTaxonomy($taxonomies);
+            }
+        }
 
         $resource = new PageCollectionResource($collection);
 
@@ -68,7 +93,8 @@ class PagesHandler extends BaseHandler
         $parsedBody = $request->getParsedBody();
         $operation = $parsedBody['operation'] ?? 'or';
         $filter = $parsedBody['taxonomyFilter'] ?? array();
-        $collection = $this->grav['taxonomy']->findTaxonomy($filter, strtolower($operation));
+
+        $collection = self::getPagesByTaxonomy($filter, $operation);
 
         $resource = new PageCollectionResource($collection);
 
@@ -270,5 +296,20 @@ class PagesHandler extends BaseHandler
         $resource = new PageResource($page);
 
         return $response->withJson($resource->toJson());
+    }
+
+    /**
+     * Returns a page collection filtered by taxonomies
+     *
+     * @param array $filter A taxonomy map array
+     * @param string $operation The logic to apply: 'or'|'and'
+     * @return \Grav\Common\Page\Collection
+     */
+    public function getPagesByTaxonomy($filter, $operation = 'or')
+    {
+        return $this->grav['taxonomy']->findTaxonomy(
+            $filter,
+            strtolower($operation)
+        );
     }
 }
