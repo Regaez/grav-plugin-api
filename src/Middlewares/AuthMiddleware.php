@@ -5,6 +5,7 @@ use Grav\Common\Grav;
 use GravApi\Config\Method;
 use GravApi\Helpers\AuthHelper;
 use GravApi\Responses\Response;
+use Grav\Common\User\Interfaces\UserInterface;
 
 /**
  * Class AuthMiddleware
@@ -44,6 +45,8 @@ class AuthMiddleware
     {
         if ($this->config->useAuth) {
             // We try to get the user from the session
+
+            /** @var UserInterface */
             $sessionUser = $this->grav['session']->user;
 
             if ($sessionUser) {
@@ -60,6 +63,7 @@ class AuthMiddleware
                 $authUser = implode(' ', $request->getHeader('PHP_AUTH_USER')) ?: '';
                 $authPass = implode(' ', $request->getHeader('PHP_AUTH_PW')) ?: '';
 
+                /** @var UserInterface */
                 $user = $this->isAuthorised($authUser, $authPass);
 
                 if (!$user) {
