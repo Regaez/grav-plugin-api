@@ -57,6 +57,7 @@ class Constants
     const ROLE_PAGES_DELETE = 'api.pages_delete';
     const ROLE_PAGES_EDIT = 'api.pages_edit';
     const ROLE_PAGES_CREATE = 'api.pages_create';
+    const ROLE_PAGES_ADVANCED = 'api.pages_advanced_access';
     const ROLE_USERS_READ = 'api.users_read';
     const ROLE_USERS_DELETE = 'api.users_delete';
     const ROLE_USERS_CREATE = 'api.users_create';
@@ -75,6 +76,7 @@ class Constants
         Constants::ROLE_PAGES_DELETE,
         Constants::ROLE_PAGES_EDIT,
         Constants::ROLE_PAGES_CREATE,
+        Constants::ROLE_PAGES_ADVANCED,
         Constants::ROLE_USERS_READ,
         Constants::ROLE_USERS_DELETE,
         Constants::ROLE_USERS_CREATE,
