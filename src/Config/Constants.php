@@ -69,7 +69,9 @@ class Constants
     const ROLE_CONFIGS_READ = 'api.configs_read';
     const ROLE_CONFIGS_EDIT = 'api.configs_edit';
 
-    // All available roles
+    /**
+     * All available API roles
+     */
     const ROLES = [
         Constants::ROLE_SUPER,
         Constants::ROLE_PAGES_READ,
@@ -88,4 +90,9 @@ class Constants
         Constants::ROLE_CONFIGS_READ,
         Constants::ROLE_CONFIGS_EDIT
     ];
+
+    /**
+     * Pattern for route matching which will allow "any descendents"
+     */
+    const REGEX_DESCENDENT_WILDCARD = '/\/\*$/';
 }
