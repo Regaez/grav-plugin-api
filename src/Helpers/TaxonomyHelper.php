@@ -8,6 +8,24 @@ namespace GravApi\Helpers;
 class TaxonomyHelper
 {
     /**
+     * Merges two taxonomy arrays together, removing any duplicate values.
+     *
+     * @param array $a
+     * @param array $b
+     * @return array
+     */
+    public static function merge(array $a, array $b)
+    {
+        $result = array();
+
+        foreach (array_merge_recursive($a, $b) as $key => $value) {
+            $result[$key] = array_unique($value);
+        }
+
+        return $result;
+    }
+
+    /**
      * Intersects two taxonomy arrays, returning an array containing only the shared taxonomy values.
      *
      * @param array $a

@@ -94,5 +94,5 @@ class Constants
     /**
      * Pattern for route matching which will allow "any descendents"
      */
-    const REGEX_DESCENDENT_WILDCARD = '/\/\*$/';
+    const REGEX_DESCENDANT_WILDCARD = '/\/\*$/';
 }

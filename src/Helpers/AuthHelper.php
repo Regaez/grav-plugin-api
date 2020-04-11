@@ -106,7 +106,7 @@ class AuthHelper
     /**
      * Determines whether a page route matches a value from an array of routes.
      *
-     * The array could include routes with the "any descendent" wildcard.
+     * The array could include routes with the "any descendant" wildcard.
      * For example, `/blog/*`, which would return true for a route such as `/blog/child`.
      *
      * @param string $route
@@ -117,9 +117,9 @@ class AuthHelper
     {
         foreach ($routes as $r) {
             // Check the route for the "any descendent" wildcard
-            if (preg_match(Constants::REGEX_DESCENDENT_WILDCARD, $r)) {
+            if (preg_match(Constants::REGEX_DESCENDANT_WILDCARD, $r)) {
                 // Replacing with a slash prevents matching on the exact $route, so we will only match descendents
-                $ancestor = preg_replace(Constants::REGEX_DESCENDENT_WILDCARD, '/', $r);
+                $ancestor = preg_replace(Constants::REGEX_DESCENDANT_WILDCARD, '/', $r);
 
                 // Check if the route starts with the ancestor route
                 if (strpos($route, $ancestor) === 0) {
@@ -131,5 +131,63 @@ class AuthHelper
         }
 
         return false;
+    }
+
+    /**
+     * Returns the user's advanced access permissions as Collection parameters.
+     *
+     * @param UserInterface $user
+     * @param string $method
+     * @return array
+     */
+    public static function getCollectionParams($user)
+    {
+        $items = [];
+
+        // Currently the function is only called by `getPages`, but could make this a parameter if necessary
+        $method = Constants::METHOD_GET;
+
+        /** @var Config */
+        $config = Grav::instance()['config'];
+
+        $groups = (array) $user->get('groups');
+
+        $routes = [];
+        $taxonomies = [];
+
+        foreach ($groups as $group) {
+            $groupRoutes = $config->get("groups.{$group}.api.advanced_access.pages.{$method}.routes", []);
+            $routes = array_merge($routes, $groupRoutes);
+
+            // Check user's groups against the page's taxonomies
+            $taxonomies = TaxonomyHelper::merge(
+                $taxonomies,
+                $config->get("groups.{$group}.api.advanced_access.pages.{$method}.taxonomy", [])
+            );
+        }
+
+        $routes = array_merge(
+            $routes,
+            $user->get("api.advanced_access.pages.{$method}.routes", [])
+        );
+
+        $taxonomies = TaxonomyHelper::merge(
+            $taxonomies,
+            $user->get("api.advanced_access.pages.{$method}.taxonomy", [])
+        );
+
+        foreach (array_unique($routes) as $r) {
+            if (preg_match(Constants::REGEX_DESCENDANT_WILDCARD, $r)) {
+                $items['@page.descendants'] = preg_replace(Constants::REGEX_DESCENDANT_WILDCARD, '', $r);
+            } else {
+                $items['@page.self'] = $r;
+            }
+        }
+
+        if (count($taxonomies) > 0) {
+            $items['@taxonomy'] = $taxonomies;
+        }
+
+        return $items;
     }
 }
