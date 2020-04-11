@@ -7,6 +7,9 @@ use GravApi\Resources\PageResource;
 use GravApi\Resources\PageCollectionResource;
 use GravApi\Helpers\PageHelper;
 use GravApi\Helpers\ArrayHelper;
+use GravApi\Helpers\AuthHelper;
+use GravApi\Config\Config;
+use GravApi\Config\Constants;
 
 /**
  * Class PagesHandler
@@ -23,6 +26,14 @@ class PagesHandler extends BaseHandler
         return $response->withJson($resource->toJson());
     }
 
+    /**
+     * Request handler to return a single page
+     *
+     * @param \Slim\Http\Request $request
+     * @param \Slim\Http\Response $response
+     * @param array $args
+     * @return \Slim\Http\Response
+     */
     public function getPage($request, $response, $args)
     {
         if (!isset($args['page'])) {
@@ -34,6 +45,24 @@ class PagesHandler extends BaseHandler
 
         if (!$page) {
             return $response->withJson(Response::notFound(), 404);
+        }
+
+        if (Config::instance()->pages->get->useAuth) {
+
+            /** @var UserInterface */
+            $user = $request->getAttribute('user');
+
+            // Check if user has a role which allows any page access
+            $hasPermission = AuthHelper::checkRoles($user, [Constants::ROLE_PAGES_READ]);
+
+            if (!$hasPermission) {
+                // Check user's advanced API access permissions
+                $hasPageAccess = AuthHelper::hasPageAccess($user, $page, Constants::METHOD_GET);
+
+                if (!$hasPageAccess) {
+                    return $response->withJson(Response::unauthorized(), 401);
+                }
+            }
         }
 
         $resource = new PageResource($page);
