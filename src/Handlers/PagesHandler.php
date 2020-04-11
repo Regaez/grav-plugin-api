@@ -161,6 +161,24 @@ class PagesHandler extends BaseHandler
             return $response->withJson(Response::notFound(), 404);
         }
 
+        if (Config::instance()->pages->delete->useAuth) {
+
+            /** @var UserInterface */
+            $user = $request->getAttribute('user');
+
+            // Check if user has a role which allows any page access
+            $hasPermission = AuthHelper::checkRoles($user, [Constants::ROLE_PAGES_DELETE]);
+
+            if (!$hasPermission) {
+                // Check user's advanced API access permissions
+                $hasPageAccess = AuthHelper::hasPageAccess($user, $page, Constants::METHOD_DELETE);
+
+                if (!$hasPageAccess) {
+                    return $response->withJson(Response::unauthorized(), 401);
+                }
+            }
+        }
+
         // if the requested route has non-modular children,
         // we just delete the route's markdown file, keeping the directory
         if (0 < count($page->children()->nonModular())) {

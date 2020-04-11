@@ -110,10 +110,10 @@ class Api
                     if ($config->pages->delete->enabled) {
                         $this->delete('/{page:.*}', PagesHandler::class . ':deletePage')
                         ->add(
-                            new AuthMiddleware(
-                                $config->pages->delete,
-                                [Constants::ROLE_PAGES_DELETE]
-                            )
+                            new AuthMiddleware($config->pages->delete, [
+                                Constants::ROLE_PAGES_DELETE,
+                                Constants::ROLE_PAGES_ADVANCED
+                            ])
                         );
                     }
 
