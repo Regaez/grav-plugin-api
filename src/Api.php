@@ -71,10 +71,10 @@ class Api
                     if ($config->pages->get->enabled) {
                         $this->get('', PagesHandler::class . ':getPages')
                         ->add(
-                            new AuthMiddleware(
-                                $config->pages->get,
-                                [Constants::ROLE_PAGES_READ]
-                            )
+                            new AuthMiddleware($config->pages->get, [
+                                Constants::ROLE_PAGES_READ,
+                                Constants::ROLE_PAGES_ADVANCED
+                            ])
                         );
 
                         $this->get('/{page:.*}', PagesHandler::class . ':getPage')

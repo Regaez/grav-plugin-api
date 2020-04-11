@@ -1,6 +1,8 @@
 <?php
 namespace GravApi\Handlers;
 
+use Grav\Common\Page\Page;
+use Grav\Common\Page\Collection;
 use Grav\Common\Filesystem\Folder;
 use GravApi\Responses\Response;
 use GravApi\Resources\PageResource;
@@ -10,6 +12,7 @@ use GravApi\Helpers\ArrayHelper;
 use GravApi\Helpers\AuthHelper;
 use GravApi\Config\Config;
 use GravApi\Config\Constants;
+use GravApi\Helpers\TaxonomyHelper;
 
 /**
  * Class PagesHandler
@@ -19,7 +22,30 @@ class PagesHandler extends BaseHandler
 {
     public function getPages($request, $response, $args)
     {
+        /**
+         * By default, we set the collection to be all pages
+         * @var Collection
+         */
         $collection = $this->grav['pages']->all();
+
+        if (Config::instance()->pages->get->useAuth) {
+
+            /** @var UserInterface */
+            $user = $request->getAttribute('user');
+
+            // Check if user has a role which allows any page access
+            $hasPermission = AuthHelper::checkRoles($user, [Constants::ROLE_PAGES_READ]);
+
+            if (!$hasPermission) {
+                /** @var Page */
+                $page = $this->grav['page'];
+
+                $collection = $page->evaluate(
+                    AuthHelper::getCollectionParams($user),
+                    false // also return non-published pages
+                );
+            }
+        }
 
         $resource = new PageCollectionResource($collection);
 
