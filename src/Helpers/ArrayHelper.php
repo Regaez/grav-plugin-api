@@ -34,6 +34,12 @@ class ArrayHelper
         return $current;
     }
 
+    /**
+     * Filters an array so it only contains values which are strings
+     *
+     * @param mixed[] $array
+     * @return string[]
+     */
     public static function asStringArray(array $array)
     {
         $filteredArray = [];
@@ -45,36 +51,5 @@ class ArrayHelper
         }
 
         return $filteredArray;
-    }
-
-    /**
-     * Intersects two arrays, returning an array containing only the shared items.
-     * Unlike `array_intersect`, it will work for values which are also arrays.
-     *
-     * @param array $a
-     * @param array $b
-     * @return array An empty array will be returned if there is no intersection.
-     */
-    public static function intersect($a, $b)
-    {
-        if (!is_array($a) || !is_array($b)) {
-            return array();
-        }
-
-        if (!empty($a)) {
-            foreach ($a as $key => $value) {
-                if (!isset($b[$key])) {
-                    unset($a[$key]);
-                } else {
-                    if (serialize($b[$key]) !== serialize($value)) {
-                        unset($a[$key]);
-                    }
-                }
-            }
-
-            return $a;
-        }
-
-        return array();
     }
 }
