@@ -231,6 +231,24 @@ class PagesHandler extends BaseHandler
             return $response->withJson(Response::notFound(), 404);
         }
 
+        if (Config::instance()->pages->patch->useAuth) {
+
+            /** @var UserInterface */
+            $user = $request->getAttribute('user');
+
+            // Check if user has a role which allows any page access
+            $hasPermission = AuthHelper::checkRoles($user, [Constants::ROLE_PAGES_EDIT]);
+
+            if (!$hasPermission) {
+                // Check user's advanced API access permissions
+                $hasPageAccess = AuthHelper::hasPageAccess($user, $page, Constants::METHOD_PATCH);
+
+                if (!$hasPageAccess) {
+                    return $response->withJson(Response::unauthorized(), 401);
+                }
+            }
+        }
+
         $parsedBody = $request->getParsedBody();
 
         $template = isset($parsedBody['template'])

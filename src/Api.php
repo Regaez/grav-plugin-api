@@ -120,10 +120,10 @@ class Api
                     if ($config->pages->patch->enabled) {
                         $this->patch('/{page:.*}', PagesHandler::class . ':updatePage')
                         ->add(
-                            new AuthMiddleware(
-                                $config->pages->patch,
-                                [Constants::ROLE_PAGES_EDIT]
-                            )
+                            new AuthMiddleware($config->pages->patch, [
+                                Constants::ROLE_PAGES_EDIT,
+                                Constants::ROLE_PAGES_ADVANCED
+                            ])
                         );
                     }
                 }
