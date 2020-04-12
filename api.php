@@ -14,6 +14,11 @@ class ApiPlugin extends Plugin
     protected $defaultBaseRoute = 'api';
     protected $api;
 
+    // This will enable the plugin to extend the user/account blueprint
+    public $features = [
+        'blueprints' => 1000,
+    ];
+
     /**
      * @return array
      *

@@ -1,0 +1,93 @@
+extends@: parent@
+
+form:
+  fields:
+    api_advanced_access:
+      security@: admin.super
+      title: API Advanced Access
+      text: This section allows for advanced customisation of the user's page permissions. In order for this to take effect, you MUST also enable the `api.pages_advanced_access` role. Note that these permissions only apply to access via the API, not general page access on the site frontend.
+      type: section
+      underline: true
+      fields:
+        get:
+          type: fieldset
+          security@: admin.super
+          title: GET - Read Pages
+          text: Configure which pages the user is able to read via the API.
+          collapsed: true
+          collapsible: true
+          fields:
+            api.advanced_access.pages.get.routes:
+              type: array
+              label: Routes
+              help: A route such as `/page` will enable access to *only* that page, and `/page/*` will allow access to *any* descendant of `/page` but NOT `/page` itself.
+              value_only: true
+            api.advanced_access.pages.get.taxonomy:
+              type: taxonomy
+              label: PLUGIN_ADMIN.TAXONOMY
+              # HACKY WORKAROUND TO POPULATE FIELD WITH USER DATA
+              data-default@:
+                - '\GravApi\Helpers\TaxonomyHelper::getUserTaxonomy'
+                - 'get'
+              multiple: true
+              validate:
+                type: array
+        patch:
+          type: fieldset
+          security@: admin.super
+          title: PATCH - Edit Pages
+          text: Configure which pages the user is able to edit via the API.
+          collapsed: true
+          collapsible: true
+          fields:
+            api.advanced_access.pages.patch.routes:
+              type: array
+              label: Routes
+              help: A route such as `/page` will enable access to *only* that page, and `/page/*` will allow access to *any* descendant of `/page` but NOT `/page` itself.
+              value_only: true
+            api.advanced_access.pages.patch.taxonomy:
+              type: taxonomy
+              label: PLUGIN_ADMIN.TAXONOMY
+              # HACKY WORKAROUND TO POPULATE FIELD WITH USER DATA
+              data-default@:
+                - '\GravApi\Helpers\TaxonomyHelper::getUserTaxonomy'
+                - 'patch'
+              multiple: true
+              validate:
+                type: array
+        post:
+          type: fieldset
+          security@: admin.super
+          title: POST - Create Pages
+          text: Configure which pages the user is able to create via the API.
+          collapsed: true
+          collapsible: true
+          fields:
+            api.advanced_access.pages.post.routes:
+              type: array
+              label: Routes
+              help: A route such as `/page` will enable access to *only* that page, and `/page/*` will allow access to *any* descendant of `/page` but NOT `/page` itself.
+              value_only: true
+        delete:
+          type: fieldset
+          security@: admin.super
+          title: DELETE - Remove Pages
+          text: Configure which pages the user is able to delete via the API.
+          collapsed: true
+          collapsible: true
+          fields:
+            api.advanced_access.pages.delete.routes:
+              type: array
+              label: Routes
+              help: A route such as `/page` will enable access to *only* that page, and `/page/*` will allow access to *any* descendant of `/page` but NOT `/page` itself.
+              value_only: true
+            api.advanced_access.pages.delete.taxonomy:
+              type: taxonomy
+              label: PLUGIN_ADMIN.TAXONOMY
+              # HACKY WORKAROUND TO POPULATE FIELD WITH USER DATA
+              data-default@:
+                - '\GravApi\Helpers\TaxonomyHelper::getUserTaxonomy'
+                - 'delete'
+              multiple: true
+              validate:
+                type: array
