@@ -86,7 +86,7 @@ final class PageResourceTest extends Test
             ],
             "filePathClean" => "user/pages/test/default.md",
             "folder" => "test",
-            "frontmatter" => "title: 'Test page'\ncustom_field: WORLD",
+            "frontmatter" => "title: 'Test page'\ncustom_field: WORLD\ntaxonomy:\n    category: blog\n    tag: [news, grav]\n",
             "header" => [
                 "title" => "Test page",
                 "custom_field" => "WORLD",
@@ -130,7 +130,7 @@ final class PageResourceTest extends Test
             "permalink" => "http://localhost/test",
             "publishDate" => null,
             "published" => true,
-            "raw" => "---\ntitle: 'Test page'\ncustom_field: WORLD\ntaxonomy:\n  category: blog\n  tag: [news, grav]\n---\n\n# Hello {{custom_field}}! This is a test.\n",
+            "raw" => "---\ntitle: 'Test page'\ncustom_field: WORLD\ntaxonomy:\n    category: blog\n    tag: [news, grav]\n---\n\n# Hello {{custom_field}}! This is a test.\n",
             "rawMarkdown" => "# Hello {{custom_field}}! This is a test.\n",
             "rawRoute" => "/test",
             "root" => false,

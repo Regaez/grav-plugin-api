@@ -40,6 +40,10 @@ final class PagesHandlerTest extends Test
                         'enabled' => true,
                         'auth' => false
                     ],
+                    Constants::METHOD_POST => [
+                        'enabled' => true,
+                        'auth' => false
+                    ],
                     Constants::METHOD_DELETE => [
                         'enabled' => true,
                         'auth' => false
