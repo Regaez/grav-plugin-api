@@ -100,10 +100,10 @@ class Api
                     if ($config->pages->post->enabled) {
                         $this->post('', PagesHandler::class . ':newPage')
                         ->add(
-                            new AuthMiddleware(
-                                $config->pages->post,
-                                [Constants::ROLE_PAGES_CREATE]
-                            )
+                            new AuthMiddleware($config->pages->post, [
+                                Constants::ROLE_PAGES_CREATE,
+                                Constants::ROLE_PAGES_ADVANCED
+                            ])
                         );
                     }
 

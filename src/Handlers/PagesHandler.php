@@ -117,6 +117,28 @@ class PagesHandler extends BaseHandler
         }
 
         $route = $parsedBody['route'];
+
+        if (Config::instance()->pages->post->useAuth) {
+
+            /** @var UserInterface */
+            $user = $request->getAttribute('user');
+
+            // Check if user has a role which allows creating any page
+            $hasPermission = AuthHelper::checkRoles($user, [Constants::ROLE_PAGES_CREATE]);
+
+            if (!$hasPermission) {
+                // Get all the routes the user is allowed to create
+                $userRoutes = AuthHelper::getUserRoutes($user, Constants::METHOD_POST);
+
+                // Check user's advanced API access permissions
+                $canCreateRoute = AuthHelper::hasMatchingRoute($route, $userRoutes);
+
+                if (!$canCreateRoute) {
+                    return $response->withJson(Response::unauthorized(), 401);
+                }
+            }
+        }
+
         $existingPage = $this->grav['pages']->find($route);
 
         // if existingPage is a directory, we can still create a file, so check if isPage

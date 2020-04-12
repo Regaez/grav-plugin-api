@@ -4,6 +4,7 @@ namespace GravApi\Helpers;
 use \Grav\Common\Grav;
 use \Grav\Common\Uri;
 use \Grav\Common\User\Interfaces\UserInterface;
+use \GravApi\Helpers\AuthHelper;
 
 /**
  * Class TaxonomyHelper
@@ -88,6 +89,6 @@ class TaxonomyHelper
         /** @var UserInterface */
         $user = $grav['accounts']->load($username);
 
-        return $user->get("api.advanced_access.pages.{$method}.taxonomy", []);
+        return AuthHelper::getUserTaxonomy($user, $method);
     }
 }

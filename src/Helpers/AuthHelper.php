@@ -82,7 +82,7 @@ class AuthHelper
         // Check user's routes against the page's route
         $hasMatchingRoute = self::hasMatchingRoute(
             $page->route(),
-            $user->get("api.advanced_access.pages.{$method}.routes", [])
+            self::getUserRoutes($user, $method)
         );
 
         if ($hasMatchingRoute) {
@@ -93,7 +93,7 @@ class AuthHelper
         // Check user against the page's taxonomies
         $hasTaxonomyIntersect = TaxonomyHelper::hasIntersect(
             $page->taxonomy(),
-            $user->get("api.advanced_access.pages.{$method}.taxonomy", [])
+            self::getUserTaxonomy($user, $method)
         );
 
         if ($hasTaxonomyIntersect) {
@@ -101,6 +101,30 @@ class AuthHelper
         }
 
         return false;
+    }
+
+    /**
+     * Returns an array of routes this user can access.
+     *
+     * @param UserInterface $user
+     * @param string $method
+     * @return string[] If no routes configured, an empty array will be returned.
+     */
+    public static function getUserRoutes($user, $method)
+    {
+        return $user->get("api.advanced_access.pages.{$method}.routes", []);
+    }
+
+    /**
+     * Returns an array of taxonomies this user can access.
+     *
+     * @param UserInterface $user
+     * @param string $method
+     * @return string[] If no taxonomies are configured, an empty array will be returned.
+     */
+    public static function getUserTaxonomy($user, $method)
+    {
+        return $user->get("api.advanced_access.pages.{$method}.taxonomy", []);
     }
 
     /**
