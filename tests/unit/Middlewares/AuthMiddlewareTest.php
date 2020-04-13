@@ -10,6 +10,7 @@ use Grav\Common\Grav;
 use GravApi\Config\Config;
 use GravApi\Config\Constants;
 use GravApi\Middlewares\AuthMiddleware;
+use Grav\Common\User\User;
 
 final class AuthMiddlewareTest extends Test
 {
@@ -246,5 +247,57 @@ final class AuthMiddlewareTest extends Test
         );
 
         $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    public function testRequestDecoratedWithBasicAuthUser(): void
+    {
+        $expectedUser = null;
+
+        $request = Request::createFromEnvironment(
+            Environment::mock([
+                'REQUEST_METHOD' => 'GET',
+                'REQUEST_URI' => '/api/users',
+                'PHP_AUTH_USER' => 'development',
+                'PHP_AUTH_PW' => 'D3velopment'
+            ])
+        );
+
+        $response = $this->middleware->__invoke(
+            $request,
+            new Response(),
+            function ($request, $response) use (&$expectedUser) {
+                $expectedUser = $request->getAttribute('user');
+                return $response->withJson('', 200);
+            }
+        );
+
+        $this->assertInstanceOf(User::class, $expectedUser);
+    }
+
+    public function testRequestDecoratedWithSessionUser(): void
+    {
+        $expectedUser = null;
+        // Sets a user to be "logged in" and authenticated
+        $user = $this->grav['accounts']->load('andy');
+        $user->authenticated = true;
+        $this->grav['session']->user = $user;
+
+        $request = Request::createFromEnvironment(
+            Environment::mock([
+                'REQUEST_METHOD' => 'GET',
+                'REQUEST_URI' => '/api/users'
+            ])
+        );
+
+        $response = $this->middleware->__invoke(
+            $request,
+            new Response(),
+            function ($request, $response) use (&$expectedUser) {
+                $expectedUser = $request->getAttribute('user');
+                return $response->withJson('', 200);
+            }
+        );
+
+        $this->assertInstanceOf(User::class, $expectedUser);
     }
 }
