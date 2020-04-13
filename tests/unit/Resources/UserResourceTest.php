@@ -78,6 +78,9 @@ final class UserResourceTest extends Test
                 ],
                 'site' => [
                     'login' => true
+                ],
+                'api' => [
+                    'super' => true
                 ]
             ],
             'groups' => null
@@ -149,6 +152,9 @@ final class UserResourceTest extends Test
                 ],
                 'site' => [
                     'login' => true
+                ],
+                'api' => [
+                    'super' => true
                 ]
             ],
             'groups' => null
@@ -187,6 +193,9 @@ final class UserResourceTest extends Test
                 ],
                 'site' => [
                     'login' => true
+                ],
+                'api' => [
+                    'super' => true
                 ]
             ],
             'groups' => null

@@ -71,18 +71,18 @@ class Api
                     if ($config->pages->get->enabled) {
                         $this->get('', PagesHandler::class . ':getPages')
                         ->add(
-                            new AuthMiddleware(
-                                $config->pages->get,
-                                [Constants::ROLE_PAGES_READ]
-                            )
+                            new AuthMiddleware($config->pages->get, [
+                                Constants::ROLE_PAGES_READ,
+                                Constants::ROLE_PAGES_ADVANCED
+                            ])
                         );
 
                         $this->get('/{page:.*}', PagesHandler::class . ':getPage')
                         ->add(
-                            new AuthMiddleware(
-                                $config->pages->get,
-                                [Constants::ROLE_PAGES_READ]
-                            )
+                            new AuthMiddleware($config->pages->get, [
+                                Constants::ROLE_PAGES_READ,
+                                Constants::ROLE_PAGES_ADVANCED
+                            ])
                         );
                     }
 
@@ -100,30 +100,30 @@ class Api
                     if ($config->pages->post->enabled) {
                         $this->post('', PagesHandler::class . ':newPage')
                         ->add(
-                            new AuthMiddleware(
-                                $config->pages->post,
-                                [Constants::ROLE_PAGES_CREATE]
-                            )
+                            new AuthMiddleware($config->pages->post, [
+                                Constants::ROLE_PAGES_CREATE,
+                                Constants::ROLE_PAGES_ADVANCED
+                            ])
                         );
                     }
 
                     if ($config->pages->delete->enabled) {
                         $this->delete('/{page:.*}', PagesHandler::class . ':deletePage')
                         ->add(
-                            new AuthMiddleware(
-                                $config->pages->delete,
-                                [Constants::ROLE_PAGES_DELETE]
-                            )
+                            new AuthMiddleware($config->pages->delete, [
+                                Constants::ROLE_PAGES_DELETE,
+                                Constants::ROLE_PAGES_ADVANCED
+                            ])
                         );
                     }
 
                     if ($config->pages->patch->enabled) {
                         $this->patch('/{page:.*}', PagesHandler::class . ':updatePage')
                         ->add(
-                            new AuthMiddleware(
-                                $config->pages->patch,
-                                [Constants::ROLE_PAGES_EDIT]
-                            )
+                            new AuthMiddleware($config->pages->patch, [
+                                Constants::ROLE_PAGES_EDIT,
+                                Constants::ROLE_PAGES_ADVANCED
+                            ])
                         );
                     }
                 }

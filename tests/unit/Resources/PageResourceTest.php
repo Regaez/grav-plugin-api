@@ -86,15 +86,15 @@ final class PageResourceTest extends Test
             ],
             "filePathClean" => "user/pages/test/default.md",
             "folder" => "test",
-            "frontmatter" => "title: 'Test page'\ncustom_field: WORLD",
+            "frontmatter" => "title: 'Test page'\ncustom_field: WORLD\ntaxonomy:\n    category: blog\n    tag: [news, grav]\n",
             "header" => [
                 "title" => "Test page",
                 "custom_field" => "WORLD",
                 "taxonomy" => [
-                    "taxonomyKey1" => "taxonomyValue1",
-                    "taxonomyKey2" => [
-                        "taxonomyValue2",
-                        "taxonomyValue3"
+                    "category" => "blog",
+                    "tag" => [
+                        "news",
+                        "grav"
                     ]
                 ]
             ],
@@ -130,7 +130,7 @@ final class PageResourceTest extends Test
             "permalink" => "http://localhost/test",
             "publishDate" => null,
             "published" => true,
-            "raw" => "---\ntitle: 'Test page'\ncustom_field: WORLD\ntaxonomy:\n  taxonomyKey1: taxonomyValue1\n  taxonomyKey2: [taxonomyValue2, taxonomyValue3]\n---\n\n# Hello {{custom_field}}! This is a test.\n",
+            "raw" => "---\ntitle: 'Test page'\ncustom_field: WORLD\ntaxonomy:\n    category: blog\n    tag: [news, grav]\n---\n\n# Hello {{custom_field}}! This is a test.\n",
             "rawMarkdown" => "# Hello {{custom_field}}! This is a test.\n",
             "rawRoute" => "/test",
             "root" => false,
@@ -140,12 +140,12 @@ final class PageResourceTest extends Test
             "slug" => "test",
             "summary" => "<h1>Hello {{custom_field}}! This is a test.</h1>",
             "taxonomy" => [
-                "taxonomyKey1" => [
-                    "taxonomyValue1"
+                "category" => [
+                    "blog"
                 ],
-                "taxonomyKey2" => [
-                    "taxonomyValue2",
-                    "taxonomyValue3"
+                "tag" => [
+                    "news",
+                    "grav"
                 ]
             ],
             "template" => "default",

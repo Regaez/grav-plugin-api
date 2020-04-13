@@ -34,6 +34,12 @@ class ArrayHelper
         return $current;
     }
 
+    /**
+     * Filters an array so it only contains values which are strings
+     *
+     * @param mixed[] $array
+     * @return string[]
+     */
     public static function asStringArray(array $array)
     {
         $filteredArray = [];

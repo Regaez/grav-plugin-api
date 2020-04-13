@@ -18,3 +18,49 @@ siteadmin:
       login: true
     site:
       login: true
+bloggers:
+  readableName: Bloggers
+  description: 'The group of blog authors'
+  icon: child
+  access:
+    api:
+      pages_advanced_access: true
+    admin:
+      login: true
+    site:
+      login: true
+  api:
+    advanced_access:
+      pages:
+        get:
+          taxonomy:
+            category:
+              - blog
+        patch:
+          taxonomy:
+            category:
+              - blog
+        post:
+          routes:
+            - /blog/*
+        delete:
+          taxonomy:
+            category:
+              - blog
+testers:
+  readableName: Testers
+  description: 'The group of route /test'
+  icon: child
+  access:
+    api:
+      pages_advanced_access: true
+    admin:
+      login: true
+    site:
+      login: true
+  api:
+    advanced_access:
+      pages:
+        get:
+          routes:
+            - /test

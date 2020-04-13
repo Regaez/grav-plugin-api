@@ -2,9 +2,10 @@
 namespace GravApi\Middlewares;
 
 use Grav\Common\Grav;
-use GravApi\Config\Constants;
 use GravApi\Config\Method;
+use GravApi\Helpers\AuthHelper;
 use GravApi\Responses\Response;
+use Grav\Common\User\Interfaces\UserInterface;
 
 /**
  * Class AuthMiddleware
@@ -30,40 +31,48 @@ class AuthMiddleware
     {
         $this->config = $config;
         $this->grav = Grav::instance();
-
-        // These are default roles which allow for a user
-        // to use any part of the API
-        $defaultRoles = ['admin.super', Constants::ROLE_SUPER];
-
-        $this->roles = array_merge($defaultRoles, $roles);
+        $this->roles = $roles;
     }
 
     /**
-     * @param  \Psr\Http\Message\ServerRequestInterface $request  PSR7 request
-     * @param  \Psr\Http\Message\ResponseInterface      $response PSR7 response
-     * @param  callable                                 $next     Next middleware
+     * @param  \Slim\Http\Request $request  PSR7 request
+     * @param  \Slim\Http\Response $response PSR7 response
+     * @param  callable $next Next middleware
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Slim\Http\Response
      */
     public function __invoke($request, $response, $next)
     {
         if ($this->config->useAuth) {
             // We try to get the user from the session
+
+            /** @var UserInterface */
             $sessionUser = $this->grav['session']->user;
 
             if ($sessionUser) {
                 // Check if the session user has the required roles
-                if (!$this->checkRoles($sessionUser)) {
+                if (!AuthHelper::checkRoles($sessionUser, $this->roles)) {
                     return $response->withJson(Response::unauthorized(), 401);
                 }
+
+                // Authorisation has now passed for session auth,
+                // so we decorate the request with the user
+                $request = $request->withAttribute('user', $sessionUser);
             } else {
                 // Otherwise we check credentials from Basic auth
                 $authUser = implode(' ', $request->getHeader('PHP_AUTH_USER')) ?: '';
                 $authPass = implode(' ', $request->getHeader('PHP_AUTH_PW')) ?: '';
 
-                if (!$this->isAuthorised($authUser, $authPass)) {
+                /** @var UserInterface */
+                $user = $this->isAuthorised($authUser, $authPass);
+
+                if (!$user) {
                     return $response->withJson(Response::unauthorized(), 401);
                 }
+
+                // Authorisation has now passed for Basic auth,
+                // so we decorate the request with the user
+                $request = $request->withAttribute('user', $user);
             }
         }
 
@@ -76,7 +85,7 @@ class AuthMiddleware
      * Authenticate against specified Grav user
      * @param  string $username
      * @param  string $password
-     * @return bool
+     * @return bool|User
      */
     public function isAuthorised($username, $password)
     {
@@ -86,26 +95,11 @@ class AuthMiddleware
         if ($isAuthenticated) {
             $user->authenticated = true;
 
-            if ($this->checkRoles($user)) {
-                return true;
+            if (AuthHelper::checkRoles($user, $this->roles)) {
+                return $user;
             }
         }
 
-        return false;
-    }
-
-    /**
-     * Checks if the user has any of the required roles
-     * @param  \Grav\Common\User\User $user
-     * @return bool
-     */
-    public function checkRoles($user)
-    {
-        foreach ($this->roles as $role) {
-            if ($user->authorize($role)) {
-                return true;
-            }
-        }
         return false;
     }
 }
