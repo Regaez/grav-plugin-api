@@ -31,7 +31,7 @@ api:
             - blog
       delete:
         routes:
-          - /test
+          - /test/*
         taxonomy:
           category:
             - blog
