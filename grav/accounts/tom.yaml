@@ -16,9 +16,15 @@ api:
       get:
         routes:
           - /typography
+          - /test/*
         taxonomy:
           category:
-            - blog
+            - news
+          tag:
+            - grav
+      post:
+        routes:
+          - /test/*
       patch:
         taxonomy:
           category:

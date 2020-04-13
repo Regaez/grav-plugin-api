@@ -19,7 +19,7 @@ class TaxonomyHelper
         $result = array();
 
         foreach (array_merge_recursive($a, $b) as $key => $value) {
-            $result[$key] = array_unique($value);
+            $result[$key] = array_values(array_unique($value));
         }
 
         return $result;

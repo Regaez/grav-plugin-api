@@ -3,5 +3,5 @@ fullname: Groupie Greg
 title: Permissions Tester
 state: enabled
 groups:
-  - blogger
+  - bloggers
 hashed_password: $2y$10$aIw9wIWgj6bVuOk.sGRgw.TSZFOkIFmteDOLUFNj5Uka4ugxp5cTu

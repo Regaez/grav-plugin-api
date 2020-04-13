@@ -112,7 +112,7 @@ class AuthHelper
             return array();
         }
 
-        return $user->get("api.advanced_access.pages.{$method}.routes", []);
+        return (array) $user->get("api.advanced_access.pages.{$method}.routes", []);
     }
 
     /**
@@ -128,7 +128,7 @@ class AuthHelper
             return array();
         }
 
-        return $user->get("api.advanced_access.pages.{$method}.taxonomy", []);
+        return (array) $user->get("api.advanced_access.pages.{$method}.taxonomy", []);
     }
 
     /**
@@ -143,7 +143,7 @@ class AuthHelper
         /** @var Config */
         $config = Grav::instance()['config'];
 
-        return $config->get("groups.{$group}.api.advanced_access.pages.{$method}.routes", []);
+        return (array) $config->get("groups.{$group}.api.advanced_access.pages.{$method}.routes", []);
     }
 
     /**
@@ -158,7 +158,7 @@ class AuthHelper
         /** @var Config */
         $config = Grav::instance()['config'];
 
-        return $config->get("groups.{$group}.api.advanced_access.pages.{$method}.taxonomy", []);
+        return (array) $config->get("groups.{$group}.api.advanced_access.pages.{$method}.taxonomy", []);
     }
 
     /**
@@ -171,7 +171,7 @@ class AuthHelper
      * @param string[] $routes An array of accessible routes
      * @return bool
      */
-    public static function hasMatchingRoute($route, $routes)
+    public static function hasMatchingRoute($route, array $routes)
     {
         foreach ($routes as $r) {
             // Check the route for the "any descendent" wildcard

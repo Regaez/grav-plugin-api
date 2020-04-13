@@ -47,3 +47,20 @@ bloggers:
           taxonomy:
             category:
               - blog
+testers:
+  readableName: Testers
+  description: 'The group of route /test'
+  icon: child
+  access:
+    api:
+      pages_advanced_access: true
+    admin:
+      login: true
+    site:
+      login: true
+  api:
+    advanced_access:
+      pages:
+        get:
+          routes:
+            - /test
