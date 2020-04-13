@@ -27,7 +27,7 @@ form:
               label: PLUGIN_ADMIN.TAXONOMY
               # HACKY WORKAROUND TO POPULATE FIELD WITH USER DATA
               data-default@:
-                - '\GravApi\Helpers\TaxonomyHelper::getUserTaxonomy'
+                - '\GravApi\Helpers\BlueprintHelper::getUserTaxonomy'
                 - 'get'
               multiple: true
               validate:
@@ -50,7 +50,7 @@ form:
               label: PLUGIN_ADMIN.TAXONOMY
               # HACKY WORKAROUND TO POPULATE FIELD WITH USER DATA
               data-default@:
-                - '\GravApi\Helpers\TaxonomyHelper::getUserTaxonomy'
+                - '\GravApi\Helpers\BlueprintHelper::getUserTaxonomy'
                 - 'patch'
               multiple: true
               validate:
@@ -86,7 +86,7 @@ form:
               label: PLUGIN_ADMIN.TAXONOMY
               # HACKY WORKAROUND TO POPULATE FIELD WITH USER DATA
               data-default@:
-                - '\GravApi\Helpers\TaxonomyHelper::getUserTaxonomy'
+                - '\GravApi\Helpers\BlueprintHelper::getUserTaxonomy'
                 - 'delete'
               multiple: true
               validate:
