@@ -49,29 +49,26 @@ class AuthHelper
      */
     public static function hasPageAccess($user, $page, $method)
     {
-        /** @var Config */
-        $config = Grav::instance()['config'];
-        $groups = (array) $user->get('groups');
+        if (!$user) {
+            return false;
+        }
 
-        foreach ($groups as $group) {
-            // Check user's groups routes against page route
-            $routes = $config->get("groups.{$group}.api.advanced_access.pages.{$method}.routes", []);
-
+        // First we check inherited permissions from the user's groups
+        foreach ((array) $user->get('groups') as $group) {
+            // Check user's group routes against page route
             $hasMatchingRoute = self::hasMatchingRoute(
                 $page->route(),
-                $routes
+                self::getGroupRoutes($group, $method)
             );
 
             if ($hasMatchingRoute) {
                 return true;
             }
 
-            // Check user's groups against the page's taxonomies
-            $taxonomies = $config->get("groups.{$group}.api.advanced_access.pages.{$method}.taxonomy", []);
-
+            // Check user's group taxonomy against the page's taxonomies
             $hasTaxonomyIntersect = TaxonomyHelper::hasIntersect(
                 $page->taxonomy(),
-                $taxonomies
+                self::getGroupTaxonomy($group, $method)
             );
 
             if ($hasTaxonomyIntersect) {
@@ -88,7 +85,6 @@ class AuthHelper
         if ($hasMatchingRoute) {
             return true;
         }
-
 
         // Check user against the page's taxonomies
         $hasTaxonomyIntersect = TaxonomyHelper::hasIntersect(
@@ -107,11 +103,15 @@ class AuthHelper
      * Returns an array of routes this user can access.
      *
      * @param UserInterface $user
-     * @param string $method
+     * @param string $method The HTTP method
      * @return string[] If no routes configured, an empty array will be returned.
      */
     public static function getUserRoutes($user, $method)
     {
+        if (!$user) {
+            return array();
+        }
+
         return $user->get("api.advanced_access.pages.{$method}.routes", []);
     }
 
@@ -119,12 +119,46 @@ class AuthHelper
      * Returns an array of taxonomies this user can access.
      *
      * @param UserInterface $user
-     * @param string $method
-     * @return string[] If no taxonomies are configured, an empty array will be returned.
+     * @param string $method The HTTP method
+     * @return array If no taxonomies are configured, an empty array will be returned.
      */
     public static function getUserTaxonomy($user, $method)
     {
+        if (!$user) {
+            return array();
+        }
+
         return $user->get("api.advanced_access.pages.{$method}.taxonomy", []);
+    }
+
+    /**
+     * Returns an array of routes this group can access.
+     *
+     * @param string $group The name of the group
+     * @param string $method The HTTP method
+     * @return string[] If no routes are configured, an empty array will be returned.
+     */
+    public static function getGroupRoutes($group, $method)
+    {
+        /** @var Config */
+        $config = Grav::instance()['config'];
+
+        return $config->get("groups.{$group}.api.advanced_access.pages.{$method}.routes", []);
+    }
+
+    /**
+     * Returns an array of taxonomies this user can access.
+     *
+     * @param string $group The name of the group
+     * @param string $method The HTTP method
+     * @return array If no taxonomies are configured, an empty array will be returned.
+     */
+    public static function getGroupTaxonomy($group, $method)
+    {
+        /** @var Config */
+        $config = Grav::instance()['config'];
+
+        return $config->get("groups.{$group}.api.advanced_access.pages.{$method}.taxonomy", []);
     }
 
     /**
@@ -166,40 +200,42 @@ class AuthHelper
      */
     public static function getCollectionParams($user)
     {
+        if (!$user) {
+            return array();
+        }
+
         $items = [];
+        $routes = [];
+        $taxonomies = [];
 
         // Currently the function is only called by `getPages`, but could make this a parameter if necessary
         $method = Constants::METHOD_GET;
 
-        /** @var Config */
-        $config = Grav::instance()['config'];
-
-        $groups = (array) $user->get('groups');
-
-        $routes = [];
-        $taxonomies = [];
-
-        foreach ($groups as $group) {
-            $groupRoutes = $config->get("groups.{$group}.api.advanced_access.pages.{$method}.routes", []);
+        // Gather user's group permissions
+        foreach ((array) $user->get('groups') as $group) {
+            // Get routes from user's group
+            $groupRoutes = self::getGroupRoutes($group, $method);
             $routes = array_merge($routes, $groupRoutes);
 
-            // Check user's groups against the page's taxonomies
+            // Get taxonomies from user's group
             $taxonomies = TaxonomyHelper::merge(
                 $taxonomies,
-                $config->get("groups.{$group}.api.advanced_access.pages.{$method}.taxonomy", [])
+                self::getGroupTaxonomy($group, $method)
             );
         }
 
+        // Gather user's individual permissions
         $routes = array_merge(
             $routes,
-            $user->get("api.advanced_access.pages.{$method}.routes", [])
+            self::getUserRoutes($user, $method)
         );
 
         $taxonomies = TaxonomyHelper::merge(
             $taxonomies,
-            $user->get("api.advanced_access.pages.{$method}.taxonomy", [])
+            self::getUserTaxonomy($user, $method)
         );
 
+        // Convert routes to Collection params items value
         foreach (array_unique($routes) as $r) {
             if (preg_match(Constants::REGEX_DESCENDANT_WILDCARD, $r)) {
                 $items['@page.descendants'] = preg_replace(Constants::REGEX_DESCENDANT_WILDCARD, '', $r);
@@ -208,6 +244,7 @@ class AuthHelper
             }
         }
 
+        // Add any taxonomy values as Collection items param
         if (count($taxonomies) > 0) {
             $items['@taxonomy'] = $taxonomies;
         }
