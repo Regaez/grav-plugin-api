@@ -136,5 +136,5 @@ class Constants
         Constants::EVENT_ON_API_PLUGIN_GET,
         Constants::EVENT_ON_API_PLUGIN_UPDATE,
         Constants::EVENT_ON_API_UNAUTHORIZED_REQUEST
-    ]
+    ];
 }
