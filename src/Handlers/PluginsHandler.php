@@ -21,6 +21,8 @@ class PluginsHandler extends BaseHandler
 
         $resource = new PluginCollectionResource($plugins);
 
+        $this->grav->fireEvent(Constants::EVENT_ON_API_PLUGIN_GET_ALL, new Event(['plugins' => $plugins]));
+
         return $response->withJson($resource->toJson());
     }
 
@@ -34,6 +36,9 @@ class PluginsHandler extends BaseHandler
         }
 
         $resource = new PluginResource($plugin);
+
+        $this->grav->fireEvent(Constants::EVENT_ON_API_PLUGIN_GET, new Event(['plugin' => $plugin]));
+
         return $response->withJson($resource->toJson());
     }
 
@@ -76,6 +81,9 @@ class PluginsHandler extends BaseHandler
         $plugin = PluginHelper::find($args['plugin']);
 
         $resource = new PluginResource($plugin);
+
+        $this->grav->fireEvent(Constants::EVENT_ON_API_PLUGIN_UPDATE, new Event(['plugin' => $plugin]));
+
         return $response->withJson($resource->toJson());
     }
 }

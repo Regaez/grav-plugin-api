@@ -18,6 +18,8 @@ class ConfigHandler extends BaseHandler
 
         $resource = new ConfigCollectionResource($configs);
 
+        $this->grav->fireEvent(Constants::EVENT_ON_API_CONFIG_GET_ALL, new Event(['configs' => $configs]));
+
         return $response->withJson($resource->toJson());
     }
 
@@ -36,6 +38,8 @@ class ConfigHandler extends BaseHandler
         }
 
         $resource = new ConfigResource($config);
+
+        $this->grav->fireEvent(Constants::EVENT_ON_API_CONFIG_GET, new Event(['config' => $config]));
 
         return $response->withJson($resource->toJson());
     }

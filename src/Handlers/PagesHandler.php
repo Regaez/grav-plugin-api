@@ -13,6 +13,7 @@ use GravApi\Helpers\AuthHelper;
 use GravApi\Config\Config;
 use GravApi\Config\Constants;
 use GravApi\Helpers\TaxonomyHelper;
+use RocketTheme\Toolbox\Event\Event;
 
 /**
  * Class PagesHandler
@@ -48,6 +49,8 @@ class PagesHandler extends BaseHandler
         }
 
         $resource = new PageCollectionResource($collection);
+
+        $this->grav->fireEvent(Constants::EVENT_ON_API_PAGE_GET_ALL, new Event(['pages' => $collection]));
 
         return $response->withJson($resource->toJson());
     }
@@ -86,12 +89,15 @@ class PagesHandler extends BaseHandler
                 $hasPageAccess = AuthHelper::hasPageAccess($user, $page, Constants::METHOD_GET);
 
                 if (!$hasPageAccess) {
+                    $this->grav->fireEvent(Constants::EVENT_ON_API_UNAUTHORIZED_REQUEST, new Event(['route' => $route]));
                     return $response->withJson(Response::unauthorized(), 401);
                 }
             }
         }
 
         $resource = new PageResource($page);
+
+        $this->grav->fireEvent(Constants::EVENT_ON_API_PAGE_GET, new Event(['page' => $page]));
 
         return $response->withJson($resource->toJson());
     }
@@ -104,6 +110,8 @@ class PagesHandler extends BaseHandler
         $collection = $this->grav['taxonomy']->findTaxonomy($filter, strtolower($operation));
 
         $resource = new PageCollectionResource($collection);
+
+        $this->grav->fireEvent(Constants::EVENT_ON_API_PAGE_FIND, new Event(['collection' => $collection]));
 
         return $response->withJson($resource->toJson());
     }
@@ -134,6 +142,7 @@ class PagesHandler extends BaseHandler
                 $canCreateRoute = AuthHelper::hasMatchingRoute($route, $userRoutes);
 
                 if (!$canCreateRoute) {
+                    $this->grav->fireEvent(Constants::EVENT_ON_API_UNAUTHORIZED_REQUEST, new Event(['route' => $route]));
                     return $response->withJson(Response::unauthorized(), 401);
                 }
             }
@@ -193,6 +202,8 @@ class PagesHandler extends BaseHandler
         // Use our resource to return the filtered page
         $resource = new PageResource($page);
 
+        $this->grav->fireEvent(Constants::EVENT_ON_API_PAGE_CREATE, new Event(['page' => $page]));
+
         return $response->withJson($resource->toJson());
     }
 
@@ -222,6 +233,7 @@ class PagesHandler extends BaseHandler
                 $hasPageAccess = AuthHelper::hasPageAccess($user, $page, Constants::METHOD_DELETE);
 
                 if (!$hasPageAccess) {
+                    $this->grav->fireEvent(Constants::EVENT_ON_API_UNAUTHORIZED_REQUEST, new Event(['route' => $route]));
                     return $response->withJson(Response::unauthorized(), 401);
                 }
             }
@@ -263,6 +275,8 @@ class PagesHandler extends BaseHandler
             }
         }
 
+        $this->grav->fireEvent(Constants::EVENT_ON_API_PAGE_DELETE, new Event(['page' => $page]));
+
         return $response->withStatus(204);
     }
 
@@ -292,6 +306,7 @@ class PagesHandler extends BaseHandler
                 $hasPageAccess = AuthHelper::hasPageAccess($user, $page, Constants::METHOD_PATCH);
 
                 if (!$hasPageAccess) {
+                    $this->grav->fireEvent(Constants::EVENT_ON_API_UNAUTHORIZED_REQUEST, new Event(['route' => $route]));
                     return $response->withJson(Response::unauthorized(), 401);
                 }
             }
@@ -359,6 +374,8 @@ class PagesHandler extends BaseHandler
 
         // Use our resource to return the updated page
         $resource = new PageResource($page);
+
+        $this->grav->fireEvent(Constants::EVENT_ON_API_PAGE_UPDATE, new Event(['page' => $page]));
 
         return $response->withJson($resource->toJson());
     }
