@@ -79,37 +79,6 @@
 					"response": []
 				},
 				{
-					"name": "Find Pages",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"taxonomyFilter\": {\n        \"taxonomyKey1\": [\"taxonomyValue1\"]\n    },\n    \"operation\": \"or\"\n}"
-						},
-						"url": {
-							"raw": "localhost:8080/api/pages/searches",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"pages",
-								"searches"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Create Page",
 					"request": {
 						"method": "POST",
