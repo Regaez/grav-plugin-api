@@ -5,6 +5,7 @@ use GravApi\Responses\Response;
 use GravApi\Helpers\ConfigHelper;
 use GravApi\Resources\ConfigResource;
 use GravApi\Resources\ConfigCollectionResource;
+use RocketTheme\Toolbox\Event\Event;
 
 /**
  * Class ConfigHandler

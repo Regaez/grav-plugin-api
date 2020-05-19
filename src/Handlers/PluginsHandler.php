@@ -8,6 +8,7 @@ use GravApi\Helpers\ArrayHelper;
 use GravApi\Helpers\PluginHelper;
 use Grav\Common\Data\ValidationException;
 use RocketTheme\Toolbox\File\YamlFile;
+use RocketTheme\Toolbox\Event\Event;
 
 /**
  * Class PluginsHandler
