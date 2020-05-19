@@ -1,0 +1,66 @@
+siteadmin:
+  readableName: Site Administrators
+  description: 'The group of site administrators'
+  icon: child
+  access:
+    api:
+      users_read: true
+      users_delete: true
+      users_create: true
+      users_edit: true
+      plugins_read: true
+      plugins_edit: true
+      plugins_install: true
+      plugins_uninstall: true
+      configs_read: true
+      configs_edit: true
+    admin:
+      login: true
+    site:
+      login: true
+bloggers:
+  readableName: Bloggers
+  description: 'The group of blog authors'
+  icon: child
+  access:
+    api:
+      pages_advanced_access: true
+    admin:
+      login: true
+    site:
+      login: true
+  api:
+    advanced_access:
+      pages:
+        get:
+          taxonomy:
+            category:
+              - blog
+        patch:
+          taxonomy:
+            category:
+              - blog
+        post:
+          routes:
+            - /blog/*
+        delete:
+          taxonomy:
+            category:
+              - blog
+testers:
+  readableName: Testers
+  description: 'The group of route /test'
+  icon: child
+  access:
+    api:
+      pages_advanced_access: true
+    admin:
+      login: true
+    site:
+      login: true
+  api:
+    advanced_access:
+      pages:
+        get:
+          routes:
+            - /test

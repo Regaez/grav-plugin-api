@@ -1,0 +1,26 @@
+email: joe@email.com
+fullname: No-Go Joe
+title: Permissions Tester
+state: enabled
+access:
+  api:
+    pages_read: false
+    pages_delete: false
+    pages_edit: false
+    pages_create: false
+    users_read: false
+    users_delete: false
+    users_create: false
+    users_edit: false
+    plugins_read: false
+    plugins_edit: false
+    plugins_install: false
+    plugins_uninstall: false
+    configs_read: false
+    configs_edit: false
+  admin:
+    super: false
+    login: true
+  site:
+    login: true
+hashed_password: $2y$10$aIw9wIWgj6bVuOk.sGRgw.TSZFOkIFmteDOLUFNj5Uka4ugxp5cTu

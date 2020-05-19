@@ -19,14 +19,14 @@ class UsersHandler extends BaseHandler
     {
         $users = [];
 
-        $files = (array) glob($this->grav['locator']->findResource("account://") . '/*.yaml');
+        $files = (array) glob($this->grav['locator']->findResource("account://") . '/*' . YAML_EXT);
 
         if (!$files) {
             return $response->withJson(Response::notFound(), 404);
         }
 
         foreach ($files as $file) {
-            $username = basename($file, '.yaml');
+            $username = basename($file, YAML_EXT);
             $users[] = $this->grav['accounts']->load($username);
         }
 
@@ -101,6 +101,10 @@ class UsersHandler extends BaseHandler
         $data['access'] = !empty($parsedBody['access'])
             ? $parsedBody['access']
             : ['site' => ['login' => true]];
+
+        $data['groups'] = isset($parsedBody['groups'])
+            ? $parsedBody['groups']
+            : [];
 
         $user = $this->createUser($username, $data);
 

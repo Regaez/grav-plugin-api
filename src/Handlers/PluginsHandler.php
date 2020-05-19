@@ -4,6 +4,10 @@ namespace GravApi\Handlers;
 use GravApi\Responses\Response;
 use GravApi\Resources\PluginResource;
 use GravApi\Resources\PluginCollectionResource;
+use GravApi\Helpers\ArrayHelper;
+use GravApi\Helpers\PluginHelper;
+use Grav\Common\Data\ValidationException;
+use RocketTheme\Toolbox\File\YamlFile;
 
 /**
  * Class PluginsHandler
@@ -22,15 +26,56 @@ class PluginsHandler extends BaseHandler
 
     public function getPlugin($request, $response, $args)
     {
-        // Check all plugins against requested plugin id
-        foreach ($this->grav['plugins'] as $p) {
-            if ($p->name === $args['plugin']) {
-                $resource = new PluginResource($p);
-                return $response->withJson($resource->toJson());
-            }
-        }
+        $plugin = PluginHelper::find($args['plugin']);
 
         // If no matching plugin is found
-        return $response->withJson(Response::notFound(), 404);
+        if (!$plugin) {
+            return $response->withJson(Response::notFound(), 404);
+        }
+
+        $resource = new PluginResource($plugin);
+        return $response->withJson($resource->toJson());
+    }
+
+    public function updatePlugin($request, $response, $args)
+    {
+        $plugin = PluginHelper::find($args['plugin']);
+
+        // If no matching plugin is found
+        if (!$plugin) {
+            return $response->withJson(Response::notFound(), 404);
+        }
+
+        $parsedBody = $request->getParsedBody();
+
+        try {
+            // Merge the existing config with the new settings
+            $config = ArrayHelper::merge(
+                $plugin->config(),
+                $parsedBody
+            );
+            // Validate the config against the plugin blueprint
+            $plugin->getBlueprint()->validate($config);
+        } catch (ValidationException $e) {
+            return $response->withJson(
+                Response::badRequest($e->getMessage()),
+                400
+            );
+        }
+
+        // Save the updates to file
+        $filename = 'config://plugins/' . $plugin->name . '.yaml';
+        $file = YamlFile::instance(
+            $this->grav['locator']->findResource($filename, true, true)
+        );
+        $file->save($config);
+        $file->free();
+
+        // Reload the site config after changes are saved
+        $this->grav['config']->reload();
+        $plugin = PluginHelper::find($args['plugin']);
+
+        $resource = new PluginResource($plugin);
+        return $response->withJson($resource->toJson());
     }
 }

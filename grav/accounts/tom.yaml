@@ -1,0 +1,38 @@
+email: tom@email.com
+fullname: Taxonomy Tom
+title: Permissions Tester
+state: enabled
+access:
+  api:
+    pages_advanced_access: true
+  admin:
+    super: false
+    login: true
+  site:
+    login: true
+api:
+  advanced_access:
+    pages:
+      get:
+        routes:
+          - /typography
+          - /test/*
+        taxonomy:
+          category:
+            - news
+          tag:
+            - grav
+      post:
+        routes:
+          - /test/*
+      patch:
+        taxonomy:
+          category:
+            - blog
+      delete:
+        routes:
+          - /test/*
+        taxonomy:
+          category:
+            - blog
+hashed_password: $2y$10$aIw9wIWgj6bVuOk.sGRgw.TSZFOkIFmteDOLUFNj5Uka4ugxp5cTu

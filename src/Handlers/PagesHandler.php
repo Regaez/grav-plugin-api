@@ -1,12 +1,18 @@
 <?php
 namespace GravApi\Handlers;
 
+use Grav\Common\Page\Page;
+use Grav\Common\Page\Collection;
 use Grav\Common\Filesystem\Folder;
 use GravApi\Responses\Response;
 use GravApi\Resources\PageResource;
 use GravApi\Resources\PageCollectionResource;
 use GravApi\Helpers\PageHelper;
 use GravApi\Helpers\ArrayHelper;
+use GravApi\Helpers\AuthHelper;
+use GravApi\Config\Config;
+use GravApi\Config\Constants;
+use GravApi\Helpers\TaxonomyHelper;
 
 /**
  * Class PagesHandler
@@ -16,13 +22,44 @@ class PagesHandler extends BaseHandler
 {
     public function getPages($request, $response, $args)
     {
+        /**
+         * By default, we set the collection to be all pages
+         * @var Collection
+         */
         $collection = $this->grav['pages']->all();
+
+        if (Config::instance()->pages->get->useAuth) {
+
+            /** @var UserInterface */
+            $user = $request->getAttribute('user');
+
+            // Check if user has a role which allows any page access
+            $hasPermission = AuthHelper::checkRoles($user, [Constants::ROLE_PAGES_READ]);
+
+            if (!$hasPermission) {
+                /** @var Page */
+                $page = $this->grav['page'];
+
+                $collection = $page->evaluate(
+                    AuthHelper::getCollectionParams($user),
+                    false // also return non-published pages
+                );
+            }
+        }
 
         $resource = new PageCollectionResource($collection);
 
         return $response->withJson($resource->toJson());
     }
 
+    /**
+     * Request handler to return a single page
+     *
+     * @param \Slim\Http\Request $request
+     * @param \Slim\Http\Response $response
+     * @param array $args
+     * @return \Slim\Http\Response
+     */
     public function getPage($request, $response, $args)
     {
         if (!isset($args['page'])) {
@@ -34,6 +71,24 @@ class PagesHandler extends BaseHandler
 
         if (!$page) {
             return $response->withJson(Response::notFound(), 404);
+        }
+
+        if (Config::instance()->pages->get->useAuth) {
+
+            /** @var UserInterface */
+            $user = $request->getAttribute('user');
+
+            // Check if user has a role which allows any page access
+            $hasPermission = AuthHelper::checkRoles($user, [Constants::ROLE_PAGES_READ]);
+
+            if (!$hasPermission) {
+                // Check user's advanced API access permissions
+                $hasPageAccess = AuthHelper::hasPageAccess($user, $page, Constants::METHOD_GET);
+
+                if (!$hasPageAccess) {
+                    return $response->withJson(Response::unauthorized(), 401);
+                }
+            }
         }
 
         $resource = new PageResource($page);
@@ -62,6 +117,28 @@ class PagesHandler extends BaseHandler
         }
 
         $route = $parsedBody['route'];
+
+        if (Config::instance()->pages->post->useAuth) {
+
+            /** @var UserInterface */
+            $user = $request->getAttribute('user');
+
+            // Check if user has a role which allows creating any page
+            $hasPermission = AuthHelper::checkRoles($user, [Constants::ROLE_PAGES_CREATE]);
+
+            if (!$hasPermission) {
+                // Get all the routes the user is allowed to create
+                $userRoutes = AuthHelper::getUserRoutes($user, Constants::METHOD_POST);
+
+                // Check user's advanced API access permissions
+                $canCreateRoute = AuthHelper::hasMatchingRoute($route, $userRoutes);
+
+                if (!$canCreateRoute) {
+                    return $response->withJson(Response::unauthorized(), 401);
+                }
+            }
+        }
+
         $existingPage = $this->grav['pages']->find($route);
 
         // if existingPage is a directory, we can still create a file, so check if isPage
@@ -97,6 +174,13 @@ class PagesHandler extends BaseHandler
                 $page->content($parsedBody['content']);
             }
 
+            if (!empty($parsedBody['order'])) {
+                // Move the page we just initialised with PageHelper
+                // so that we can set the desired page order
+                $page->move($page->parent());
+                $page->order($parsedBody['order']);
+            }
+
             // Save the page with the new header/content fields
             $page->save();
         } catch (\Exception $e) {
@@ -123,6 +207,24 @@ class PagesHandler extends BaseHandler
 
         if (!$page || !$page->exists()) {
             return $response->withJson(Response::notFound(), 404);
+        }
+
+        if (Config::instance()->pages->delete->useAuth) {
+
+            /** @var UserInterface */
+            $user = $request->getAttribute('user');
+
+            // Check if user has a role which allows any page access
+            $hasPermission = AuthHelper::checkRoles($user, [Constants::ROLE_PAGES_DELETE]);
+
+            if (!$hasPermission) {
+                // Check user's advanced API access permissions
+                $hasPageAccess = AuthHelper::hasPageAccess($user, $page, Constants::METHOD_DELETE);
+
+                if (!$hasPageAccess) {
+                    return $response->withJson(Response::unauthorized(), 401);
+                }
+            }
         }
 
         // if the requested route has non-modular children,
@@ -177,6 +279,24 @@ class PagesHandler extends BaseHandler
             return $response->withJson(Response::notFound(), 404);
         }
 
+        if (Config::instance()->pages->patch->useAuth) {
+
+            /** @var UserInterface */
+            $user = $request->getAttribute('user');
+
+            // Check if user has a role which allows any page access
+            $hasPermission = AuthHelper::checkRoles($user, [Constants::ROLE_PAGES_EDIT]);
+
+            if (!$hasPermission) {
+                // Check user's advanced API access permissions
+                $hasPageAccess = AuthHelper::hasPageAccess($user, $page, Constants::METHOD_PATCH);
+
+                if (!$hasPageAccess) {
+                    return $response->withJson(Response::unauthorized(), 401);
+                }
+            }
+        }
+
         $parsedBody = $request->getParsedBody();
 
         $template = isset($parsedBody['template'])
@@ -223,6 +343,14 @@ class PagesHandler extends BaseHandler
 
             // sets the file to use our new template
             $page->name($helper->getFilename());
+        }
+
+        // We need to be able to pass `false` to remove page order
+        if (isset($parsedBody['order'])) {
+            // We have to "move" the page, otherwise
+            // the old page order folder will remain
+            $page->move($page->parent());
+            $page->order($parsedBody['order']);
         }
 
         // save the changes to the file

@@ -10,7 +10,9 @@
             "request": "launch",
             "port": 9073,
             "pathMappings": {
-              "/var/www/html/user/plugins/api": "${workspaceFolder}"
+              "/var/www/html/user/plugins/api": "${workspaceFolder}",
+              "/var/www/html/system": "${workspaceFolder}/vendor/getgrav/grav/system",
+              "/var/www/html/vendor": "${workspaceFolder}/vendor",
             },
             "log": true,
             "xdebugSettings": {
@@ -23,14 +25,6 @@
             "ignore": [
               "${workspaceFolder}/vendor/**/*.php"
             ]
-        },
-        {
-            "name": "Launch currently open script",
-            "type": "php",
-            "request": "launch",
-            "program": "${file}",
-            "cwd": "${fileDirname}",
-            "port": 9073
         }
     ]
 }

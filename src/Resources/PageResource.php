@@ -343,6 +343,29 @@ class PageResource extends Resource
     }
 
     /**
+     * We process the header to return a stricter respresentation of the taxonomy (all arrays, all strings).
+     *
+     * @return array
+     */
+    public function processHeader()
+    {
+        $header = $this->resource->header();
+        if (property_exists($header, 'taxonomy') && !is_null($header->taxonomy)) {
+            foreach ($header->taxonomy as $key => $value) {
+                if (!is_array($value)) {
+                    $header->taxonomy[$key] = array(is_string($value) ? $value : json_encode($value));
+                } else {
+                    $header->taxonomy[$key] = array_map(function ($e) {
+                        return is_string($e) ? $e : json_encode($e);
+                    }, $header->taxonomy[$key]);
+                }
+            }
+        }
+
+        return $header;
+    }
+
+    /**
      * Sets a filter for the list of attributes based on the
      * API plugin's config setting.
 

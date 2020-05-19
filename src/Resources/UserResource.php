@@ -61,7 +61,8 @@ class UserResource extends Resource
             'fullname' => $this->resource->get('fullname'),
             'title' => $this->resource->get('title'),
             'state' => $this->resource->get('state'),
-            'access' => $this->resource->get('access')
+            'access' => $this->resource->get('access'),
+            'groups' => $this->resource->get('groups')
         ];
 
         if ($this->filter) {

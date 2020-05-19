@@ -50,4 +50,49 @@ class Constants
         Constants::METHOD_POST,
         Constants::METHOD_DELETE
     ];
+
+    // Roles
+    const ROLE_SUPER = 'api.super';
+    const ROLE_PAGES_READ = 'api.pages_read';
+    const ROLE_PAGES_DELETE = 'api.pages_delete';
+    const ROLE_PAGES_EDIT = 'api.pages_edit';
+    const ROLE_PAGES_CREATE = 'api.pages_create';
+    const ROLE_PAGES_ADVANCED = 'api.pages_advanced_access';
+    const ROLE_USERS_READ = 'api.users_read';
+    const ROLE_USERS_DELETE = 'api.users_delete';
+    const ROLE_USERS_CREATE = 'api.users_create';
+    const ROLE_USERS_EDIT = 'api.users_edit';
+    const ROLE_PLUGINS_READ = 'api.plugins_read';
+    const ROLE_PLUGINS_EDIT = 'api.plugins_edit';
+    const ROLE_PLUGINS_INSTALL = 'api.plugins_install';
+    const ROLE_PLUGINS_UNINSTALL = 'api.plugins_uninstall';
+    const ROLE_CONFIGS_READ = 'api.configs_read';
+    const ROLE_CONFIGS_EDIT = 'api.configs_edit';
+
+    /**
+     * All available API roles
+     */
+    const ROLES = [
+        Constants::ROLE_SUPER,
+        Constants::ROLE_PAGES_READ,
+        Constants::ROLE_PAGES_DELETE,
+        Constants::ROLE_PAGES_EDIT,
+        Constants::ROLE_PAGES_CREATE,
+        Constants::ROLE_PAGES_ADVANCED,
+        Constants::ROLE_USERS_READ,
+        Constants::ROLE_USERS_DELETE,
+        Constants::ROLE_USERS_CREATE,
+        Constants::ROLE_USERS_EDIT,
+        Constants::ROLE_PLUGINS_READ,
+        Constants::ROLE_PLUGINS_EDIT,
+        Constants::ROLE_PLUGINS_INSTALL,
+        Constants::ROLE_PLUGINS_UNINSTALL,
+        Constants::ROLE_CONFIGS_READ,
+        Constants::ROLE_CONFIGS_EDIT
+    ];
+
+    /**
+     * Pattern for route matching which will allow "any descendents"
+     */
+    const REGEX_DESCENDANT_WILDCARD = '/\/\*$/';
 }

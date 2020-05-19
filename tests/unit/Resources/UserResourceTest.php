@@ -78,8 +78,12 @@ final class UserResourceTest extends Test
                 ],
                 'site' => [
                     'login' => true
+                ],
+                'api' => [
+                    'super' => true
                 ]
-            ]
+            ],
+            'groups' => null
         ];
 
         $this->assertEquals(
@@ -148,8 +152,12 @@ final class UserResourceTest extends Test
                 ],
                 'site' => [
                     'login' => true
+                ],
+                'api' => [
+                    'super' => true
                 ]
-            ]
+            ],
+            'groups' => null
         ];
 
         $expected = [
@@ -170,56 +178,86 @@ final class UserResourceTest extends Test
         );
     }
 
-    // public function testToJsonReturnsAttributesOnly(): void
-    // {
-    //     $expected = [
-    //         'username' => 'development',
-    //         'email' => 'dummy@email.com',
-    //         'fullname' => 'Development',
-    //         'title' => 'Administrator',
-    //         'state' => 'enabled',
-    //         'access' => [
-    //             'admin' => [
-    //                 'login' => true,
-    //                 'super' => true
-    //             ],
-    //             'site' => [
-    //                 'login' => true
-    //             ]
-    //         ]
-    //     ];;
+    public function testToJsonReturnsAttributesOnly(): void
+    {
+        $expected = [
+            'username' => 'development',
+            'email' => 'dummy@email.com',
+            'fullname' => 'Development',
+            'title' => 'Administrator',
+            'state' => 'enabled',
+            'access' => [
+                'admin' => [
+                    'login' => true,
+                    'super' => true
+                ],
+                'site' => [
+                    'login' => true
+                ],
+                'api' => [
+                    'super' => true
+                ]
+            ],
+            'groups' => null
+        ];
 
-    //     $this->assertEquals(
-    //         $expected,
-    //         $this->resource->toJson(true)
-    //     );
-    // }
+        $this->assertEquals(
+            $expected,
+            $this->resource->toJson(true)
+        );
+    }
 
-    // public function testSetFilterReturnsSpecificResourceFields(): void
-    // {
-    //     $this->_before(['email', 'title', 'state']);
+    public function testSetFilterReturnsSpecificResourceFields(): void
+    {
+        $this->_before(['email', 'title', 'state']);
 
-    //     $attributes = [
-    //         'email' => 'dummy@email.com',
-    //         'title' => 'Administrator',
-    //         'state' => 'enabled'
-    //     ];
+        $attributes = [
+            'email' => 'dummy@email.com',
+            'title' => 'Administrator',
+            'state' => 'enabled'
+        ];
 
-    //     $expected = [
-    //         'type' => Constants::TYPE_USER,
-    //         'id' => 'development',
-    //         'attributes' => $attributes,
-    //         'links' => [
-    //             'related' => [
-    //                 'self' => 'http://localhost/api/users/development',
-    //                 'resource' => 'http://localhost/api/users/'
-    //             ]
-    //         ]
-    //     ];
+        $expected = [
+            'type' => Constants::TYPE_USER,
+            'id' => 'development',
+            'attributes' => $attributes,
+            'links' => [
+                'related' => [
+                    'self' => 'http://localhost/api/users/development',
+                    'resource' => 'http://localhost/api/users/'
+                ]
+            ]
+        ];
 
-    //     $this->assertEquals(
-    //         $expected,
-    //         $this->resource->toJson()
-    //     );
-    // }
+        $this->assertEquals(
+            $expected,
+            $this->resource->toJson()
+        );
+    }
+
+    public function testCanReturnCustomUserFields(): void
+    {
+        $this->_before(['custom']);
+
+        $attributes = [
+            'custom' => 'this is a custom field'
+        ];
+
+        $expected = [
+            'type' => Constants::TYPE_USER,
+            'id' => 'development',
+            'attributes' => $attributes,
+            'links' => [
+                'related' => [
+                    'self' => 'http://localhost/api/users/development',
+                    'resource' => 'http://localhost/api/users/'
+                ]
+            ]
+        ];
+
+        $this->assertEquals(
+            $expected,
+            $this->resource->toJson()
+        );
+    }
 }

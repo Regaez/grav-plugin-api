@@ -11,7 +11,9 @@
     "squizlabs/php_codesniffer": "^3.4",
     "brainmaestro/composer-git-hooks": "^2.7",
     "codeception/codeception": "^2.4",
-    "overtrue/phplint": "^1.1"
+    "overtrue/phplint": "^1.1",
+    "getgrav/grav": "1.6.15",
+    "phpstan/phpstan": "^0.12.18"
   },
   "scripts": {
     "docker:clean": [
@@ -25,6 +27,7 @@
     "lint:fix": "./vendor/bin/phpcbf --colors --standard=PSR2 --encoding=utf-8 --basepath=$(pwd) ./src ./tests api.php",
     "post-install-cmd": "vendor/bin/cghooks add --ignore-lock",
     "post-update-cmd": "vendor/bin/cghooks update",
+    "stan": "vendor/bin/phpstan analyse src",
     "start": "docker-compose -f docker-compose.yaml up -d",
     "start:clean": [
       "composer stop",
