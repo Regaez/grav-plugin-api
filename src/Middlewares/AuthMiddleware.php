@@ -70,7 +70,7 @@ class AuthMiddleware
                 $user = $this->isAuthorised($authUser, $authPass);
 
                 if (!$user) {
-                    $this->grav->fireEvent(Constants::EVENT_ON_API_UNAUTHORIZED_REQUEST, new Event(['route' => $route]));
+                    $this->grav->fireEvent(Constants::EVENT_ON_API_UNAUTHORIZED_REQUEST, new Event(['user' => $sessionUser, 'roles' => $this->roles]));
                     return $response->withJson(Response::unauthorized(), 401);
                 }
 
