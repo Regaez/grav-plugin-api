@@ -187,7 +187,7 @@ class UsersHandler extends BaseHandler
 
         $user->file()->delete();
 
-        $this->grav->fireEvent(Constants::EVENT_ON_API_USER_DELETE, new Event(['user' => $user]));
+        $this->grav->fireEvent(Constants::EVENT_ON_API_USER_DELETE, new Event(['username' => $username]));
 
         return $response->withStatus(204);
     }

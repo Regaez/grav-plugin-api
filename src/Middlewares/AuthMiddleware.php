@@ -6,6 +6,8 @@ use GravApi\Config\Method;
 use GravApi\Helpers\AuthHelper;
 use GravApi\Responses\Response;
 use Grav\Common\User\Interfaces\UserInterface;
+use GravApi\Config\Constants;
+use RocketTheme\Toolbox\Event\Event;
 
 /**
  * Class AuthMiddleware
@@ -52,6 +54,7 @@ class AuthMiddleware
             if ($sessionUser) {
                 // Check if the session user has the required roles
                 if (!AuthHelper::checkRoles($sessionUser, $this->roles)) {
+                    $this->grav->fireEvent(Constants::EVENT_ON_API_UNAUTHORIZED_REQUEST, new Event(['user' => $sessionUser, 'roles' => $this->roles]));
                     return $response->withJson(Response::unauthorized(), 401);
                 }
 
@@ -67,6 +70,7 @@ class AuthMiddleware
                 $user = $this->isAuthorised($authUser, $authPass);
 
                 if (!$user) {
+                    $this->grav->fireEvent(Constants::EVENT_ON_API_UNAUTHORIZED_REQUEST, new Event(['route' => $route]));
                     return $response->withJson(Response::unauthorized(), 401);
                 }
 

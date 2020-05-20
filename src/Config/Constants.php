@@ -114,27 +114,4 @@ class Constants
     const EVENT_ON_API_PLUGIN_GET = 'onApiPluginGet';
     const EVENT_ON_API_PLUGIN_UPDATE= 'onApiPluginUpdate';
     const EVENT_ON_API_UNAUTHORIZED_REQUEST = 'onApiUnauthorisedRequest';
-
-    /**
-     * All events
-     */
-    const EVENTS = [
-        Constants::EVENT_ON_API_CONFIG_GET_ALL,
-        Constants::EVENT_ON_API_CONFIG_GET,
-        Constants::EVENT_ON_API_PAGE_GET_ALL,
-        Constants::EVENT_ON_API_PAGE_GET,
-        Constants::EVENT_ON_API_PAGE_FIND,
-        Constants::EVENT_ON_API_PAGE_CREATE,
-        Constants::EVENT_ON_API_PAGE_UPDATE,
-        Constants::EVENT_ON_API_PAGE_DELETE,
-        Constants::EVENT_ON_API_USER_GET_ALL,
-        Constants::EVENT_ON_API_USER_GET,
-        Constants::EVENT_ON_API_USER_CREATE,
-        Constants::EVENT_ON_API_USER_UPDATE,
-        Constants::EVENT_ON_API_USER_DELETE,
-        Constants::EVENT_ON_API_PLUGIN_GET_ALL,
-        Constants::EVENT_ON_API_PLUGIN_GET,
-        Constants::EVENT_ON_API_PLUGIN_UPDATE,
-        Constants::EVENT_ON_API_UNAUTHORIZED_REQUEST
-    ];
 }

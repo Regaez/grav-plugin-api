@@ -275,7 +275,7 @@ class PagesHandler extends BaseHandler
             }
         }
 
-        $this->grav->fireEvent(Constants::EVENT_ON_API_PAGE_DELETE, new Event(['page' => $page]));
+        $this->grav->fireEvent(Constants::EVENT_ON_API_PAGE_DELETE, new Event(['route' => $route]));
 
         return $response->withStatus(204);
     }
