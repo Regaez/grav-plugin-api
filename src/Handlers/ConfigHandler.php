@@ -5,6 +5,8 @@ use GravApi\Responses\Response;
 use GravApi\Helpers\ConfigHelper;
 use GravApi\Resources\ConfigResource;
 use GravApi\Resources\ConfigCollectionResource;
+use GravApi\Config\Constants;
+use RocketTheme\Toolbox\Event\Event;
 
 /**
  * Class ConfigHandler
@@ -17,6 +19,8 @@ class ConfigHandler extends BaseHandler
         $configs = ConfigHelper::loadConfigs();
 
         $resource = new ConfigCollectionResource($configs);
+
+        $this->grav->fireEvent(Constants::EVENT_ON_API_CONFIG_GET_ALL, new Event(['configs' => $configs]));
 
         return $response->withJson($resource->toJson());
     }
@@ -36,6 +40,8 @@ class ConfigHandler extends BaseHandler
         }
 
         $resource = new ConfigResource($config);
+
+        $this->grav->fireEvent(Constants::EVENT_ON_API_CONFIG_GET, new Event(['config' => $config]));
 
         return $response->withJson($resource->toJson());
     }

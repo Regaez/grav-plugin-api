@@ -95,4 +95,22 @@ class Constants
      * Pattern for route matching which will allow "any descendents"
      */
     const REGEX_DESCENDANT_WILDCARD = '/\/\*$/';
+
+    // Events
+    const EVENT_ON_API_CONFIG_GET_ALL = 'onApiConfigGetAll';
+    const EVENT_ON_API_CONFIG_GET = 'onApiConfigGet';
+    const EVENT_ON_API_PAGE_GET_ALL = 'onApiPageGetAll';
+    const EVENT_ON_API_PAGE_GET = 'onApiPageGet';
+    const EVENT_ON_API_PAGE_FIND = 'onApiPageFind';
+    const EVENT_ON_API_PAGE_CREATE = 'onApiPageCreate';
+    const EVENT_ON_API_PAGE_UPDATE = 'onApiPageUpdate';
+    const EVENT_ON_API_PAGE_DELETE = 'onApiPageDelete';
+    const EVENT_ON_API_USER_GET_ALL = 'onApiUserGetAll';
+    const EVENT_ON_API_USER_GET = 'onApiUserGet';
+    const EVENT_ON_API_USER_CREATE = 'onApiUserCreate';
+    const EVENT_ON_API_USER_UPDATE = 'onApiUserUpdate';
+    const EVENT_ON_API_USER_DELETE = 'onApiUserDelete';
+    const EVENT_ON_API_PLUGIN_GET_ALL = 'onApiPluginGetAll';
+    const EVENT_ON_API_PLUGIN_GET = 'onApiPluginGet';
+    const EVENT_ON_API_PLUGIN_UPDATE= 'onApiPluginUpdate';
 }

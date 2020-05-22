@@ -8,6 +8,8 @@ use GravApi\Helpers\ArrayHelper;
 use Grav\Common\User\Authentication;
 use Grav\Common\Inflector;
 use Grav\Common\File\CompiledYamlFile;
+use GravApi\Config\Constants;
+use RocketTheme\Toolbox\Event\Event;
 
 /**
  * Class PagesHandler
@@ -32,6 +34,8 @@ class UsersHandler extends BaseHandler
 
         $resource = new UserCollectionResource($users);
 
+        $this->grav->fireEvent(Constants::EVENT_ON_API_USER_GET_ALL, new Event(['users' => $users]));
+
         return $response->withJson($resource->toJson());
     }
 
@@ -44,6 +48,8 @@ class UsersHandler extends BaseHandler
         }
 
         $resource = new UserResource($user);
+
+        $this->grav->fireEvent(Constants::EVENT_ON_API_USER_GET, new Event(['user' => $user]));
 
         return $response->withJson($resource->toJson());
     }
@@ -110,6 +116,8 @@ class UsersHandler extends BaseHandler
 
         $resource = new UserResource($user);
 
+        $this->grav->fireEvent(Constants::EVENT_ON_API_USER_CREATE, new Event(['user' => $user]));
+
         return $response->withJson($resource->toJson());
     }
 
@@ -162,6 +170,8 @@ class UsersHandler extends BaseHandler
 
         $resource = new UserResource($user);
 
+        $this->grav->fireEvent(Constants::EVENT_ON_API_USER_UPDATE, new Event(['user' => $user]));
+
         return $response->withJson($resource->toJson());
     }
 
@@ -176,6 +186,8 @@ class UsersHandler extends BaseHandler
         }
 
         $user->file()->delete();
+
+        $this->grav->fireEvent(Constants::EVENT_ON_API_USER_DELETE, new Event(['username' => $username]));
 
         return $response->withStatus(204);
     }
