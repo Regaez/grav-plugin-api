@@ -89,7 +89,6 @@ class PagesHandler extends BaseHandler
                 $hasPageAccess = AuthHelper::hasPageAccess($user, $page, Constants::METHOD_GET);
 
                 if (!$hasPageAccess) {
-                    $this->grav->fireEvent(Constants::EVENT_ON_API_UNAUTHORIZED_REQUEST, new Event(['route' => $route]));
                     return $response->withJson(Response::unauthorized(), 401);
                 }
             }
@@ -142,7 +141,6 @@ class PagesHandler extends BaseHandler
                 $canCreateRoute = AuthHelper::hasMatchingRoute($route, $userRoutes);
 
                 if (!$canCreateRoute) {
-                    $this->grav->fireEvent(Constants::EVENT_ON_API_UNAUTHORIZED_REQUEST, new Event(['route' => $route]));
                     return $response->withJson(Response::unauthorized(), 401);
                 }
             }
@@ -233,7 +231,6 @@ class PagesHandler extends BaseHandler
                 $hasPageAccess = AuthHelper::hasPageAccess($user, $page, Constants::METHOD_DELETE);
 
                 if (!$hasPageAccess) {
-                    $this->grav->fireEvent(Constants::EVENT_ON_API_UNAUTHORIZED_REQUEST, new Event(['route' => $route]));
                     return $response->withJson(Response::unauthorized(), 401);
                 }
             }
@@ -306,7 +303,6 @@ class PagesHandler extends BaseHandler
                 $hasPageAccess = AuthHelper::hasPageAccess($user, $page, Constants::METHOD_PATCH);
 
                 if (!$hasPageAccess) {
-                    $this->grav->fireEvent(Constants::EVENT_ON_API_UNAUTHORIZED_REQUEST, new Event(['route' => $route]));
                     return $response->withJson(Response::unauthorized(), 401);
                 }
             }

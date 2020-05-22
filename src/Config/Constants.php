@@ -113,5 +113,4 @@ class Constants
     const EVENT_ON_API_PLUGIN_GET_ALL = 'onApiPluginGetAll';
     const EVENT_ON_API_PLUGIN_GET = 'onApiPluginGet';
     const EVENT_ON_API_PLUGIN_UPDATE= 'onApiPluginUpdate';
-    const EVENT_ON_API_UNAUTHORIZED_REQUEST = 'onApiUnauthorisedRequest';
 }
