@@ -4,7 +4,7 @@ With the custom events fired by the Api, this allows for some extensibility of t
 
 ## Plugins
 
-- [Api Git Sync Integrator](https://github.com/djairhogeuens/grav-plugin-api-git-sync-integrator) by @djairhogeuens
+- [Api Git Sync Integrator](https://github.com/djairhogeuens/grav-plugin-api-git-sync-integrator) by **@djairhogeuens**
 
 ---
 

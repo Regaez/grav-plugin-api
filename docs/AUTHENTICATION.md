@@ -123,7 +123,7 @@ You may want to restrict a user's to a limited number of pages on your site. Thi
 
 In order to enable this feature, you must give a user the `api.pages_advanced_access` role.
 
-Within the user account file, `user/accounts/*.yaml`, you must specify an nested object structure, such as:
+Within the user account file, `user/accounts/*.yaml` (where `*` represents a username), you must specify a nested object structure, such as:
 
 ```yaml
 api:
@@ -195,8 +195,9 @@ api:
 
 See below for an example account file:
 
-_accounts/joe.yaml_
 ```yaml
+# accounts/joe.yaml
+
 email: joe@email.com
 fullname: Joe Bloggs
 title: Staff Member
@@ -252,8 +253,9 @@ The setup is exactly the same as for the user account. In your `user/config/grou
 
 For _Advanced Access_ you can add the same `api.advanced_access` structure, but it must be within a specific group's properties, e.g.
 
-_user/config/groups.yaml_
 ```yaml
+# user/config/groups.yaml
+
 authors:
   readableName: Authors
   description: A group of blog authors
