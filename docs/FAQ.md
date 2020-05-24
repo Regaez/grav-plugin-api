@@ -1,8 +1,50 @@
 # Frequently Asked Questions
 
+- [Is this production-ready?](#is-this-production-ready)
+- [Which Grav versions are supported?](#which-grav-versions-are-supported)
+- [When should I use this plugin?](#when-should-i-use-this-plugin)
 - [Why isn't Basic Authentication working for me?](#why-isnt-basic-authentication-working-for-me)
 - [How can I make my plugin/theme do something after an API request?](#how-can-i-make-my-plugintheme-do-something-after-an-api-request)
 - [Does the Api plugin trigger Git Sync?](#does-the-api-plugin-trigger-git-sync)
+
+## Is this production-ready?
+
+**This plugin is still a work-in-progress.** The plugin is not yet considered to be in a "stable" state. Therefore, we are not concerned with making "breaking changes" to the API specification, nor maintaining a comprehensive changelog, _until version `1.0.0` has been published to GPM_.
+
+> **It is not recommended to use this plugin on a production site. Install it at your own risk.**
+
+If you are developing your own theme/plugin/project which relies on this plugin, please be aware that any updates of the plugin may cause problems.
+
+Once the plugin has stabilised and been published to GPM, we will follow semantic versioning and endeavour to keep the number of breaking changes to a minimum.
+
+## Which Grav versions are supported?
+
+Currently, the plugin is currently being developed on Grav version `1.6.23`. We recommend that you update your site to _at least this patch version_ in order to ensure compatibility.
+
+> **NOTE:** the plugin has not been tested on Grav `1.7.x` as this version is still in beta. When it is released as stable, we will consider switching to this minor version.
+
+## When should I use this plugin?
+
+This plugin exposes a fairly comprehensive REST API to _manage a lot of your site's data_. This includes pages, media, users, plugins, and configuration files.
+
+> **Note:** Grav already has [built-in support for custom Content Types](https://learn.getgrav.org/content/content-types), that would allow you to return JSON responses.
+>
+> If you only need to **retrieve page content**, you might find that creating your own Twig templates in your theme is a much better approach as you can customise the response to your exact requirements.
+
+However, you may want to use this plugin if:
+
+- You are using a pre-built theme and cannot extend it with custom page content types.
+- You want to have your page content exposed as JSON, _but only for authenticated users_.
+- You want to allow users to create/update page content without needing to give them access to the admin interface or the source files.
+- You want to externally manage your site's, or any plugin's, configuration files.
+- You want to be able to externally create Users on your site.
+
+Some example use cases for this API:
+
+- You want to create an authenticated section on your site that allows users to create/update pages, but only under a specific route, such as a "profile" section.
+- You are building a Single Page Application in Javascript, perhaps with React or Vue.
+- You have a lot of clients and want to create a portal where you can manage all your Grav site configurations from one place.
+- You want to use an external registry of users and automatically create/remove user accounts whenever the registry changes.
 
 ## Why isn't Basic Authentication working for me?
 
