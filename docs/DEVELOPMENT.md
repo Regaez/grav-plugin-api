@@ -1,4 +1,11 @@
-# Api Plugin Development
+# API Plugin Development
+
+- [Setup](#setup)
+- [Local development](#local-development)
+  - [Scripts](#scripts)
+  - [User Accounts](#user-accounts)
+    - [Admin Credentials](#admin-credentials)
+    - [Testing Permissions](#testing-permissions)
 
 ## Setup
 
