@@ -1,4 +1,4 @@
-# API Plugin Development
+# Api Plugin Development
 
 - [Setup](#setup)
 - [Local development](#local-development)
