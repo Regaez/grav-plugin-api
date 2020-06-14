@@ -67,3 +67,6 @@ endpoints:
       # Prevents API from accessing these config files
       ignore_files:
         - streams
+    patch:
+      enabled: true
+      auth: true

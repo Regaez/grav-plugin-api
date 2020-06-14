@@ -99,6 +99,7 @@ class Constants
     // Events
     const EVENT_ON_API_CONFIG_GET_ALL = 'onApiConfigGetAll';
     const EVENT_ON_API_CONFIG_GET = 'onApiConfigGet';
+    const EVENT_ON_API_CONFIG_UPDATE = 'onApiConfigUpdate';
     const EVENT_ON_API_PAGE_GET_ALL = 'onApiPageGetAll';
     const EVENT_ON_API_PAGE_GET = 'onApiPageGet';
     const EVENT_ON_API_PAGE_FIND = 'onApiPageFind';

@@ -583,7 +583,7 @@ paths:
       tags:
         - plugins
       summary: Update a specific plugin
-      description: The request's body JSON should match the config structure of the plugin which you wish to update. If you wish to remove existing properties from the config, you can set their values to `null` and they will be unset.
+      description: The request's body JSON should match the config structure of the plugin which you wish to update. If you wish to remove existing properties from the config, you can set their values to `null` and they will be unset. Otherwise, the given values will be merged with the existing config.
       security:
         - basic: ['api.super', 'admin.super']
       parameters:
@@ -683,6 +683,52 @@ paths:
           schema:
             type: string
             example: "site"
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfigResponse'
+        401:
+          description: Invalid authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                InvalidAuth:
+                  $ref: '#/components/examples/InvalidAuthResponse'
+        404:
+          description: Configuration file not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                NotFound:
+                  $ref: '#/components/examples/NotFoundResponse'
+    patch:
+      tags:
+        - configs
+      summary: Update a specific config file
+      description: The request's body JSON should match the structure of the config file which you wish to update. If you wish to remove existing properties from the config, you can set their values to `null` and they will be unset. Otherwise, the given values will be merged with the existing config.
+      security:
+        - basic: ['api.super', 'api.configs_edit']
+      parameters:
+        - name: id
+          in: path
+          description: The id of the config file to update
+          required: true
+          schema:
+            type: string
+            example: site
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: This JSON structure should match the desired configuration file's options.
       responses:
         200:
           description: Successful operation

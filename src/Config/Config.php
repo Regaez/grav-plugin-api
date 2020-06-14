@@ -137,7 +137,7 @@ class Config
         // But may want to override it specifically if we've given custom
         // settings to the Config instance (e.g. for tests)
         if (isset($customRoute)) {
-            $this->route = $customRoute;
+            $this->route = trim($customRoute, '/');
         } elseif ($route) {
             $this->route = trim($route, '/');
         }
