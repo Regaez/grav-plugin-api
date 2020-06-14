@@ -86,7 +86,7 @@ class ConfigHandler extends BaseHandler
 
         $resource = new ConfigResource($configModel);
 
-        $this->grav->fireEvent(Constants::EVENT_ON_API_CONFIG_UPDATE, new Event(['config' => $configModel->data]));
+        $this->grav->fireEvent(Constants::EVENT_ON_API_CONFIG_UPDATE, new Event(['config' => $configModel]));
 
         return $response->withJson($resource->toJson());
     }

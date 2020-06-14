@@ -18,6 +18,7 @@
   - [Config](#config)
     - [onApiConfigGetAll](#onapiconfiggetall)
     - [onApiConfigGet](#onapiconfigget)
+    - [onApiConfigUpdate](#onapiconfigupdate)
   - [Plugin](#plugin)
     - [onApiPluginGetAll](#onapiplugingetall)
     - [onApiPluginGet](#onapipluginget)
@@ -234,6 +235,7 @@ List of `Config` events:
 
   - [onApiConfigGetAll](#onapiconfiggetall)
   - [onApiConfigGet](#onapiconfigget)
+  - [onApiConfigUpdate](#onapiconfigupdate)
 
 Please refer to the example code provided for full documentation of the available properties for each custom event.
 
@@ -258,6 +260,21 @@ This event is fired any time the `GET /configs/{id}` endpoint is successfully re
 
 ```php
 function onApiConfigGet(Event $e) {
+    /**
+     * The GravApi ConfigModel returned in the API response.
+     *
+     * @var \GravApi\Models\ConfigModel
+     */
+    $e['config'];
+}
+```
+
+#### onApiConfigUpdate
+
+This event is fired any time the `PATCH /configs/{id}` endpoint is successfully requested.
+
+```php
+function onApiConfigUpdate(Event $e) {
     /**
      * The GravApi ConfigModel returned in the API response.
      *
