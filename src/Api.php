@@ -241,6 +241,16 @@ class Api
                             )
                         );
                     }
+
+                    if ($config->configs->patch->enabled) {
+                        $this->patch('/{config}', ConfigHandler::class . ':updateConfig')
+                        ->add(
+                            new AuthMiddleware(
+                                $config->configs->patch,
+                                [Constants::ROLE_CONFIGS_EDIT]
+                            )
+                        );
+                    }
                 }
             );
         });

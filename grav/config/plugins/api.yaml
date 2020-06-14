@@ -64,3 +64,6 @@ endpoints:
       auth: true
       ignore_files:
         - streams
+    patch:
+      enabled: true
+      auth: true
